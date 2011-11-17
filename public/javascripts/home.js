@@ -1,3 +1,17 @@
+var foursquare = function () {
+  var api = {};
+  api.search_by_location = function (latitude, longitude, callback) {
+    venues = [];
+    $.getJSON('https://api.foursquare.com/v2/venues/search?v=20111117&ll=' + latitude + ',' + longitude + '&radius=1000&intent=browse&limit=50&oauth_token=YN1YTMIQU0S1KLYILLFQNQQIX5WTBZBRWW1Z2YBTLSBMJAR5', function (data) {
+      $(data.response.venues).each(function (index, venue) {
+        venues.push({foursquare_id: venue.id, name: venue.name});
+      });
+      callback(venues);
+    });
+  };
+  return api;
+}();
+
 $(document).ready(function () {
     var geolocationFetched = false;
     var latitude;
@@ -20,15 +34,25 @@ $(document).ready(function () {
             });
         });
     }
+    
+    function buildResultHtml(venues) {
+      var result = $('<p>');
+      $(venues).each(function (index, venue) {
+        var link = $('<a>').attr('href', '#').attr('class', 'searchResultItemLink');
+        var div = $('<div>').attr('class', 'searchResultItem');
+        var title = $('<span>').attr('class', 'searchResultItemTitle').text(venue.name);
+        result.append(link.append(div.append(title)));
+      });
+      return result;
+    }
 
     function nearby() {
         if (!geolocationFetched) {
           return;
         }
         prepareToSearch();
-        $.ajax({
-            url: '/venues/search/by_location/' + latitude + '/' + longitude,
-            success: showSearchResult
+        foursquare.search_by_location(latitude, longitude, function (venues) {
+          showSearchResult(buildResultHtml(venues));
         });
         return false;
     }
@@ -42,9 +66,9 @@ $(document).ready(function () {
           city = '_';
         }
         $.ajax({
-            url: '/venues/search/by_name_and_city/' + encodeURIComponent(name) + '/' + encodeURIComponent(city),
-            success: showSearchResult
-            });
+          url: '/venues/search/by_name_and_city/' + encodeURIComponent(name) + '/' + encodeURIComponent(city),
+          success: showSearchResult
+        });
         return false;
     }
 
