@@ -18,30 +18,67 @@ var foursquare = function () {
   return api;
 }();
 
-$(document).ready(function () {
-    var geolocationFetched = false;
-    var latitude;
-    var longitude;
-    var thereIsASearchResult = false;
+var geolocation = function () {
+  var api = {};
 
-    function queryGeolocation() {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        geolocationFetched = true;
+  api.fetch = function (callback) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      callback(position.coords.latitude, position.coords.longitude);
+    });
+  };
+
+  api.city = function (latitude, longitude, callback) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      $.getJSON('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&addressdetails=1', function (data) {
+        callback(data.address.city);
+      });
+    });
+  };
+  
+  return api;
+}();
+
+var home = function () {
+    var api = {};
+
+    var pvt = {
+      thereIsASearchResult: false,
+      latitude: null,
+      longitude: null,
+      geolocationFetched: false
+    };
+
+    api.initialize = function () {
+      $("#btnSearchNearby").attr("disabled", 'true');
+
+      pvt.queryGeolocation();
+
+      $("#searchNearby").submit(function (event) {
+        event.preventDefault();
+        pvt.searchNearbyVenues();
+      });
+
+      $("#searchByNameAndCity").submit(function (event) {
+        event.preventDefault();
+        pvt.searchVenuesByNameAndCity();
+      });
+    };
+
+    pvt.queryGeolocation = function () {
+      geolocation.fetch(function (latitude, longitude) {
+        pvt.latitude = latitude;
+        pvt.longitude = longitude;
+        pvt.geolocationFetched = true;
         $("#btnSearchNearby").attr("disabled", false);
-
-        $.getJSON('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&addressdetails=1', function (data) {
-          console.log($('#inputSearchCity').attr('value'));
-          if ($('#inputSearchCity').attr('value') != null && $('#inputSearchCity').attr('value') != '') {
-              return;
+        geolocation.city(latitude, longitude, function (city) {
+          if ($('#inputSearchCity').attr('value') == null || $('#inputSearchCity').attr('value') == '') {
+            $('#inputSearchCity').attr('value', city);
           }
-          $('#inputSearchCity').attr('value', data.address.city);
         });
       });
-    }
+    };
     
-    function buildResultHtml(venues) {
+    pvt.buildResultHtml = function (venues) {
       var result = $('<div>');
       if(venues.length > 0) {
         $(venues).each(function (index, venue) {
@@ -54,21 +91,21 @@ $(document).ready(function () {
         result.attr('id', 'no_search_results').text('OMG, no results!');
       }
       return result;
-    }
+    };
 
-    function nearby() {
-        if (!geolocationFetched) {
+    pvt.searchNearbyVenues = function () {
+        if (!pvt.geolocationFetched) {
           return;
         }
-        prepareToSearch();
-        foursquare.search_by_location(latitude, longitude, function (venues) {
-          showSearchResult(buildResultHtml(venues));
+        pvt.prepareToSearch();
+        foursquare.search_by_location(pvt.latitude, pvt.longitude, function (venues) {
+          pvt.showSearchResult(pvt.buildResultHtml(venues));
         });
         return false;
-    }
+    };
 
-    function search() {
-      prepareToSearch();
+    pvt.searchVenuesByNameAndCity = function () {
+      pvt.prepareToSearch();
       var name = $("#inputSearchName").attr('value');
       var city = $("#inputSearchCity").attr('value');
       if (name == null || name == '' || city == null || city == '') {
@@ -76,23 +113,23 @@ $(document).ready(function () {
         city = '_';
       }
       foursquare.search_by_name_and_city(name, city, function (venues) {
-        showSearchResult(buildResultHtml(venues));
+        pvt.showSearchResult(pvt.buildResultHtml(venues));
       });
       return false;
-    }
+    };
 
-    function prepareToSearch() {
+    pvt.prepareToSearch = function () {
       $('#spinning').removeClass('hidden');
-      if(!thereIsASearchResult) {
+      if(!pvt.thereIsASearchResult) {
         return;
       }
       resultContainer = $('#searchResultContainer');
       resultContainer.animate({top: -resultContainer.height()}, {easing: 'easeOutBounce', duration: 1000});
-    }
+    };
 
-    function showSearchResult(html) {
+    pvt.showSearchResult = function (html) {
       $('#spinning').addClass('hidden');
-      thereIsASearchResult = true;
+      pvt.thereIsASearchResult = true;
       resultContainer = $('<div>', {id:'searchResultContainer'}).css('position', 'relative').append(html);
       $('#searchResult').empty().append(resultContainer);
       resultContainer.css('top', -resultContainer.height());
@@ -103,28 +140,20 @@ $(document).ready(function () {
           var href = link.attr('href');
           link.attr('href', '#');
           link.click(function () {
-            slideContainer(function () { window.location = href });
+            pvt.slideContainer(function () { window.location = href });
             return false;
           });
       });
-    }
+    };
 
-    function slideContainer(callback) {
+    pvt.slideContainer = function (callback) {
       $('#outerContainer').css('overflow', 'hidden');
       $('#container').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : callback });
-    }
+    };
 
-    $("#btnSearchNearby").attr("disabled", 'true');
+    return api;
+}();
 
-    $("#searchNearby").submit(function (event) {
-      event.preventDefault();
-      nearby();
-    });
-    $("#searchByNameAndCity").submit(function (event) {
-      event.preventDefault();
-      search();
-    });
-
-    queryGeolocation();
+$(document).ready(function () {
+  home.initialize();
 });
-
