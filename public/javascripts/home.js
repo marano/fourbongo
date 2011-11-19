@@ -77,7 +77,7 @@ var page = function () {
     var result = $('<div>');
     if(venues.length > 0) {
       $(venues).each(function (index, venue) {
-        var link = $('<a>').attr('href', '#').attr('class', 'searchResultItemLink');
+        var link = $('<a>').attr('href', '/wall/' + venue.foursquare_id).attr('class', 'searchResultItemLink');
         var div = $('<div>', {class: 'searchResultItem'});
         var title = $('<span>').attr('class', 'searchResultItemTitle').text(venue.name);
         result.append(link.append(div.append(title)));
@@ -112,7 +112,6 @@ var page = function () {
     $('.searchResultItemLink').each(function (key, linkElement) {
       var link = $(linkElement);
       var href = link.attr('href');
-      link.attr('href', '#');
       link.click(function (event) {
         event.preventDefault();
         pvt.slideContainer(function () { window.location = href });

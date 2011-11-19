@@ -1,0 +1,64 @@
+.publication_container {
+  font-size: 350%;
+  top: 20%;
+  margin: 0 auto 0 auto;
+  position:absolute;
+  height: 600px;
+  margin-top: -1em;
+  padding-left: 20px;
+  min-width: 95%;
+  max-width: 95%;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.user_data_container {
+  text-align: left;
+}
+
+.avatar {
+  display: inline;
+  float: left;
+  margin: 0 35px 10px 10px;
+}
+
+.publication_content_container{
+  display: inline;
+  vertical-align: top;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.screen_name {
+  font-size: 70%;
+}
+
+#venue_cover {
+  font-size: 150px;
+  text-align: center;
+  margin-top: 300px;
+}
+
+#loading {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  padding: 7px;
+  z-index: 5;
+  font-size: 100px;
+  background-color: #C8C8C8;
+  color: black;
+  opacity: .6;
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+}
+
