@@ -42,20 +42,6 @@ var twitter = function () {
   return api;
 }();
 
-var facebook = function () {
-  var api = {};
-  
-  api.updates = function (userId, callback) {
-    $.getJSON('https://graph.facebook.com/' + userId + '/feed?access_token=AAAAAAITEghMBAEqaOApjv7ZBnUnZA2cpTzUWfv1IQsSGZBPSNo1xQBGsCapZBKgLoe9GOM5H9Eaiza3Sxlxs2TN7y1qZBYsVrTluWmlw0wjshRTeX40R8', function (data) {
-      var updates = [];
-      _(data.data).each(function (update) { updates.push(FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message})); });
-      callback(updates);
-    });
-  };
-
-  return api;
-}();
-
 var page = function () {
   var api = {};
 
@@ -236,32 +222,3 @@ var wall = function () {
 
   return api;
 }();
-
-$(function () {
-  //var venueId = $('meta[name=venueId]').attr("content");
-  //wall.initialize(venueId);
-
-
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '101544976563660', // App ID
-      channelURL : '//localhost.com:4567/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      oauth      : true, // enable OAuth 2.0
-      xfbml      : true  // parse XFBML
-    });
-    //FB.login();
-  };
-  
-//   (function(d){
-//     var js, id = 'facebook-jssdk';
-//     if (d.getElementById(id)) {return;}
-//     js = d.createElement('script');
-//     js.id = id;
-//     js.async = true;
-//     js.src = "//connect.facebook.net/en_US/all.js";
-//     d.getElementsByTagName('head')[0].appendChild(js);
-//   }(document));
-
-});

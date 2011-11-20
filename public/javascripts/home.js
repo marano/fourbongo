@@ -18,6 +18,48 @@ var foursquareSearch = function () {
   return api;
 }();
 
+var facebook = function () {
+ var api = {accessToken: null};
+
+ api.initialize = function () {
+   $('body').append($('<div>', {id: 'fb-root'}));
+
+   window.fbAsyncInit = function() {
+     FB.init({
+       appId      : '101544976563660', // App ID
+       channelURL : '//localhost.com:4567/channel.html', // Channel File
+       status     : true, // check login status
+       cookie     : true, // enable cookies to allow the server to access the session
+       oauth      : true, // enable OAuth 2.0
+       xfbml      : true  // parse XFBML
+     });
+   };
+
+   var d = document;
+   var js, id = 'facebook-jssdk';
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script');
+   js.id = id;
+   js.async = true;
+   js.src = "//connect.facebook.net/en_US/all.js";
+   d.getElementsByTagName('head')[0].appendChild(js);
+ };
+
+ api.login = function () {
+   FB.login(function (response) { api.accessToken = response.authResponse.accessToken; });
+ };
+
+  api.updates = function (userId, callback) {
+    FB.api(userId + '/feed', function (data) {
+      var updates = [];
+      _(data.data).each(function (update) { updates.push(FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message})); });
+      callback(updates);
+    });
+  };
+
+  return api;
+}();
+
 var geolocation = function () {
   var api = {};
 
@@ -55,6 +97,13 @@ var homePage = function () {
 
   api.bindSearchByNameAndCityButton = function (callback) {
     $("#searchByNameAndCity").submit(function (event) {
+      event.preventDefault();
+      callback();
+    });
+  };
+
+  api.bindFacebookLoginButton = function (callback) {
+    $("#facebookLogin").click(function (event) {
       event.preventDefault();
       callback();
     });
@@ -127,6 +176,7 @@ var home = function () {
     };
 
     api.initialize = function () {
+      facebook.initialize();
       if (window.location.hash != '') {
         var venueId = window.location.hash.replace('#', '')
         pvt.startShow(venueId);
@@ -135,6 +185,7 @@ var home = function () {
         pvt.queryGeolocation();
         homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
         homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+        homePage.bindFacebookLoginButton(facebook.login);
       }
     };
 
@@ -178,4 +229,7 @@ var home = function () {
     return api;
 }();
 
-$(document).ready(function () { home.initialize(); });
+$(document).ready(function () {
+  home.initialize();
+  facebook.initialize();
+});
