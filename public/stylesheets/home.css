@@ -5,7 +5,6 @@ body {
 #searchOuterContainer {
  color: #444; 
  font-family: helvetica;
- margin: 0;
 }
 
 #searchOuterContainer a, #searchOuterContainer a:active, #searchOuterContainer a:visited {
