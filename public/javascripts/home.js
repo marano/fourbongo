@@ -19,7 +19,7 @@ var foursquareSearch = function () {
 }();
 
 var facebook = function () {
- var api = {accessToken: null};
+ var api = {};
 
  api.initialize = function () {
    $('body').append($('<div>', {id: 'fb-root'}));
@@ -229,7 +229,4 @@ var home = function () {
     return api;
 }();
 
-$(document).ready(function () {
-  home.initialize();
-  facebook.initialize();
-});
+$(document).ready(function () { home.initialize(); });
