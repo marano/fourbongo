@@ -40,9 +40,7 @@ var geolocation = function () {
 
 var homePage = function () {
   api = {};
-  pvt = {
-    thereIsASearchResult: false
-  };
+  pvt = { thereIsASearchResult: false };
 
   api.disableSearchNearbyButton = function () { $("#btnSearchNearby").attr("disabled", true); };
 
@@ -62,7 +60,7 @@ var homePage = function () {
     });
   };
 
-  pvt.slideContainer = function (callback) {
+  api.slideContainer = function (callback) {
     $('#searchOuterContainer').css('overflow', 'hidden');
     $('#searchContainer').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : function () {
       $('#searchOuterContainer').remove();
@@ -76,18 +74,13 @@ var homePage = function () {
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
 
-  api.removeContainer = function () {
-  };
-
   pvt.buildResultHtml = function (venues, callback) {
     var result = $('<div>');
     if(venues.length > 0) {
       $(venues).each(function (index, venue) {
         var link = $('<a>').attr('href', '#' + venue.foursquare_id).attr('class', 'searchResultItemLink');
         link.click(function (event) {
-          pvt.slideContainer(function () {
-            callback(venue);
-          });
+          callback(venue.foursquare_id);
         });
         var div = $('<div>', {class: 'searchResultItem'});
         var title = $('<span>').attr('class', 'searchResultItemTitle').text(venue.name);
@@ -134,10 +127,15 @@ var home = function () {
     };
 
     api.initialize = function () {
-      homePage.disableSearchNearbyButton();
-      pvt.queryGeolocation();
-      homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
-      homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+      if (window.location.hash != '') {
+        var venueId = window.location.hash.replace('#', '')
+        pvt.startShow(venueId);
+      } else {
+        homePage.disableSearchNearbyButton();
+        pvt.queryGeolocation();
+        homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
+        homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+      }
     };
 
     pvt.queryGeolocation = function () {
@@ -175,7 +173,7 @@ var home = function () {
       });
     };
 
-    pvt.startShow = function (venue) { wall.initialize(venue); };
+    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall.initialize(venueId); }); };
 
     return api;
 }();

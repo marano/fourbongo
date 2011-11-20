@@ -203,9 +203,9 @@ var wall = function () {
   var api = {};
   var pvt = {};
 
-  api.initialize = function (venue) {
+  api.initialize = function (venueId) {
     page.createWallContainerHtml();
-    foursquare.venue(venue.foursquare_id, pvt.startShow);
+    foursquare.venue(venueId, pvt.startShow);
   };
 
   pvt.startShow = function (venue) {
