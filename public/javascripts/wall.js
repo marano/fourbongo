@@ -45,8 +45,11 @@ var twitter = function () {
 var facebook = function () {
   var api = {};
   
-  api.updates = function (userId) {
-    $.getJSON('https://graph.facebook.com/' + userId + '/feed?access_token=AAAAAAITEghMBAFLctX7QkV35KQo8aOzOAaYDr3NDmf9Apj1WqJIfnc2R8m4aCLJ21VWa7GrcGN19kZCImBHbJvy5aEwpSCXVJwmGHkJ6LsCqFBIOd', function (data) {
+  api.updates = function (userId, callback) {
+    $.getJSON('https://graph.facebook.com/' + userId + '/feed?access_token=AAAAAAITEghMBAEqaOApjv7ZBnUnZA2cpTzUWfv1IQsSGZBPSNo1xQBGsCapZBKgLoe9GOM5H9Eaiza3Sxlxs2TN7y1qZBYsVrTluWmlw0wjshRTeX40R8', function (data) {
+      var updates = [];
+      _(data.data).each(function (update) { updates.push(FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message})); });
+      callback(updates);
     });
   };
 
@@ -56,8 +59,9 @@ var facebook = function () {
 var page = function () {
   var api = {};
 
-  api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#container')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
+  api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
+  api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
   api.hideLoading = function () { $('#loading').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#loading').remove(); }}); };
 
   api.coverHtml = function (venueName) { return $('<div>', {id: 'venue_cover'}).text(venueName); };
@@ -76,6 +80,16 @@ var page = function () {
     userData.append($('<span>', {class: 'screen_name'}).text('(' + tweet.username + ')'));
     container.append(userData);
     container.append($('<div>', {class: 'publication_content_container'}).text(tweet.content));
+    return container;
+  };
+
+  api.facebookUpdateHtml = function (update) {
+    var container = $('<div>', {class: 'publication_container'});
+    container.append($('<img>', {src: update.avatar, class: 'avatar'}));
+    var userData = $('<div>', {class: 'user_data_container'});
+    userData.append($('<span>', {class: 'username'}).text(update.username));
+    container.append(userData);
+    container.append($('<div>', {class: 'publication_content_container'}).text(update.content));
     return container;
   };
 
@@ -130,13 +144,23 @@ var Tweet = function (tweetData) {
 
   api.isSame = function (otherPost) { return api.id == otherPost.id; };
 
-  api.html = function (tweet) { return page.tweetHtml(tweet); };
+  api.html = function (post) { return page.tweetHtml(post); };
 
   return api;
 };
 
 var FacebookUpdate = function (updateData) {
-  var api = {};
+  var api = {
+    id: updateData.id,
+    username: updateData.username,
+    content: updateData.content,
+    avatar: 'https://graph.facebook.com/' + updateData.userId + '/picture?type=large'
+  };
+
+  api.isSame = function (otherPost) { return api.id == otherPost.id; };
+
+  api.html = function (post) { return page.facebookUpdateHtml(post); };
+
   return api;
 };
 
@@ -159,7 +183,7 @@ var slidesCoordinator = function () {
   var api = {};
   var pvt = { needsToHideLoading: true };
   
-  api.start = function (slider) { setInterval(function () { pvt.next(slider); }, 8000); };
+  api.start = function (slider) { setInterval(function () { pvt.next(slider); }, 10000); };
 
   pvt.next = function (slider) {
     if (postsList.isNotEmpty()) {
@@ -179,10 +203,13 @@ var wall = function () {
   var api = {};
   var pvt = {};
 
-  api.initialize = function (venueId) { foursquare.venue(venueId, pvt.startShow); };
+  api.initialize = function (venue) {
+    page.createWallContainerHtml();
+    foursquare.venue(venue.foursquare_id, pvt.startShow);
+  };
 
   pvt.startShow = function (venue) {
-    var slider = slideShow($('#container'));
+    var slider = slideShow($('#wallContainer'));
     introduction.showCover(venue.name, slider);
     setTimeout(page.showLoading, 1000);
     setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
@@ -190,8 +217,8 @@ var wall = function () {
     pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
     pvt.fetchCheckins(venue.id);
 
-    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 30000);
-    setInterval(function () { pvt.fetchCheckins(venue.id); }, 30000);
+    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 60000);
+    setInterval(function () { pvt.fetchCheckins(venue.id); }, 60000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
   };
@@ -211,6 +238,30 @@ var wall = function () {
 }();
 
 $(function () {
-  var venueId = $('meta[name=venueId]').attr("content");
-  wall.initialize(venueId);
+  //var venueId = $('meta[name=venueId]').attr("content");
+  //wall.initialize(venueId);
+
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '101544976563660', // App ID
+      channelURL : '//localhost.com:4567/channel.html', // Channel File
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      oauth      : true, // enable OAuth 2.0
+      xfbml      : true  // parse XFBML
+    });
+    //FB.login();
+  };
+  
+//   (function(d){
+//     var js, id = 'facebook-jssdk';
+//     if (d.getElementById(id)) {return;}
+//     js = d.createElement('script');
+//     js.id = id;
+//     js.async = true;
+//     js.src = "//connect.facebook.net/en_US/all.js";
+//     d.getElementsByTagName('head')[0].appendChild(js);
+//   }(document));
+
 });

@@ -1,4 +1,4 @@
-var foursquare = function () {
+var foursquareSearch = function () {
   var api = {};
 
   api.search_by_name_and_city = function (name, city, callback) {
@@ -38,7 +38,7 @@ var geolocation = function () {
   return api;
 }();
 
-var page = function () {
+var homePage = function () {
   api = {};
   pvt = {
     thereIsASearchResult: false
@@ -63,8 +63,11 @@ var page = function () {
   };
 
   pvt.slideContainer = function (callback) {
-    $('#outerContainer').css('overflow', 'hidden');
-    $('#container').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : callback });
+    $('#searchOuterContainer').css('overflow', 'hidden');
+    $('#searchContainer').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : function () {
+      $('#searchOuterContainer').remove();
+      callback();
+    }});
   };
 
   api.searchNameInputValue = function () { return $('#inputSearchName').val(); };
@@ -73,11 +76,19 @@ var page = function () {
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
 
-  pvt.buildResultHtml = function (venues) {
+  api.removeContainer = function () {
+  };
+
+  pvt.buildResultHtml = function (venues, callback) {
     var result = $('<div>');
     if(venues.length > 0) {
       $(venues).each(function (index, venue) {
-        var link = $('<a>').attr('href', '/wall/' + venue.foursquare_id).attr('class', 'searchResultItemLink');
+        var link = $('<a>').attr('href', '#' + venue.foursquare_id).attr('class', 'searchResultItemLink');
+        link.click(function (event) {
+          pvt.slideContainer(function () {
+            callback(venue);
+          });
+        });
         var div = $('<div>', {class: 'searchResultItem'});
         var title = $('<span>').attr('class', 'searchResultItemTitle').text(venue.name);
         result.append(link.append(div.append(title)));
@@ -100,23 +111,14 @@ var page = function () {
     }
   };
 
-  api.showSearchResult = function (venues) {
+  api.showSearchResult = function (venues, callback) {
     pvt.hideSpinning();
     pvt.thereIsASearchResult = true;
-    var html = pvt.buildResultHtml(venues);
+    var html = pvt.buildResultHtml(venues, callback);
     resultContainer = $('<div>', {id:'searchResultContainer'}).css('position', 'relative').append(html);
     $('#searchResult').empty().append(resultContainer);
     resultContainer.css('top', -resultContainer.height());
     resultContainer.animate({top: 0}, {easing: 'easeOutBounce', duration: 1000});
-
-    $('.searchResultItemLink').each(function (key, linkElement) {
-      var link = $(linkElement);
-      var href = link.attr('href');
-      link.click(function (event) {
-        event.preventDefault();
-        pvt.slideContainer(function () { window.location = href });
-      });
-    });
   };
 
   return api;
@@ -132,10 +134,10 @@ var home = function () {
     };
 
     api.initialize = function () {
-      page.disableSearchNearbyButton();
+      homePage.disableSearchNearbyButton();
       pvt.queryGeolocation();
-      page.bindSearchNearbyButton(pvt.searchNearbyVenues);
-      page.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+      homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
+      homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
     };
 
     pvt.queryGeolocation = function () {
@@ -143,41 +145,39 @@ var home = function () {
         pvt.latitude = latitude;
         pvt.longitude = longitude;
         pvt.geolocationFetched = true;
-        page.enableSearchNearbyButton();
+        homePage.enableSearchNearbyButton();
         geolocation.city(latitude, longitude, function (city) {
-          if (page.searchCityInputValue() == null || page.searchCityInputValue()  == '') {
-            page.setSearchCityInputValue(city);
+          if (homePage.searchCityInputValue() == null || homePage.searchCityInputValue()  == '') {
+            homePage.setSearchCityInputValue(city);
           }
         });
       });
     };
     
     pvt.searchNearbyVenues = function () {
-        if (!pvt.geolocationFetched) {
-          return;
-        }
-        page.prepareToSearch();
-        foursquare.search_by_location(pvt.latitude, pvt.longitude, function (venues) {
-          page.showSearchResult(venues);
+        if (!pvt.geolocationFetched) { return; }
+        homePage.prepareToSearch();
+        foursquareSearch.search_by_location(pvt.latitude, pvt.longitude, function (venues) {
+          homePage.showSearchResult(venues, pvt.startShow);
         });
     };
 
     pvt.searchVenuesByNameAndCity = function () {
-      page.prepareToSearch();
-      var name = page.searchNameInputValue();
-      var city = page.searchCityInputValue();
+      homePage.prepareToSearch();
+      var name = homePage.searchNameInputValue();
+      var city = homePage.searchCityInputValue();
       if (name == null || name == '' || city == null || city == '') {
         name = '_';
         city = '_';
       }
-      foursquare.search_by_name_and_city(name, city, function (venues) {
-        page.showSearchResult(venues);
+      foursquareSearch.search_by_name_and_city(name, city, function (venues) {
+        homePage.showSearchResult(venues, pvt.startShow);
       });
     };
+
+    pvt.startShow = function (venue) { wall.initialize(venue); };
 
     return api;
 }();
 
-$(document).ready(function () {
-  home.initialize();
-});
+$(document).ready(function () { home.initialize(); });

@@ -10,9 +10,8 @@
   max-width: 95%;
 }
 
-body {
+#wallContainer {
   position: relative;
-  margin: 0;
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: hidden;

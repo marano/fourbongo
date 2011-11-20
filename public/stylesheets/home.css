@@ -1,19 +1,23 @@
 body {
+  margin: 0;
+}
+
+#searchOuterContainer {
  color: #444; 
  font-family: helvetica;
  margin: 0;
 }
 
-a, a:active, a:visited {
+#searchOuterContainer a, #searchOuterContainer a:active, #searchOuterContainer a:visited {
   color: #444;
   text-decoration: none;
 }
 
-input[type='submit'] {
+#searchOuterContainer input[type='submit'] {
   letter-spacing: 1px;
 }
 
-input[type='text'] {
+#searchOuterContainer input[type='text'] {
   padding-left: 4px;
 }
 
@@ -21,7 +25,7 @@ input[type='text'] {
   display: none !important;
 }
 
-#container {
+#searchContainer {
   margin-left: auto;
   margin-right: auto;
   width: 1024px;
