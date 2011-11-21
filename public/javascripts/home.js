@@ -121,6 +121,11 @@ var homePage = function () {
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
 
+  api.showTitle = function () {
+    var titleOpacity = $('#title').css('opacity');
+    $('#title').css('opacity', '.0').show().animate({'opacity': titleOpacity}, {easing: 'easeOutQuint', duration: 1000});
+  };
+
   pvt.showBar = function () {
     $('#bar').css('opacity', '.0').show().animate({'opacity': '1'}, {easing: 'easeOutQuint', duration: 1000});
   };
@@ -202,6 +207,7 @@ var home = function () {
     };
 
     api.initialize = function () {
+      homePage.showTitle();
       foursquare.initialize();
       facebook.initialize(function () {
         if (!foursquare.isAuthenticated()) {

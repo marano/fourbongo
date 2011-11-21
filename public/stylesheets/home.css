@@ -56,11 +56,14 @@ body {
 }
 
 #title {
+  font-family: 'Vidaloka', serif;
   letter-spacing: -15px;
   text-align: center;
-  font-size: 800%;
+  font-size: 900%;
   margin-top: 30px;
   margin-bottom: 30px;
+  font-weight: 100;
+  opacity: 0.85;
 }
 
 #bar, #searchMenu, #searchMenuFields {
