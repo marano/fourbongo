@@ -60,7 +60,7 @@ var twitter = function () {
   var api = {};
 
   api.timeline = function (userId, callback) {
-    $.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + userId + '&count=50&callback=?', function (data) {
+    $.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + userId + '&count=200&callback=?', function (data) {
         var tweets = _(data).map(function (tweet) {
           return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: tweet.text, avatar: tweet.user.profile_image_url});
         });
@@ -186,17 +186,43 @@ var FacebookUpdate = function (updateData) {
   return api;
 };
 
+var PostsListItem = function (item) {
+  var api = {
+    post: item,
+    viewed: false
+  };
+  return api;
+};
+
 var postsList = function () {
   var api = {};
-  var pvt = { posts: [] };
+  var pvt = { posts: [], queue: [] };
 
-  api.addAll = function (posts) { _(posts).each(function (post) { if (!pvt.contains(post)) { pvt.posts.push(post); } }); };
+  api.addAll = function (posts) { _(posts).each(pvt.add); };
 
-  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.isSame(post); }); };
+  pvt.add = function (post) {
+    if (!pvt.contains(post)) {
+      pvt.posts.push(PostsListItem(post));
+      pvt.fillQueue();
+    }
+  };
 
-  api.random = function () { return pvt.posts[Math.floor(Math.random() * pvt.posts.length)]; };
+  pvt.fillQueue = function () {
+    pvt.queue = _(pvt.posts).sortBy(function  () { return Math.random(); });
+  };
+
+  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
 
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
+
+  api.next = function () {
+    if (_(pvt.queue).isEmpty()) {
+      pvt.fillQueue();
+    }
+    var next = pvt.queue.shift().post;
+    next.viewed = true;
+    return next;
+  };
 
   return api;
 }();
@@ -213,7 +239,7 @@ var slidesCoordinator = function () {
         page.hideLoading();
         pvt.needsToHideLoading = false;
       }
-      var post = postsList.random();
+      var post = postsList.next();
       slider.slide(post.html(post));
     }
   };
@@ -239,8 +265,8 @@ var wall = function () {
     pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
     pvt.fetchCheckins(venue.id);
 
-    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 60000);
-    setInterval(function () { pvt.fetchCheckins(venue.id); }, 60000);
+    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 300000);
+    setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
   };
