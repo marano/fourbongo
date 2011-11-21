@@ -97,7 +97,7 @@ var homePage = function () {
 
   api.slideContainer = function (callback) {
     $('#searchOuterContainer').css('overflow', 'hidden');
-    $('#searchContainer').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : function () {
+    $('#homeContainer').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : function () {
       $('#searchOuterContainer').remove();
       callback();
     }});
@@ -108,6 +108,9 @@ var homePage = function () {
   api.searchCityInputValue = function () { return $('#inputSearchCity').val(); };
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
+
+  api.buildSearchMenu = function () {
+  };
 
   pvt.buildResultHtml = function (venues, callback) {
     var result = $('<div>');
@@ -164,6 +167,10 @@ var home = function () {
     api.initialize = function () {
       foursquare.initialize();
       facebook.initialize();
+
+      if (!foursquare.isAuthenticated()) {
+      } else {
+      }
       
       if (window.location.hash != '') {
         var venueId = window.location.hash.replace('#', '')

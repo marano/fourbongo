@@ -17,34 +17,36 @@
   <body>
     <div id='wallContainer'></div>
     <div id='searchOuterContainer'>
-      <div id="searchContainer">
+      <div id="homeContainer">
         <a href="#" id='facebookLogin'>Login on facebook</a> | 
         <a href="#" id='foursquareLogin'>Login on foursquare</a>
         <h1 id='title'>fourbongo</h1>
 
-        <div id='searchMenu'>
-          <div id='searchMenuFields'>
-            <h3>where?</h3>
+        <div id='bar'>
+          <div id='searchMenu'>
+            <div id='searchMenuFields'>
+              <h3>where?</h3>
 
-            <form id="searchNearby" class="search_form">
-              <input type='submit' id='btnSearchNearby' value="nearby" class='searchButton' />
-            </form>
+              <form id="searchNearby" class="search_form">
+                <input type='submit' id='btnSearchNearby' value="nearby" class='searchButton' />
+              </form>
 
-            <label class='searchLabel'>or</label>
+              <label class='searchLabel'>or</label>
 
-            <form id="searchByNameAndCity" class="search_form">
-              <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='by name' />
-              <label class='searchLabel'>at</label>
-              <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='and city' />
-              <input type='submit' value="go" class='searchButton' />
-            </form>
-          </div>
+              <form id="searchByNameAndCity" class="search_form">
+                <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='by name' />
+                <label class='searchLabel'>at</label>
+                <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='and city' />
+                <input type='submit' value="go" class='searchButton' />
+              </form>
+            </div>
 
-          <div id='spinning' class='hidden'>
-            <img src='/spinning.gif' />
+            <div id='spinning' class='hidden'>
+              <img src='/spinning.gif' />
+            </div>
           </div>
         </div>
-        <div id='searchResult' />
+        <div id='searchResult'></div>
       </div>
     </div>
   </body>
