@@ -45,7 +45,7 @@ var facebook = function () {
   };
 
   api.isAuthenticated = function () {
-    return document.cookie.indexOf('fbsr_') >= 0;
+    return pvt.authenticated;
   };
 
   return api;
