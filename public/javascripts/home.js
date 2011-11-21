@@ -15,14 +15,13 @@ var facebook = function () {
      });
    };
 
-   var d = document;
    var js, id = 'facebook-jssdk';
-   if (d.getElementById(id)) {return;}
-   js = d.createElement('script');
+   if (document.getElementById(id)) {return;}
+   js = document.createElement('script');
    js.id = id;
    js.async = true;
    js.src = "//connect.facebook.net/en_US/all.js";
-   d.getElementsByTagName('head')[0].appendChild(js);
+   document.getElementsByTagName('head')[0].appendChild(js);
  };
 
  api.login = function () {
@@ -163,21 +162,10 @@ var home = function () {
     };
 
     api.initialize = function () {
+      foursquare.initialize();
       facebook.initialize();
-
-      var isFoursquareCallback = $('meta[name=from_foursquare_authentication_callback]').attr('content') == 'true';
-
-      if (isFoursquareCallback) {
-        var token = window.location.hash.replace('#access_token=', '');
-        window.history.pushState(0, '', '/');
-        $.cookie('foursquare_token', token, {path: '/', expires: 365});
-        foursquare.setToken(token);
-      } else {
-        var token = $.cookie('foursquare_token');
-        foursquare.setToken(token);
-      }
-
-      if (!isFoursquareCallback && window.location.hash != '') {
+      
+      if (window.location.hash != '') {
         var venueId = window.location.hash.replace('#', '')
         pvt.startShow(venueId);
       } else {
