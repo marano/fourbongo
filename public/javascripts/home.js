@@ -1,28 +1,36 @@
 var facebook = function () {
  var api = {};
+ var pvt = {authenticated: null}
 
- api.initialize = function () {
-   $('body').append($('<div>', {id: 'fb-root'}));
+  api.initialize = function (callback) {
+    $('body').append($('<div>', {id: 'fb-root'}));
 
-   window.fbAsyncInit = function() {
-     FB.init({
-       appId      : '101544976563660', // App ID
-       channelURL : '//localhost.com:4567/channel.html', // Channel File
-       status     : true, // check login status
-       cookie     : true, // enable cookies to allow the server to access the session
-       oauth      : true, // enable OAuth 2.0
-       xfbml      : true  // parse XFBML
-     });
-   };
-
-   var js, id = 'facebook-jssdk';
-   if (document.getElementById(id)) {return;}
-   js = document.createElement('script');
-   js.id = id;
-   js.async = true;
-   js.src = "//connect.facebook.net/en_US/all.js";
-   document.getElementsByTagName('head')[0].appendChild(js);
- };
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '101544976563660', // App ID
+        channelURL : '//localhost.com:4567/channel.html', // Channel File
+        status     : true, // check login status
+        cookie     : true, // enable cookies to allow the server to access the session
+        oauth      : true, // enable OAuth 2.0
+        xfbml      : true  // parse XFBML
+      });
+      
+      FB.getLoginStatus(function(response) {
+        if (response.authResponse) {
+          pvt.authenticated = true;
+        }
+        callback();
+      });
+    };
+ 
+    var js, id = 'facebook-jssdk';
+    if (document.getElementById(id)) {return;}
+    js = document.createElement('script');
+    js.id = id;
+    js.async = true;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    document.getElementsByTagName('head')[0].appendChild(js);
+  };
 
  api.login = function () {
    FB.login(function (response) { api.accessToken = response.authResponse.accessToken; });
@@ -34,6 +42,10 @@ var facebook = function () {
       _(data.data).each(function (update) { updates.push(FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message})); });
       callback(updates);
     });
+  };
+
+  api.isAuthenticated = function () {
+    return document.cookie.indexOf('fbsr_') >= 0;
   };
 
   return api;
@@ -96,9 +108,9 @@ var homePage = function () {
   };
 
   api.slideContainer = function (callback) {
-    $('#searchOuterContainer').css('overflow', 'hidden');
+    $('#homeOuterContainer').css('overflow', 'hidden');
     $('#homeContainer').animate({left : $(window).width()}, {easing: 'easieEaseInQuint', duration: 1000, complete : function () {
-      $('#searchOuterContainer').remove();
+      $('#homeOuterContainer').remove();
       callback();
     }});
   };
@@ -109,7 +121,32 @@ var homePage = function () {
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
 
-  api.buildSearchMenu = function () {
+  pvt.showBar = function () {
+    $('#bar').css('opacity', '.0').show().animate({'opacity': '1'}, {easing: 'easeOutQuint', duration: 1000});
+  };
+
+  api.buildSearchMenu = function (callback) {
+    $.get('/search_menu', function (html) {
+      $('#bar').append(html);
+      pvt.showBar();
+      callback();
+    });
+  };
+
+  api.buildFoursquareAuthenticationMenu = function (callback) {
+    $.get('/foursquare/authentication_menu', function (html) {
+      $('#bar').append(html);
+      pvt.showBar();
+      callback();
+    });
+  };
+
+  api.buildFacebookAuthenticationMenu = function (callback) {
+    $.get('/facebook/authentication_menu', function (html) {
+      $('#bar').append(html);
+      pvt.showBar();
+      callback();
+    });
   };
 
   pvt.buildResultHtml = function (venues, callback) {
@@ -166,23 +203,30 @@ var home = function () {
 
     api.initialize = function () {
       foursquare.initialize();
-      facebook.initialize();
+      facebook.initialize(function () {
+        if (!foursquare.isAuthenticated()) {
+          homePage.buildFoursquareAuthenticationMenu(function () {
+            homePage.bindFoursquareLoginButton(foursquare.login);
+          });
+        } else if (!facebook.isAuthenticated()) {
+          homePage.buildFacebookAuthenticationMenu(function () {
+            homePage.bindFacebookLoginButton(facebook.login);
+          });
+        } else if (window.location.hash != '') {
+          var venueId = window.location.hash.replace('#', '')
+          pvt.startShow(venueId);
+        } else {
+          homePage.buildSearchMenu(pvt.prepareSearchMenu);
+        }
+      });
+    };
 
-      if (!foursquare.isAuthenticated()) {
-      } else {
-      }
-      
-      if (window.location.hash != '') {
-        var venueId = window.location.hash.replace('#', '')
-        pvt.startShow(venueId);
-      } else {
-        homePage.disableSearchNearbyButton();
-        pvt.queryGeolocation();
-        homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
-        homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
-        homePage.bindFacebookLoginButton(facebook.login);
-        homePage.bindFoursquareLoginButton(foursquare.login);
-      }
+    pvt.prepareSearchMenu = function () {
+      homePage.disableSearchNearbyButton();
+      pvt.queryGeolocation();
+      homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
+      homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+      homePage.bindFacebookLoginButton(facebook.login);
     };
 
     pvt.queryGeolocation = function () {

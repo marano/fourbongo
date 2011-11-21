@@ -191,7 +191,7 @@ var postsList = function () {
 
   api.addAll = function (posts) { _(posts).each(function (post) { if (!pvt.contains(post)) { pvt.posts.push(post); } }); };
 
-  pvt.contains = function (post) { return _.any(pvt.posts, function (eachPost) { return eachPost.isSame(post); }); };
+  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.isSame(post); }); };
 
   api.random = function () { return pvt.posts[Math.floor(Math.random() * pvt.posts.length)]; };
 
