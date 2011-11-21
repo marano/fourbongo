@@ -1,10 +1,11 @@
 get '/' do
+  @from_foursquare_authentication_callback = false
   erb :index
 end
 
-get '/wall/:venue_id' do
-  @venue_id = params[:venue_id]
-  erb :wall
+get '/foursquare/authentication_callback' do
+  @from_foursquare_authentication_callback = true
+  erb :index
 end
 
 get '/venues/search_by_name_and_city/:name/:city' do
