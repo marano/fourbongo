@@ -196,18 +196,28 @@ var PostsListItem = function (item) {
 
 var postsList = function () {
   var api = {};
-  var pvt = { posts: [], queue: [] };
+  var pvt = {
+    posts: [],
+    queue: [],
+    currentIndex: 0
+  };
 
-  api.addAll = function (posts) { _(posts).each(pvt.add); };
+  api.addAll = function (posts) {
+    _(posts).each(pvt.add);
+  };
 
   pvt.add = function (post) {
     if (!pvt.contains(post)) {
-      pvt.posts.push(PostsListItem(post));
-      pvt.fillQueue();
+      var item = PostsListItem(post);
+      pvt.posts.push(item);
+      var remainingItems = pvt.queue.slice(pvt.currentIndex);
+      remainingItems.splice(Math.floor(Math.random() * remainingItems.length), 0, item);
+      pvt.queue = _.union(pvt.queue.slice(0, pvt.currentIndex), remainingItems);
     }
   };
 
-  pvt.fillQueue = function () {
+  pvt.resetQueue = function () {
+    pvt.currentIndex = 0;
     pvt.queue = _(pvt.posts).sortBy(function  () { return Math.random(); });
   };
 
@@ -216,10 +226,9 @@ var postsList = function () {
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
 
   api.next = function () {
-    if (_(pvt.queue).isEmpty()) {
-      pvt.fillQueue();
-    }
-    var next = pvt.queue.shift().post;
+    if (_(pvt.queue).isEmpty()) { pvt.resetQueue(); }
+    if (pvt.currentIndex == pvt.queue.length) { pvt.currentIndex = 0; }
+    var next = pvt.queue[pvt.currentIndex++].post;
     next.viewed = true;
     return next;
   };
