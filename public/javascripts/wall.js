@@ -23,11 +23,8 @@ var foursquare = function () {
   };
   
   api.search_venues_by_location = function (latitude, longitude, callback) {
-    venues = [];
     $.getJSON('https://api.foursquare.com/v2/venues/search?v=20111117&ll=' + latitude + ',' + longitude + '&radius=1000&intent=browse&limit=50&oauth_token=' + pvt.token, function (data) {
-      $(data.response.venues).each(function (index, venue) {
-        venues.push({foursquare_id: venue.id, name: venue.name});
-      });
+      var vanues = $(data.response.venues).map(function (index, venue) { return {foursquare_id: venue.id, name: venue.name}; });
       callback(venues);
     });
   };
@@ -43,8 +40,7 @@ var foursquare = function () {
 
   api.herenow = function (venueId, callback) {
     $.getJSON('https://api.foursquare.com/v2/venues/' + venueId + '/herenow?oauth_token=' + pvt.token + '&v=20111118', function (data) {
-      var userIds = [];
-      _(data.response.hereNow.items).each(function (checkin) { userIds.push(checkin.user.id); });
+      var userIds = _(data.response.hereNow.items).map(function (checkin) { return checkin.user.id; });
       callback(userIds);
     });
   };

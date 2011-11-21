@@ -16,9 +16,7 @@ var facebook = function () {
       });
       
       FB.getLoginStatus(function(response) {
-        if (response.authResponse) {
-          pvt.authenticated = true;
-        }
+        if (response.authResponse) { pvt.authenticated = true; }
         callback();
       });
     };
@@ -38,15 +36,12 @@ var facebook = function () {
 
   api.updates = function (userId, callback) {
     FB.api(userId + '/feed', function (data) {
-      var updates = [];
-      _(data.data).each(function (update) { updates.push(FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message})); });
+      var updates = _(data.data).map(function (update) { return FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: update.message}); });
       callback(updates);
     });
   };
 
-  api.isAuthenticated = function () {
-    return pvt.authenticated;
-  };
+  api.isAuthenticated = function () { return pvt.authenticated; };
 
   return api;
 }();
