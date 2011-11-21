@@ -1,11 +1,11 @@
 body {
   margin: 0;
+ font-family: 'Times New Roman', serif;
 }
 
 .authentication_menu {
   font-size: 36px;
   color: white;
-  font-family: helvetica;
 }
 
 .authentication_menu a, .authentication_menu a:active, .authentication_menu a:visited {
@@ -28,7 +28,6 @@ body {
 
 #searchMenu, #searchResult {
  color: #444; 
- font-family: helvetica;
 }
 
 #searchResult a, #searchResult a:active, #searchResult a:visited {
@@ -66,12 +65,8 @@ body {
   opacity: 0.85;
 }
 
-#bar, #searchMenu, #searchMenuFields {
-  height: 60px;
-}
-
 #searchMenuFields {
-  padding-top: 12px;
+  margin-top: 12px;
   margin-left: 80px;
   float: left;
 }
@@ -91,10 +86,12 @@ body {
 }
 
 #bar {
+  height: 60px;
   width: 1024px;
   margin-left: auto;
   margin-right: auto;
-  background-color: #555;
+  background-color: black;
+  opacity: 0.85;
   
   border-radius: 3px;
   -moz-border-radius: 3px;

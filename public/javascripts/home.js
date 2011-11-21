@@ -121,14 +121,14 @@ var homePage = function () {
 
   api.setSearchCityInputValue = function (value) { $('#inputSearchCity').attr('value', value); };
 
-  api.showTitle = function () {
-    var titleOpacity = $('#title').css('opacity');
-    $('#title').css('opacity', '.0').show().animate({'opacity': titleOpacity}, {easing: 'easeOutQuint', duration: 1000});
-  };
+  api.showTitle = function () { pvt.smoothShow('#title'); };
 
-  pvt.showBar = function () {
-    $('#bar').css('opacity', '.0').show().animate({'opacity': '1'}, {easing: 'easeOutQuint', duration: 1000});
-  };
+  pvt.showBar = function () { pvt.smoothShow('#bar'); };
+
+  pvt.smoothShow = function (element) {
+    var elementOpacity = $(element).css('opacity');
+    $(element).css('opacity', '.0').show().animate({'opacity': elementOpacity}, {easing: 'easeOutQuint', duration: 1000});
+  }
 
   api.buildSearchMenu = function (callback) {
     $.get('/search_menu', function (html) {
