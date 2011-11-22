@@ -50,7 +50,7 @@ var foursquare = function () {
   };
 
   api.login = function () {
-    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=GBFO0NELBGW0SEP2BGDY1KID00VO45TGNTJQ4OZHVJKIFP5Z&response_type=token&redirect_uri=' + encodeURI('http://localhost:4567/foursquare/authentication_callback');
+    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=GBFO0NELBGW0SEP2BGDY1KID00VO45TGNTJQ4OZHVJKIFP5Z&response_type=token&redirect_uri=' + encodeURI('http://fourbongo.com/foursquare/authentication_callback');
   };
 
   return api;
@@ -83,7 +83,21 @@ var page = function () {
 
   api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
+  api.bindToWallHover = function (callback) { $('#wallContainer').mouseover(callback); };
+
+  api.bindToSettingsHover = function (callback) { $('#settings').mouseover(callback); };
+  
+  api.showSettings = function () { $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
+
+  api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
+
+  api.showSettingsOptions = function () {
+    $('#settingsIcon').animate({'opacity' : '.0'}, {easing: 'easeoutquint', duration: 1000, complete: function () { $('#settingsIcon').remove(); }});
+    $.get('/settings', function (html) { $('#settings').append(html); });
+  };
+
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
+
   api.hideLoading = function () { $('#loading').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#loading').remove(); }}); };
 
   api.coverHtml = function (venueName) { return $('<div>', {id: 'venue_cover'}).text(venueName); };
@@ -256,12 +270,53 @@ var slidesCoordinator = function () {
   return api;
 }();
 
+var settings = function () {
+  var api = {};
+  var pvt = {
+    lastHover: 0,
+    isIconDisplayed: false,
+    areOptionsDisplayed: false
+  };
+
+  api.initialize = function () { page.bindToWallHover(pvt.wallHover); }
+
+  pvt.wallHover = function () {
+    if (pvt.isIconDisplayed) { return; }
+    pvt.isIconDisplayed = true;
+    pvt.showSettings();
+  };
+
+  pvt.optionsHover = function () {
+    page.showSettingsOptions();
+    pvt.moreTime();
+  };
+
+  pvt.showSettings = function () {
+    page.showSettings();
+    page.bindToSettingsHover(pvt.optionsHover);
+    pvt.moreTime();
+  };
+
+  pvt.moreTime = function () {
+    pvt.lastHover = new Date().getTime();
+    setTimeout(function () {
+      if ((new Date().getTime() - pvt.lastHover) >= 5000) {
+        page.hideSettings();
+        pvt.isIconDisplayed = false;
+      }
+    }, 5000);
+  };
+
+  return api;
+}();
+
 var wall = function () {
   var api = {};
   var pvt = {};
 
   api.initialize = function (venueId) {
     page.createWallContainerHtml();
+    settings.initialize();
     foursquare.venue(venueId, pvt.startShow);
   };
 
