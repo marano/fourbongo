@@ -30,8 +30,14 @@ var facebook = function () {
     document.getElementsByTagName('head')[0].appendChild(js);
   };
 
- api.login = function () {
-   FB.login(function (response) { api.accessToken = response.authResponse.accessToken; });
+ api.login = function (callback) {
+   FB.login(function (response) {
+     if (response.authResponse) {
+       api.accessToken = response.authResponse.accessToken;
+       pvt.authenticated = true;
+       callback();
+     }
+   });
  };
 
   api.updates = function (userId, callback) {
@@ -120,10 +126,18 @@ var homePage = function () {
 
   pvt.showBar = function () { pvt.smoothShow('#bar'); };
 
+  pvt.hideBar = function (callback) {
+    var elementOpacity = $('#bar').css('opacity');
+    $('#bar').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
+      $('#bar').hide().css('opacity', elementOpacity);
+      callback();
+    }});
+  };
+
   pvt.smoothShow = function (element) {
     var elementOpacity = $(element).css('opacity');
     $(element).css('opacity', '.0').show().animate({'opacity': elementOpacity}, {easing: 'easeOutQuint', duration: 1000});
-  }
+  };
 
   api.buildSearchMenu = function (callback) {
     $.get('/search_menu', function (html) {
@@ -145,6 +159,13 @@ var homePage = function () {
     $.get('/facebook/authentication_menu', function (html) {
       $('#bar').append(html);
       pvt.showBar();
+      callback();
+    });
+  };
+
+  api.hideFabookAuthenticationMenu = function (callback) {
+    pvt.hideBar(function () {
+      $('#facebookAuthenticationMenu').remove();
       callback();
     });
   };
@@ -211,15 +232,25 @@ var home = function () {
           });
         } else if (!facebook.isAuthenticated()) {
           homePage.buildFacebookAuthenticationMenu(function () {
-            homePage.bindFacebookLoginButton(facebook.login);
+            homePage.bindFacebookLoginButton(function () {
+              facebook.login(function () {
+                homePage.hideFabookAuthenticationMenu(pvt.initializeFourbongo);
+              });
+            });
           });
-        } else if (window.location.hash != '') {
-          var venueId = window.location.hash.replace('#', '')
-          pvt.startShow(venueId);
         } else {
-          homePage.buildSearchMenu(pvt.prepareSearchMenu);
+          pvt.initializeFourbongo();
         }
       });
+    };
+
+    pvt.initializeFourbongo = function () {
+      if (window.location.hash != '') {
+        var venueId = window.location.hash.replace('#', '')
+        pvt.startShow(venueId);
+      } else {
+        homePage.buildSearchMenu(pvt.prepareSearchMenu);
+      }
     };
 
     pvt.prepareSearchMenu = function () {
