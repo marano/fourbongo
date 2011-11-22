@@ -48,6 +48,7 @@
 }
 
 #settings {
+  font-size: 26px;
   position: absolute;
   right: 20px;
   bottom: 20px;
@@ -58,6 +59,15 @@
   opacity: .6;
   border-radius: 15px;
   -moz-border-radius: 15px;
+}
+
+#settings h3 {
+  margin: 0;
+  font-size: 40 px;
+}
+
+#settingsContainer {
+  margin: 20px;
 }
 
 #loading {
