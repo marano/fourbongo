@@ -12,6 +12,10 @@ get '/search_menu' do
   erb :search_menu
 end
 
+get '/settings' do
+  erb :settings
+end
+
 get '/foursquare/authentication_menu' do
   erb :foursquare_authentication_menu
 end
