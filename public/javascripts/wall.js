@@ -51,6 +51,7 @@ var page = function () {
     var userData = $('<div>', {class: 'user_data_container'});
     userData.append($('<span>', {class: 'username'}).text(tweet.fullname));
     userData.append($('<span>', {class: 'screen_name'}).text('(' + tweet.username + ')'));
+    userData.append($('<span>', {class: 'publication_time'}).text('at ' + tweet.createdAt.toString()));
     container.append(userData);
     container.append($('<div>', {class: 'publication_content_container'}).text(tweet.content));
     return container;
@@ -85,6 +86,7 @@ var Tweet = function (tweetData) {
     username: tweetData.username,
     fullname: tweetData.fullname,
     content: tweetData.content,
+    createdAt: tweetData.createdAt,
     avatar: tweetData.avatar.replace('_normal', '')
   };
 
@@ -100,6 +102,7 @@ var FacebookUpdate = function (updateData) {
     id: updateData.id,
     username: updateData.username,
     content: updateData.content,
+    createdAt: updateData.createdAt,
     avatar: 'https://graph.facebook.com/' + updateData.userId + '/picture?type=large'
   };
 
@@ -138,9 +141,21 @@ var PublicationSort = function () {
   api.name = 'publication';
 
   api.add = function (newPost, currentIndex, currentQueue) {
-    var remainingItems = currentQueue.slice(currentIndex);
-    remainingItems.splice(Math.floor(Math.random() * remainingItems.length), 0, newPost);
-    return _.union(currentQueue.slice(0, currentIndex), remainingItems);
+    var foundIndex = false;
+    var targetIndex;
+    for (var i = 0; i < currentQueue.length && foundIndex; i++) {
+      if (currentQueue[i].post.createdAt.getTime() < newPost.post.createdAt.getTime()) {
+        foundIndex = true;
+        targetIndex = i;
+      }
+    }
+
+    if (!foundIndex) {
+      targetIndex = currentQueue.length;
+    }
+    
+    currentQueue.splice(targetIndex, 0, newPost);
+    return currentQueue;
   };
 
   return api;
@@ -151,7 +166,7 @@ var postsList = function () {
   var pvt = {
     posts: [],
     queue: [],
-    sortOrder: RandomSort(),
+    sortOrder: PublicationSort(),
     currentIndex: 0
   };
 
