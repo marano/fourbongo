@@ -45,25 +45,26 @@ var page = function () {
 
   api.mapCanvasDocumentElement = function () { return document.getElementById('map_canvas'); };
 
-  api.tweetHtml = function (tweet) {
+  api.tweetHtml = function (post) {
     var container = $('<div>', {class: 'publication_container'});
-    container.append($('<img>', {src: tweet.avatar, class: 'avatar'}));
+    container.append($('<img>', {src: post.avatar, class: 'avatar'}));
     var userData = $('<div>', {class: 'user_data_container'});
-    userData.append($('<span>', {class: 'username'}).text(tweet.fullname));
-    userData.append($('<span>', {class: 'screen_name'}).text('(' + tweet.username + ')'));
-    userData.append($('<span>', {class: 'publication_time'}).text('at ' + tweet.createdAt.toString()));
+    userData.append($('<div>', {class: 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<span>', {class: 'username'}).text(post.fullname));
+    userData.append($('<span>', {class: 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
-    container.append($('<div>', {class: 'publication_content_container'}).text(tweet.content));
+    container.append($('<div>', {class: 'publication_content_container'}).text(post.content));
     return container;
   };
 
-  api.facebookUpdateHtml = function (update) {
+  api.facebookUpdateHtml = function (post) {
     var container = $('<div>', {class: 'publication_container'});
-    container.append($('<img>', {src: update.avatar, class: 'avatar'}));
+    container.append($('<img>', {src: post.avatar, class: 'avatar'}));
     var userData = $('<div>', {class: 'user_data_container'});
-    userData.append($('<span>', {class: 'username'}).text(update.username));
+    userData.append($('<div>', {class: 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<span>', {class: 'username'}).text(post.username));
     container.append(userData);
-    container.append($('<div>', {class: 'publication_content_container'}).text(update.content));
+    container.append($('<div>', {class: 'publication_content_container'}).text(post.content));
     return container;
   };
 
@@ -213,6 +214,7 @@ var slidesCoordinator = function () {
       if (pvt.needsToHideLoading) {
         page.hideLoading();
         pvt.needsToHideLoading = false;
+        settings.initialize();
       }
       var post = postsList.next();
       slider.slide(post.html(post));
@@ -224,11 +226,12 @@ var slidesCoordinator = function () {
 
 var wall = function () {
   var api = {};
-  var pvt = {};
+  var pvt = {
+    shouldFecthLocationBasedTweets: true
+  };
 
   api.initialize = function (venueId) {
     page.createWallContainerHtml();
-    settings.initialize();
     foursquare.venue(venueId, pvt.startShow);
   };
 
@@ -247,7 +250,11 @@ var wall = function () {
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
   };
 
-  pvt.fetchLocationBasedTweets = function (latitude, longitude) { twitter.byLocation(latitude, longitude, postsList.addAll); };
+  pvt.fetchLocationBasedTweets = function (latitude, longitude) {
+    if (pvt.shouldFecthLocationBasedTweets) {
+      twitter.byLocation(latitude, longitude, postsList.addAll);
+    }
+  };
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
 
