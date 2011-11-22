@@ -21,15 +21,12 @@ var settings = function () {
     }
     pvt.areOptionsDisplayed = true;
     page.showSettingsOptions(function () {
-      page.bindToSortByRandomButton(pvt.sortByRandom);
-      page.bindToSortByPublicationButton(pvt.sortByPublication);
+      page.selectSortOrder(postsList.currentSortOrder());
+      page.bindToSortByRandomButton(postsList.sortByRandom);
+      page.bindToSortByPublicationButton(postsList.sortByPublication);
     });
     pvt.moreTime();
   };
-
-  pvt.sortByRandom = function () {};
-
-  pvt.sortByPublication = function () {};
 
   pvt.showSettingsIcon = function () {
     page.showSettingsIcon();

@@ -31,6 +31,8 @@ var page = function () {
 
   api.bindToSortByPublicationButton = function (callback) { $('#sortByPublication').click(callback); };
 
+  api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
+
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
 
   api.hideLoading = function () { $('#loading').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#loading').remove(); }}); };
@@ -116,13 +118,44 @@ var PostsListItem = function (item) {
   return api;
 };
 
+var RandomSort = function () {
+  var api = {};
+
+  api.name = 'random';
+
+  api.add = function (newPost, currentIndex, currentQueue) {
+    var remainingItems = currentQueue.slice(currentIndex);
+    remainingItems.splice(Math.floor(Math.random() * remainingItems.length), 0, newPost);
+    return _.union(currentQueue.slice(0, currentIndex), remainingItems);
+  };
+
+  return api;
+};
+
+var PublicationSort = function () {
+  var api = {};
+
+  api.name = 'publication';
+
+  api.add = function (newPost, currentIndex, currentQueue) {
+    var remainingItems = currentQueue.slice(currentIndex);
+    remainingItems.splice(Math.floor(Math.random() * remainingItems.length), 0, newPost);
+    return _.union(currentQueue.slice(0, currentIndex), remainingItems);
+  };
+
+  return api;
+};
+
 var postsList = function () {
   var api = {};
   var pvt = {
     posts: [],
     queue: [],
+    sortOrder: RandomSort(),
     currentIndex: 0
   };
+
+  api.currentSortOrder = function () { return pvt.sortOrder.name; };
 
   api.addAll = function (posts) {
     _(posts).each(pvt.add);
@@ -132,15 +165,8 @@ var postsList = function () {
     if (!pvt.contains(post)) {
       var item = PostsListItem(post);
       pvt.posts.push(item);
-      var remainingItems = pvt.queue.slice(pvt.currentIndex);
-      remainingItems.splice(Math.floor(Math.random() * remainingItems.length), 0, item);
-      pvt.queue = _.union(pvt.queue.slice(0, pvt.currentIndex), remainingItems);
+      pvt.queue = pvt.sortOrder.add(item, pvt.currentIndex, pvt.queue); 
     }
-  };
-
-  pvt.resetQueue = function () {
-    pvt.currentIndex = 0;
-    pvt.queue = _(pvt.posts).sortBy(function  () { return Math.random(); });
   };
 
   pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
@@ -148,12 +174,15 @@ var postsList = function () {
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
 
   api.next = function () {
-    if (_(pvt.queue).isEmpty()) { pvt.resetQueue(); }
     if (pvt.currentIndex == pvt.queue.length) { pvt.currentIndex = 0; }
     var next = pvt.queue[pvt.currentIndex++].post;
     next.viewed = true;
     return next;
   };
+
+  api.sortByRandom = function () { pvt.sortOrder = RandomSort(); };
+
+  api.sortByPublication = function () { pvt.sortOrder = PublicationSort(); };
 
   return api;
 }();
