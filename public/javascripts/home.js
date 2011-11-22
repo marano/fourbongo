@@ -8,7 +8,7 @@ var facebook = function () {
     window.fbAsyncInit = function() {
       FB.init({
         appId      : '101544976563660', // App ID
-        channelURL : '//localhost.com:4567/channel.html', // Channel File
+        channelURL : '//fourbongo.com/channel.html', // Channel File
         status     : true, // check login status
         cookie     : true, // enable cookies to allow the server to access the session
         oauth      : true, // enable OAuth 2.0
