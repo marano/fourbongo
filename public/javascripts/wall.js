@@ -87,12 +87,12 @@ var page = function () {
 
   api.bindToSettingsHover = function (callback) { $('#settings').mouseover(callback); };
   
-  api.showSettings = function () { $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
+  api.showSettingsIcon = function () { $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
 
   api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
 
   api.showSettingsOptions = function () {
-    $('#settingsIcon').animate({'opacity' : '.0'}, {easing: 'easeoutquint', duration: 1000, complete: function () { $('#settingsIcon').remove(); }});
+    $('#settingsIcon').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settingsIcon').remove(); }});
     $.get('/settings', function (html) { $('#settings').append(html); });
   };
 
@@ -283,16 +283,21 @@ var settings = function () {
   pvt.wallHover = function () {
     if (pvt.isIconDisplayed) { return; }
     pvt.isIconDisplayed = true;
-    pvt.showSettings();
+    pvt.showSettingsIcon();
   };
 
   pvt.optionsHover = function () {
+    if (pvt.areOptionsDisplayed) {
+      pvt.moreTime();
+      return;
+    }
+    pvt.areOptionsDisplayed = true;
     page.showSettingsOptions();
     pvt.moreTime();
   };
 
-  pvt.showSettings = function () {
-    page.showSettings();
+  pvt.showSettingsIcon = function () {
+    page.showSettingsIcon();
     page.bindToSettingsHover(pvt.optionsHover);
     pvt.moreTime();
   };
@@ -303,6 +308,7 @@ var settings = function () {
       if ((new Date().getTime() - pvt.lastHover) >= 5000) {
         page.hideSettings();
         pvt.isIconDisplayed = false;
+        pvt.areOptionsDisplayed = false;
       }
     }, 5000);
   };
