@@ -21,9 +21,9 @@ var settings = function () {
     }
     pvt.areOptionsDisplayed = true;
     page.showSettingsOptions(function () {
-      page.selectSortOrder(postsList.currentSortOrder());
-      page.bindToSortByRandomButton(postsList.sortByRandom);
-      page.bindToSortByPublicationButton(postsList.sortByPublication);
+      page.selectSortOrder(postsList.currentSortOrderName());
+      page.bindToSortByRandomButton(postsList.setSortOrderByName);
+      page.bindToSortByPublicationButton(postsList.setSortOrderByName);
     });
     pvt.moreTime();
   };

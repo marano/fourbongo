@@ -25,13 +25,21 @@ var page = function () {
 
   api.selectSortByRandom = function () { $('#sortByRandom').attr('checked', true); };
 
-  api.bindToSortByRandomButton = function (callback) { $('#sortByRandom').click(callback); };
+  api.bindToSortByRandomButton = function (callback) {
+    $('#sortByRandom').click(function () { callback($('#sortByRandom').attr('value')); });
+  };
   
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
-  api.bindToSortByPublicationButton = function (callback) { $('#sortByPublication').click(callback); };
+  api.bindToSortByPublicationButton = function (callback) {
+    $('#sortByPublication').click(function () { callback($('#sortByRandom').attr('value')); });
+  };
 
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
+
+  api.bindFetchLocationBasedTweetsButton = function (callback) {
+    $('fetchLocationBasedTweets').click(callback);
+  };
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
 
@@ -122,7 +130,7 @@ var PostsListItem = function (item) {
   return api;
 };
 
-var RandomSort = function () {
+var randomSort = function () {
   var api = {};
 
   api.name = 'random';
@@ -134,9 +142,9 @@ var RandomSort = function () {
   };
 
   return api;
-};
+}();
 
-var PublicationSort = function () {
+var publicationSort = function () {
   var api = {};
 
   api.name = 'publication';
@@ -160,22 +168,30 @@ var PublicationSort = function () {
   };
 
   return api;
-};
+}();
 
 var postsList = function () {
+
+  var loadSortOrder = function () {
+    var sortOrderName = $.cookie('sort_order');
+    if (sortOrderName != null) {
+      return pvt.findSortOrderByName(sortOrderName);
+    } else {
+      return publicationSort;
+    }
+  };
+
   var api = {};
   var pvt = {
     posts: [],
     queue: [],
-    sortOrder: PublicationSort(),
+    sortOrder: loadSortOrder(),
     currentIndex: 0
   };
 
-  api.currentSortOrder = function () { return pvt.sortOrder.name; };
+  api.currentSortOrderName = function () { return pvt.sortOrder.name; };
 
-  api.addAll = function (posts) {
-    _(posts).each(pvt.add);
-  };
+  api.addAll = function (posts) { _(posts).each(pvt.add); };
 
   pvt.add = function (post) {
     if (!pvt.contains(post)) {
@@ -196,9 +212,15 @@ var postsList = function () {
     return next;
   };
 
-  api.sortByRandom = function () { pvt.sortOrder = RandomSort(); };
+  pvt.findSortOrderByName = function (sortName) {
+    var sorts = [publicationSort, randomSort];
+    return _(sorts).find(function (sort) { return sort.name == sortName });
+  };
 
-  api.sortByPublication = function () { pvt.sortOrder = PublicationSort(); };
+  api.setSortOrderByName = function (sortName) {
+    pvt.sortOrder = pvt.findSortOrderByName(sortName);
+    $.cookie('sort_order', sortName);
+  };
 
   return api;
 }();
@@ -212,8 +234,8 @@ var slidesCoordinator = function () {
   pvt.next = function (slider) {
     if (postsList.isNotEmpty()) {
       if (pvt.needsToHideLoading) {
-        page.hideLoading();
         pvt.needsToHideLoading = false;
+        page.hideLoading();
         settings.initialize();
       }
       var post = postsList.next();
