@@ -1,13 +1,17 @@
 var page = function () {
   var api = {};
+  var pvt = { settingsOptions: null };
 
   api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
-  api.bindToWallHover = function (callback) { $('#wallContainer').mouseover(callback); };
+  api.bindToWallHover = function (callback) { $('#wallContainer').mousemove(callback); };
 
-  api.bindToSettingsHover = function (callback) { $('#settings').mouseover(callback); };
+  api.bindToSettingsIconHover = function (callback) { $('#settings').mousemove(callback); };
   
-  api.showSettingsIcon = function () { $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
+  api.showSettingsIcon = function (callback) {
+    var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer'))
+    settingsDiv.animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000, complete: callback});
+  };
 
   api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
 
@@ -15,12 +19,21 @@ var page = function () {
     var opacity = $('#settings').css('opacity');
     $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
       $('#settingsIcon').remove();
-      $.get('/settings', function (html) {
-        $('#settings').append(html);
-        callback();
-        $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 1000});
-      });
+      if (pvt.settingsOptions == null) {
+        $.get('/settings', function (html) {
+          pvt.settingsOptions = html;
+          pvt.showLoadedSettingsOptions(opacity, callback);
+        });
+      } else {
+        pvt.showLoadedSettingsOptions(opacity, callback);
+      }
     }});
+  };
+
+  pvt.showLoadedSettingsOptions = function (opacity, callback) {
+    $('#settings').append(pvt.settingsOptions);
+    callback();
+    $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 1000});
   };
 
   api.selectSortByRandom = function () { $('#sortByRandom').attr('checked', true); };
@@ -32,7 +45,7 @@ var page = function () {
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
   api.bindToSortByPublicationButton = function (callback) {
-    $('#sortByPublication').click(function () { callback($('#sortByRandom').attr('value')); });
+    $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
   };
 
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
@@ -172,21 +185,25 @@ var publicationSort = function () {
 
 var postsList = function () {
 
-  var loadSortOrder = function () {
-    var sortOrderName = $.cookie('sort_order');
-    if (sortOrderName != null) {
-      return pvt.findSortOrderByName(sortOrderName);
-    } else {
-      return publicationSort;
-    }
-  };
-
   var api = {};
   var pvt = {
     posts: [],
     queue: [],
-    sortOrder: loadSortOrder(),
+    sortOrder: null, 
     currentIndex: 0
+  };
+
+  api.initialize = function () {
+    pvt.loadSortOrder();
+  };
+  
+  pvt.loadSortOrder = function () {
+    var sortOrderName = $.cookie('sort_order');
+    if (sortOrderName != null) {
+      pvt.sortOrder = pvt.findSortOrderByName(sortOrderName);
+    } else {
+      pvt.sortOrder = publicationSort;
+    }
   };
 
   api.currentSortOrderName = function () { return pvt.sortOrder.name; };
@@ -254,6 +271,7 @@ var wall = function () {
 
   api.initialize = function (venueId) {
     page.createWallContainerHtml();
+    postsList.initialize();
     foursquare.venue(venueId, pvt.startShow);
   };
 

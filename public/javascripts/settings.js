@@ -14,7 +14,7 @@ var settings = function () {
     pvt.showSettingsIcon();
   };
 
-  pvt.optionsHover = function () {
+  pvt.settingsIconHover = function () {
     if (pvt.areOptionsDisplayed) {
       pvt.moreTime();
       return;
@@ -29,8 +29,7 @@ var settings = function () {
   };
 
   pvt.showSettingsIcon = function () {
-    page.showSettingsIcon();
-    page.bindToSettingsHover(pvt.optionsHover);
+    page.showSettingsIcon(function () { page.bindToSettingsIconHover(pvt.settingsIconHover); });
     pvt.moreTime();
   };
 
