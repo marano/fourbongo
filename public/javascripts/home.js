@@ -102,7 +102,7 @@ var homePage = function () {
       _(venues).each(function (venue) {
         var link = $('<a>').attr('href', '#' + venue.foursquare_id).attr('class', 'searchResultItemLink');
         link.click(function (event) { callback(venue.foursquare_id); });
-        var div = $('<div>', {class: 'searchResultItem'});
+        var div = $('<div class="searchResultItem">');
         var title = $('<span>').attr('class', 'searchResultItemTitle').text(venue.name);
         result.append(link.append(div.append(title)));
       });
