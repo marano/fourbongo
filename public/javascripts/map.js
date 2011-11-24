@@ -2,8 +2,8 @@ var map = function () {
   var api = {};
   
   api.show = function (latitude, longitude, slider) {
-    var mapContainer = page.mapContainerHtml();
-    var mapCanvas = page.mapCanvasHtml();
+    var mapContainer = wallPage.mapContainerHtml();
+    var mapCanvas = wallPage.mapCanvasHtml();
     mapCanvas.appendTo(mapContainer);
     
     slider.slide(mapContainer, function () {
@@ -18,10 +18,9 @@ var map = function () {
         streetViewControl: false
       };
 
-      var map = new google.maps.Map(page.mapCanvasDocumentElement(), myOptions);
+      var map = new google.maps.Map(wallPage.mapCanvasDocumentElement(), myOptions);
     });
   };
 
   return api;
 }();
-

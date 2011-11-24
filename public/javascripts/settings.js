@@ -45,30 +45,30 @@ var settings = function () {
       return;
     }
     pvt.areOptionsDisplayed = true;
-    page.showSettingsOptions(function () {
-      page.selectSortOrder(postsList.currentSortOrderName());
-      page.setCurrentTimeRange(postsList.currentTimeRange());
-      page.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
-      page.preparetTimeRangeSlider(timeRanges.length, function (timeRange) {
+    wallPage.showSettingsOptions(function () {
+      wallPage.selectSortOrder(postsList.currentSortOrderName());
+      wallPage.setCurrentTimeRange(postsList.currentTimeRange());
+      wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
+      wallPage.preparetTimeRangeSlider(timeRanges.length, function (timeRange) {
         var timeRange = timeRanges[timeRange];
-        page.setCurrentTimeRangeLabel(timeRange);
+        wallPage.setCurrentTimeRangeLabel(timeRange);
         postsList.setCurrentTimeRange(timeRange);
       });
-      page.bindToSortByRandomButton(postsList.setSortOrderByName);
-      page.bindToSortByPublicationButton(postsList.setSortOrderByName);
-      page.bindToFetchLocationBasedTweetsButton(postsList.setShouldFetchLocationBasedTweets);
+      wallPage.bindToSortByRandomButton(postsList.setSortOrderByName);
+      wallPage.bindToSortByPublicationButton(postsList.setSortOrderByName);
+      wallPage.bindToFetchLocationBasedTweetsButton(postsList.setShouldFetchLocationBasedTweets);
     });
     pvt.moreTime();
   };
 
   pvt.showSettingsIcon = function () {
-    page.showSettingsIcon(function () { page.bindToSettingsIconHover(pvt.settingsIconHover); });
+    wallPage.showSettingsIcon(function () { wallPage.bindToSettingsIconHover(pvt.settingsIconHover); });
     pvt.moreTime();
   };
 
   api.timeRangeChanged = function (value) {
     var currentRange = timeRanges[value];
-    page.setCurrentTimeRangeLabel(currentRange);
+    wallPage.setCurrentTimeRangeLabel(currentRange);
     postsList.setCurrentTimeRange(currentRange);
   };
 
@@ -76,7 +76,7 @@ var settings = function () {
     pvt.lastHover = new Date().getTime();
     setTimeout(function () {
       if ((new Date().getTime() - pvt.lastHover) >= 5000) {
-        page.hideSettings();
+        wallPage.hideSettings();
         pvt.isIconDisplayed = false;
         pvt.areOptionsDisplayed = false;
       }
