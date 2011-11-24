@@ -1,9 +1,20 @@
 <div id='settingsContainer'>
-  <h3>Sorting order</h3>
-  <form>
-    <input id='sortByPublication' type='radio' name='sorting' value='publication' /><label for='sortByPublication'>Publication</label>
-    <input id='sortByRandom' type='radio' name='sorting' value='random' /><label for='sortByRandom'>Random</label>
-  </form>
-  <h3>Location based tweets</h3>
-  <input id='fetchLocationBasedTweets' type='checkbox' /><label for='fetchLocationBasedTweets'>Fetch them</label>
+  <div class='settingsSection'>
+    <h3>Freshness cutoff</h3>
+    <div  id='currentTimeRangeLabel'></div>
+    <input id='currentTimeRangeSlider' type='range' min='0' max='9' onchange='settings.timeRangeChanged(this.value)' />
+  </div>
+
+  <div class='settingsSection'>
+    <h3>Sorting order</h3>
+    <form>
+      <input id='sortByPublication' type='radio' name='sorting' value='publication' /><label for='sortByPublication'>Publication</label>
+      <input id='sortByRandom' type='radio' name='sorting' value='random' /><label for='sortByRandom'>Random</label>
+    </form>
+  </div>
+
+  <div class='settingsSection'>
+    <h3>Location based tweets</h3>
+    <input id='fetchLocationBasedTweets' type='checkbox' /><label for='fetchLocationBasedTweets'>Fetch them</label>
+  </div>
 </div>

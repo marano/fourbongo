@@ -70,6 +70,20 @@
   margin: 20px;
 }
 
+.settingsSection {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#currentTimeRangeLabel {
+  display: inline-block;
+  width: 160px;
+}
+
+#currentTimeRangeSlider {
+  width: 220px;
+}
+
 #loading {
   position: absolute;
   left: 20px;

@@ -2,6 +2,8 @@ var page = function () {
   var api = {};
   var pvt = { settingsOptions: null };
 
+  api.emptySlide = function () { return $('<div>'); };
+
   api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
   api.bindToWallHover = function (callback) { $('#wallContainer').mousemove(callback); };
@@ -43,6 +45,13 @@ var page = function () {
   };
   
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
+
+  api.setCurrentTimeRange = function (range) {
+    api.setCurrentTimeRangeLabel(range);
+    $('#currentTimeRangeSlider').attr('value', range.index);
+  };
+  
+  api.setCurrentTimeRangeLabel = function (range) { $('#currentTimeRangeLabel').text(range.description); };
 
   api.bindToSortByPublicationButton = function (callback) {
     $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
@@ -166,7 +175,9 @@ var publicationSort = function () {
     if (currentPost == null) {
       return _(sortedPosts).first();
     } else {
-      var nextPost = _(sortedPosts).find(function (post) { return post.post.createdAt.getTime() < currentPost.post.createdAt.getTime(); });
+      var nextPost = _(sortedPosts).find(function (post) {
+        return post.post.createdAt.getTime() < currentPost.post.createdAt.getTime();
+      });
       if (nextPost == null) {
         return _(sortedPosts).first();
       } else {
@@ -179,16 +190,17 @@ var publicationSort = function () {
 }();
 
 var postsList = function () {
-
   var api = {};
   var pvt = {
     posts: [],
     sortOrder: null, 
-    currentPost: null
+    currentPost: null,
+    currentTimeRange: null
   };
 
   api.initialize = function () {
     pvt.loadSortOrder();
+    pvt.currentTimeRange = timeRanges[0];
   };
   
   pvt.loadSortOrder = function () {
@@ -201,6 +213,10 @@ var postsList = function () {
   };
 
   api.currentSortOrderName = function () { return pvt.sortOrder.name; };
+  
+  api.currentTimeRange = function () { return pvt.currentTimeRange; };
+
+  api.setCurrentTimeRange = function (timeRange) { pvt.currentTimeRange = timeRange; };
 
   api.addAll = function (posts) { _(posts).each(pvt.add); };
 
@@ -213,10 +229,16 @@ var postsList = function () {
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
 
   api.next = function () {
-    var next = pvt.sortOrder.next(pvt.currentPost, pvt.posts);
-    next.viewed = true;
-    pvt.currentPost = next;
-    return next;
+    var now = new Date().getTime();
+    var validPosts = _(pvt.posts).filter(function (postItem) { return pvt.currentTimeRange.validate(postItem, now); });
+    if(_(validPosts).isEmpty()) {
+      return null;
+    } else {
+      var next = pvt.sortOrder.next(pvt.currentPost, validPosts);
+      next.viewed = true;
+      pvt.currentPost = next;
+      return next;
+    }
   };
 
   pvt.findSortOrderByName = function (sortName) {
@@ -246,7 +268,11 @@ var slidesCoordinator = function () {
         settings.initialize();
       }
       var post = postsList.next();
-      slider.slide(post.post.html(post.post));
+      if (post == null) {
+        slider.slide(page.emptySlide());
+      } else {
+        slider.slide(post.post.html(post.post));
+      }
     }
   };
 
