@@ -11,16 +11,16 @@ var TimeRange = function (index, timeInThePast, description) {
 };
 
 var timeRanges = [
-  TimeRange(0, 1 * 60 * 1000, 'one minute'),
-  TimeRange(1, 3 * 60 * 1000, 'three minutes'),
-  TimeRange(2, 5 * 60 * 1000, 'five minutes'),
-  TimeRange(3, 10 * 60 * 1000, 'ten minutes'),
-  TimeRange(4, 30 * 60 * 1000, 'half an hour'),
-  TimeRange(5, 1 * 60 * 60 * 1000, 'one hour'),
-  TimeRange(6, 2 * 60 * 60 * 1000, 'two hours'),
-  TimeRange(7, 12 * 60 * 60 * 1000, 'twelve hours'),
-  TimeRange(8, 24 * 60 * 60 * 1000, 'one day'),
-  TimeRange(9, 48 * 60 * 60 * 1000, 'two days')
+  TimeRange(0, 1 * 60 * 1000, 'One minute'),
+  TimeRange(1, 3 * 60 * 1000, 'Three minutes'),
+  TimeRange(2, 5 * 60 * 1000, 'Five minutes'),
+  TimeRange(3, 10 * 60 * 1000, 'Ten minutes'),
+  TimeRange(4, 30 * 60 * 1000, 'Half an hour'),
+  TimeRange(5, 1 * 60 * 60 * 1000, 'One hour'),
+  TimeRange(6, 2 * 60 * 60 * 1000, 'Two hours'),
+  TimeRange(7, 12 * 60 * 60 * 1000, 'Twelve hours'),
+  TimeRange(8, 24 * 60 * 60 * 1000, 'One day'),
+  TimeRange(9, 48 * 60 * 60 * 1000, 'Two days')
 ];
 
 var settings = function () {
