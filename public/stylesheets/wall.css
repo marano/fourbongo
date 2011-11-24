@@ -97,3 +97,9 @@
   border-radius: 15px;
   -moz-border-radius: 15px;
 }
+
+#noUpdates {
+  font-size: 150px;
+  color: #C8C8C8;
+  margin: 70px;
+}

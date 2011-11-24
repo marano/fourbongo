@@ -2,7 +2,7 @@ var page = function () {
   var api = {};
   var pvt = { settingsOptions: null };
 
-  api.emptySlide = function () { return $('<div>'); };
+  api.noUpdatesSlide = function () { return $('<div id="noUpdates">OMG! Nothing to show. Try changing your filters.</div>'); };
 
   api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
@@ -312,7 +312,7 @@ var slidesCoordinator = function () {
       }
       var post = postsList.next();
       if (post == null) {
-        slider.slide(page.emptySlide());
+        slider.slide(page.noUpdatesSlide());
       } else {
         slider.slide(post.post.html(post.post));
       }
