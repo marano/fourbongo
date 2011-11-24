@@ -200,8 +200,17 @@ var postsList = function () {
 
   api.initialize = function () {
     pvt.loadSortOrder();
-    pvt.currentTimeRange = timeRanges[0];
+    pvt.loadTimeRange();
   };
+
+  pvt.loadTimeRange = function () {
+    var cookieTimeRange = $.cookie('time_range');
+    if (cookieTimeRange == null) {
+      pvt.currentTimeRange = timeRanges[2];
+    } else {
+      pvt.currentTimeRange = timeRanges[cookieTimeRange];
+    }
+  }
   
   pvt.loadSortOrder = function () {
     var sortOrderName = $.cookie('sort_order');
@@ -216,7 +225,10 @@ var postsList = function () {
   
   api.currentTimeRange = function () { return pvt.currentTimeRange; };
 
-  api.setCurrentTimeRange = function (timeRange) { pvt.currentTimeRange = timeRange; };
+  api.setCurrentTimeRange = function (timeRange) {
+    pvt.currentTimeRange = timeRange;
+    $.cookie('time_range', timeRange.index);
+  };
 
   api.addAll = function (posts) { _(posts).each(pvt.add); };
 
