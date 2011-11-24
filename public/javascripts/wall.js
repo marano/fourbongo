@@ -6,12 +6,10 @@ var page = function () {
 
   api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
-  api.bindToWallHover = function (callback) { $('#wallContainer').mousemove(callback); };
-
   api.bindToSettingsIconHover = function (callback) { $('#settings').mousemove(callback); };
   
   api.showSettingsIcon = function (callback) {
-    var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('#wallContainer'))
+    var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('body'));
     settingsDiv.animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000, complete: callback});
   };
 
@@ -277,7 +275,6 @@ var slidesCoordinator = function () {
       if (pvt.needsToHideLoading) {
         pvt.needsToHideLoading = false;
         page.hideLoading();
-        settings.initialize();
       }
       var post = postsList.next();
       if (post == null) {
@@ -300,7 +297,6 @@ var wall = function () {
   api.initialize = function (venueId) {
     page.createWallContainerHtml();
     page.showLoading();
-    postsList.initialize();
     foursquare.venue(venueId, pvt.startShow);
   };
 

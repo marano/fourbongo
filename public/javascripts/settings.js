@@ -31,9 +31,9 @@ var settings = function () {
     areOptionsDisplayed: false
   };
 
-  api.initialize = function () { page.bindToWallHover(pvt.wallHover); }
+  api.initialize = function () { homePage.bindToMouseMovement(pvt.mouseMovement); }
 
-  pvt.wallHover = function () {
+  pvt.mouseMovement = function () {
     if (pvt.isIconDisplayed) { return; }
     pvt.isIconDisplayed = true;
     pvt.showSettingsIcon();

@@ -2,6 +2,8 @@ var homePage = function () {
   api = {};
   pvt = { thereIsASearchResult: false };
 
+  api.bindToMouseMovement = function (callback) { $('body').mousemove(callback); };
+
   api.disableSearchNearbyButton = function () { $("#btnSearchNearby").attr("disabled", true); };
 
   api.enableSearchNearbyButton = function () { $("#btnSearchNearby").attr("disabled", false); };
@@ -149,6 +151,8 @@ var home = function () {
     api.initialize = function () {
       homePage.showTitle();
       foursquare.initialize();
+      postsList.initialize();
+      settings.initialize();
       facebook.initialize(function () {
         if (!foursquare.isAuthenticated()) {
           homePage.buildFoursquareAuthenticationMenu(function () {
