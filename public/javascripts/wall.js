@@ -65,8 +65,9 @@ var page = function () {
     $('#fetchLocationBasedTweets').attr('checked', value);
   }
 
-  api.bindToCurrentTimeRangeSlider = function (callback) {
+  api.preparetTimeRangeSlider = function (sliderSize, callback) {
     $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
+    $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
   }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 

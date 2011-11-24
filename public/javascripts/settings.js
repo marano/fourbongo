@@ -49,7 +49,7 @@ var settings = function () {
       page.selectSortOrder(postsList.currentSortOrderName());
       page.setCurrentTimeRange(postsList.currentTimeRange());
       page.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
-      page.bindToCurrentTimeRangeSlider(function (timeRange) {
+      page.preparetTimeRangeSlider(timeRanges.length, function (timeRange) {
         var timeRange = timeRanges[timeRange];
         page.setCurrentTimeRangeLabel(timeRange);
         postsList.setCurrentTimeRange(timeRange);
