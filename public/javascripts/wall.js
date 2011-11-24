@@ -299,6 +299,7 @@ var wall = function () {
 
   api.initialize = function (venueId) {
     page.createWallContainerHtml();
+    page.showLoading();
     postsList.initialize();
     foursquare.venue(venueId, pvt.startShow);
   };
@@ -306,7 +307,6 @@ var wall = function () {
   pvt.startShow = function (venue) {
     var slider = slideShow($('#wallContainer'));
     introduction.showCover(venue.name, slider);
-    setTimeout(page.showLoading, 1000);
     setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
 
     pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
