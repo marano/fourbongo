@@ -57,9 +57,13 @@ var page = function () {
 
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
 
-  api.bindFetchLocationBasedTweetsButton = function (callback) {
-    $('fetchLocationBasedTweets').click(callback);
+  api.bindToFetchLocationBasedTweetsButton = function (callback) {
+    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').attr('checked')); });
   };
+
+  api.setShouldFetchLocationBasedTweets = function (value) {
+    $('#fetchLocationBasedTweets').attr('checked', value);
+  }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
 
@@ -116,7 +120,8 @@ var Tweet = function (tweetData) {
     fullname: tweetData.fullname,
     content: tweetData.content,
     createdAt: tweetData.createdAt,
-    avatar: tweetData.avatar.replace('_normal', '')
+    avatar: tweetData.avatar.replace('_normal', ''),
+    isTweetByLocation: tweetData.isTweetByLocation
   };
 
   api.isSame = function (otherPost) { return api.id == otherPost.id; };
@@ -193,15 +198,46 @@ var postsList = function () {
     posts: [],
     sortOrder: null, 
     currentPost: null,
-    currentTimeRange: null
+    currentTimeRange: null,
+    shouldShowLocationBasedTweets: null
   };
 
   api.initialize = function () {
     pvt.loadSortOrder();
     pvt.loadTimeRange();
+    pvt.loadShouldFetchLocationBasedTweets();
   };
 
-  pvt.loadTimeRange = function () {
+  api.addAll = function (posts) { _(posts).each(pvt.add); };
+
+  pvt.add = function (post) {
+    if (!pvt.contains(post)) { pvt.posts.push(PostsListItem(post)); }
+  };
+
+  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
+
+  api.isNotEmpty = function () { return pvt.posts.length > 0; };
+
+  api.next = function () {
+    var now = new Date().getTime();
+    var validPosts = _(pvt.posts).filter(function (postItem) {
+      if (!pvt.shouldShowLocationBasedTweets && postItem.post.isTweetByLocation) {
+        return false;
+      } else {
+        return pvt.currentTimeRange.validate(postItem, now);
+      }
+    });
+    if(_(validPosts).isEmpty()) {
+      return null;
+    } else {
+      var next = pvt.sortOrder.next(pvt.currentPost, validPosts);
+      next.viewed = true;
+      pvt.currentPost = next;
+      return next;
+    }
+  };
+
+ pvt.loadTimeRange = function () {
     var cookieTimeRange = $.cookie('time_range');
     if (cookieTimeRange == null) {
       pvt.currentTimeRange = timeRanges[2];
@@ -219,36 +255,24 @@ var postsList = function () {
     }
   };
 
+  pvt.loadShouldFetchLocationBasedTweets = function () {
+    var cookieShouldFetchLocationBasedTweets = $.cookie('fetch_location_based_tweets');
+    if (cookieShouldFetchLocationBasedTweets != undefined) {
+      pvt.shouldShowLocationBasedTweets = cookieShouldFetchLocationBasedTweets == 'true';
+    } else {
+      pvt.shouldShowLocationBasedTweets = true;
+    }
+  }
+
   api.currentSortOrderName = function () { return pvt.sortOrder.name; };
   
   api.currentTimeRange = function () { return pvt.currentTimeRange; };
 
+  api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
+
   api.setCurrentTimeRange = function (timeRange) {
     pvt.currentTimeRange = timeRange;
     $.cookie('time_range', timeRange.index);
-  };
-
-  api.addAll = function (posts) { _(posts).each(pvt.add); };
-
-  pvt.add = function (post) {
-    if (!pvt.contains(post)) { pvt.posts.push(PostsListItem(post)); }
-  };
-
-  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
-
-  api.isNotEmpty = function () { return pvt.posts.length > 0; };
-
-  api.next = function () {
-    var now = new Date().getTime();
-    var validPosts = _(pvt.posts).filter(function (postItem) { return pvt.currentTimeRange.validate(postItem, now); });
-    if(_(validPosts).isEmpty()) {
-      return null;
-    } else {
-      var next = pvt.sortOrder.next(pvt.currentPost, validPosts);
-      next.viewed = true;
-      pvt.currentPost = next;
-      return next;
-    }
   };
 
   pvt.findSortOrderByName = function (sortName) {
@@ -259,6 +283,11 @@ var postsList = function () {
   api.setSortOrderByName = function (sortName) {
     pvt.sortOrder = pvt.findSortOrderByName(sortName);
     $.cookie('sort_order', sortName);
+  };
+
+  api.setShouldFetchLocationBasedTweets = function (value) {
+    pvt.shouldShowLocationBasedTweets = value;
+    $.cookie('fetch_location_based_tweets', value);
   };
 
   return api;
@@ -291,7 +320,6 @@ var slidesCoordinator = function () {
 var wall = function () {
   var api = {};
   var pvt = {
-    shouldFecthLocationBasedTweets: true
   };
 
   api.initialize = function (venueId) {
@@ -315,9 +343,7 @@ var wall = function () {
   };
 
   pvt.fetchLocationBasedTweets = function (latitude, longitude) {
-    if (pvt.shouldFecthLocationBasedTweets) {
-      twitter.byLocation(latitude, longitude, postsList.addAll);
-    }
+    twitter.byLocation(latitude, longitude, postsList.addAll);
   };
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };

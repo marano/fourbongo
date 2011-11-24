@@ -48,8 +48,10 @@ var settings = function () {
     page.showSettingsOptions(function () {
       page.selectSortOrder(postsList.currentSortOrderName());
       page.setCurrentTimeRange(postsList.currentTimeRange());
+      page.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       page.bindToSortByRandomButton(postsList.setSortOrderByName);
       page.bindToSortByPublicationButton(postsList.setSortOrderByName);
+      page.bindToFetchLocationBasedTweetsButton(postsList.setShouldFetchLocationBasedTweets);
     });
     pvt.moreTime();
   };
