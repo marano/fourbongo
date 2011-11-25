@@ -231,9 +231,19 @@ var postsList = function () {
 
 var slidesCoordinator = function () {
   var api = {};
-  var pvt = { needsToHideLoading: true };
+  var pvt = {
+    needsToHideLoading: true,
+    isShowingNoUpdates: false
+  };
   
   api.start = function (slider) { setInterval(function () { pvt.next(slider); }, 10000); };
+
+  pvt.noUpdates = function (slider) {
+    if (!pvt.isShowingNoUpdates) {
+      pvt.isShowingNoUpdates = true;
+      slider.slide(wallPage.noUpdatesSlide());
+    }
+  };
 
   pvt.next = function (slider) {
     if (postsList.isNotEmpty()) {
@@ -243,12 +253,13 @@ var slidesCoordinator = function () {
       }
       var post = postsList.next();
       if (post == null) {
-        slider.slide(wallPage.noUpdatesSlide());
+        pvt.noUpdates(slider);
       } else {
+        pvt.isShowingNoUpdates = false;
         slider.slide(post.post.html(post.post));
       }
     } else {
-      slider.slide(wallPage.noUpdatesSlide());
+      pvt.noUpdates(slider);
     }
   };
 
