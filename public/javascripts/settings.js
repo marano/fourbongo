@@ -31,12 +31,19 @@ var settings = function () {
     areOptionsDisplayed: false
   };
 
-  api.initialize = function () { homePage.bindToMouseMovement(pvt.mouseMovement); }
+  api.initialize = function () {
+    homePage.bindToMouseMovement(pvt.mouseMovement);
+    postsList.onchange(pvt.fillPostsCount);
+  }
 
   pvt.mouseMovement = function () {
     if (pvt.isIconDisplayed) { return; }
     pvt.isIconDisplayed = true;
     pvt.showSettingsIcon();
+  };
+
+  pvt.fillPostsCount = function () {
+    wallPage.setPostsCountLabel(postsList.validPosts().length);
   };
 
   pvt.settingsIconHover = function () {
@@ -46,20 +53,26 @@ var settings = function () {
     }
     pvt.areOptionsDisplayed = true;
     wallPage.showSettingsOptions(function () {
+      pvt.fillPostsCount();
       wallPage.selectSortOrder(postsList.currentSortOrderName());
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRange) {
         var timeRange = timeRanges[timeRange];
         wallPage.setCurrentTimeRangeLabel(timeRange);
         postsList.setCurrentTimeRange(timeRange);
+        pvt.fillPostsCount();
       });
       wallPage.prepareLocationBasedTweetsDistanceRangeSlider(postsList.currentLocationBasedTweetsDistanceRange(), 20, 2000, function (range) {
         wallPage.setCurrentLocationBasedTweetDistanceRangeLabel(range);
         postsList.setCurrentLocationBasedTweetDistanceRange(range);
+        pvt.fillPostsCount();
       });
       wallPage.bindToSortByRandomButton(postsList.setSortOrderByName);
       wallPage.bindToSortByPublicationButton(postsList.setSortOrderByName);
-      wallPage.bindToFetchLocationBasedTweetsButton(postsList.setShouldFetchLocationBasedTweets);
+      wallPage.bindToFetchLocationBasedTweetsButton(function (value) {
+        postsList.setShouldFetchLocationBasedTweets(value);
+        pvt.fillPostsCount();
+      });
     });
     pvt.moreTime();
   };

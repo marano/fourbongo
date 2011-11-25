@@ -36,6 +36,10 @@ var wallPage = function () {
     $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 1000});
   };
 
+  api.setPostsCountLabel = function (count) {
+    $('#postsCountLabel').text(count);
+  };
+
   api.selectSortByRandom = function () { $('#sortByRandom').attr('checked', true); };
 
   api.bindToSortByRandomButton = function (callback) {

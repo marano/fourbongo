@@ -99,7 +99,8 @@ var postsList = function () {
     shouldShowLocationBasedTweets: null,
     currentLocationBasedTweetsTimeRange: null,
     venueLat: null,
-    venueLng: null
+    venueLng: null,
+    onchangeCallback: null
   };
 
   api.initialize = function () {
@@ -109,19 +110,26 @@ var postsList = function () {
     pvt.loadLocationBasedTweetsDistanceRange();
   };
 
+  api.onchange = function (callback) {
+    pvt.onchangeCallback = callback;
+  };
+
   api.addAll = function (posts) { _(posts).each(pvt.add); };
 
   pvt.add = function (post) {
-    if (!pvt.contains(post)) { pvt.posts.push(PostsListItem(post)); }
+    if (!pvt.contains(post)) {
+      pvt.posts.push(PostsListItem(post));
+      pvt.onchangeCallback();
+    }
   };
 
   pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
 
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
 
-  api.next = function () {
+  api.validPosts = function () {
     var now = new Date().getTime();
-    var validPosts = _(pvt.posts).filter(function (postItem) {
+    return _(pvt.posts).filter(function (postItem) {
       if (!pvt.shouldShowLocationBasedTweets && postItem.post.isTweetByLocation) {
         return false;
       }
@@ -130,6 +138,10 @@ var postsList = function () {
       }
       return pvt.currentTimeRange.validate(postItem, now);
     });
+  };
+
+  api.next = function () {
+    var validPosts = api.validPosts();
     if(_(validPosts).isEmpty()) {
       return null;
     } else {
