@@ -2,7 +2,7 @@
   <div class='settingsSection'>
     <h3>Time range</h3>
     <div  id='currentTimeRangeLabel'></div>
-    <input id='currentTimeRangeSlider' type='range' min='0' max='9' />
+    <input id='currentTimeRangeSlider' type='range' min='0' />
   </div>
 
   <div class='settingsSection'>
@@ -15,6 +15,7 @@
 
   <div class='settingsSection'>
     <h3>Location based tweets</h3>
-    <input id='fetchLocationBasedTweets' type='checkbox' /><label for='fetchLocationBasedTweets'>Show</label>
+    <input id='fetchLocationBasedTweets' type='checkbox' /><label id='fetchLocationBasedTweetsLabel' for='fetchLocationBasedTweets'>Show in</label>
+    <div  id='currentLocationBasedTweetsDistanceRangeLabel'></div><input id='currentLocationBasedTweetsDistanceRangeSlider' type='range' />
   </div>
 </div>

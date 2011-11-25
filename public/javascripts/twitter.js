@@ -1,5 +1,6 @@
 var twitter = function () {
   var api = {};
+  var pvt = {};
 
   api.timeline = function (userId, callback) {
     $.getJSON('https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=' + userId + '&count=200&callback=?', function (data) {
@@ -11,12 +12,23 @@ var twitter = function () {
   };
 
   api.byLocation = function (latitude, longitude, callback) {
-    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',0.2km&rpp=100&callback=?', function (data) {
-      var tweets = _(data.results).map(function (tweet) {
-        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), isTweetByLocation: true});
+    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',2km&rpp=100&callback=?', function (data) {
+      var tweetsWithLocation = _(data.results).filter(function (tweet) { return pvt.locationInfo(tweet) != null; });
+      var tweets = _(tweetsWithLocation).map(function (tweet) {
+        var locationInfo = pvt.locationInfo(tweet);
+        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), isTweetByLocation: true, latitude: locationInfo.latitude, longitude: locationInfo.longitude});
       });
       callback(tweets);
     });
+  };
+
+  pvt.locationInfo = function (tweet) {
+    var geoInfo = tweet.geo;
+    if (geoInfo == null) {
+      return null;
+    } else {
+      return {latitude: geoInfo.coordinates[0], longitude: geoInfo.coordinates[1]}
+    }
   };
 
   return api;

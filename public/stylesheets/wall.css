@@ -41,6 +41,10 @@
   font-size: 70%;
 }
 
+.publication_time {
+  font-size: 50%;
+}
+
 #venue_cover {
   font-size: 150px;
   text-align: center;
@@ -79,8 +83,12 @@
   display: inline-block;
   width: 160px;
 }
+#currentLocationBasedTweetsDistanceRangeLabel {
+  display: inline-block;
+  width: 100px;
+}
 
-#currentTimeRangeSlider {
+#currentTimeRangeSlider, #currentLocationBasedTweetsDistanceRangeSlider {
   width: 220px;
 }
 

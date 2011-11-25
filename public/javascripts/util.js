@@ -6,3 +6,7 @@ var cheatedUnescape = function (encodedStr) {
     return encodedStr;
   }
 }
+
+Number.prototype.toRad = function() {
+  return this * Math.PI / 180;
+}

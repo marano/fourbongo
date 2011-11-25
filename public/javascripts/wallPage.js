@@ -44,13 +44,32 @@ var wallPage = function () {
   
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
-  api.setCurrentTimeRange = function (range) {
+  pvt.setCurrentTimeRange = function (range) {
     api.setCurrentTimeRangeLabel(range);
     $('#currentTimeRangeSlider').attr('value', range.index);
   };
   
   api.setCurrentTimeRangeLabel = function (range) { $('#currentTimeRangeLabel').text(range.description); };
 
+  api.prepareTimeRangeSlider = function (currentValue, sliderSize, callback) {
+    $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
+    $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
+    pvt.setCurrentTimeRange(currentValue);
+  }
+
+  pvt.setCurrentLocationBasedTweetDistanceRange = function (range) {
+    api.setCurrentLocationBasedTweetDistanceRangeLabel(range);
+    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('value', range);
+  };
+  
+  api.setCurrentLocationBasedTweetDistanceRangeLabel = function (range) { $('#currentLocationBasedTweetsDistanceRangeLabel').text(range + "m"); };
+
+  api.prepareLocationBasedTweetsDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
+    $('#currentLocationBasedTweetsDistanceRangeSlider').change(function () { callback($('#currentLocationBasedTweetsDistanceRangeSlider').attr('value')); });
+    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
+    pvt.setCurrentLocationBasedTweetDistanceRange(currentValue);
+  };
+  
   api.bindToSortByPublicationButton = function (callback) {
     $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
   };
@@ -63,11 +82,6 @@ var wallPage = function () {
 
   api.setShouldFetchLocationBasedTweets = function (value) {
     $('#fetchLocationBasedTweets').attr('checked', value);
-  }
-
-  api.preparetTimeRangeSlider = function (sliderSize, callback) {
-    $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
-    $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
   }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 

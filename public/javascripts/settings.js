@@ -47,12 +47,15 @@ var settings = function () {
     pvt.areOptionsDisplayed = true;
     wallPage.showSettingsOptions(function () {
       wallPage.selectSortOrder(postsList.currentSortOrderName());
-      wallPage.setCurrentTimeRange(postsList.currentTimeRange());
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
-      wallPage.preparetTimeRangeSlider(timeRanges.length, function (timeRange) {
+      wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRange) {
         var timeRange = timeRanges[timeRange];
         wallPage.setCurrentTimeRangeLabel(timeRange);
         postsList.setCurrentTimeRange(timeRange);
+      });
+      wallPage.prepareLocationBasedTweetsDistanceRangeSlider(postsList.currentLocationBasedTweetsDistanceRange(), 20, 2000, function (range) {
+        wallPage.setCurrentLocationBasedTweetDistanceRangeLabel(range);
+        postsList.setCurrentLocationBasedTweetDistanceRange(range);
       });
       wallPage.bindToSortByRandomButton(postsList.setSortOrderByName);
       wallPage.bindToSortByPublicationButton(postsList.setSortOrderByName);
