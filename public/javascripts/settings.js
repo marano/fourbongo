@@ -62,7 +62,7 @@ var settings = function () {
         postsList.setCurrentTimeRange(timeRange);
         pvt.fillPostsCount();
       });
-      wallPage.prepareLocationBasedTweetsDistanceRangeSlider(postsList.currentLocationBasedTweetsDistanceRange(), 20, 2000, function (range) {
+      wallPage.prepareLocationBasedTweetsDistanceRangeSlider(postsList.currentLocationBasedTweetsDistanceRange(), 20, 10000, function (range) {
         wallPage.setCurrentLocationBasedTweetDistanceRangeLabel(range);
         postsList.setCurrentLocationBasedTweetDistanceRange(range);
         pvt.fillPostsCount();

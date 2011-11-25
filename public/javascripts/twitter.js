@@ -12,7 +12,7 @@ var twitter = function () {
   };
 
   api.byLocation = function (latitude, longitude, callback) {
-    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',2km&rpp=100&callback=?', function (data) {
+    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',10km&rpp=100&callback=?', function (data) {
       var tweetsWithLocation = _(data.results).filter(function (tweet) { return pvt.locationInfo(tweet) != null; });
       var tweets = _(tweetsWithLocation).map(function (tweet) {
         var locationInfo = pvt.locationInfo(tweet);
