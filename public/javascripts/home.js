@@ -43,7 +43,6 @@ var home = function () {
     pvt.prepareSearchMenu = function () {
       pvt.queryGeolocation();
       homePage.bindSearchForm(pvt.search);
-      homePage.bindFacebookLoginButton(facebook.login);
     };
 
     pvt.queryGeolocation = function () {
