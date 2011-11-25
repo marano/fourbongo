@@ -4,19 +4,8 @@ var homePage = function () {
 
   api.bindToMouseMovement = function (callback) { $('body').mousemove(callback); };
 
-  api.disableSearchNearbyButton = function () { $("#btnSearchNearby").attr("disabled", true); };
-
-  api.enableSearchNearbyButton = function () { $("#btnSearchNearby").attr("disabled", false); };
-
-  api.bindSearchNearbyButton = function (callback) {
-    $("#searchNearby").submit(function (event) {
-      event.preventDefault();
-      callback();
-    });
-  };
-
-  api.bindSearchByNameAndCityButton = function (callback) {
-    $("#searchByNameAndCity").submit(function (event) {
+  api.bindSearchForm = function (callback) {
+    $("#searchForm").submit(function (event) {
       event.preventDefault();
       callback();
     });

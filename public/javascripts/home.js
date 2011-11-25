@@ -41,10 +41,8 @@ var home = function () {
     };
 
     pvt.prepareSearchMenu = function () {
-      homePage.disableSearchNearbyButton();
       pvt.queryGeolocation();
-      homePage.bindSearchNearbyButton(pvt.searchNearbyVenues);
-      homePage.bindSearchByNameAndCityButton(pvt.searchVenuesByNameAndCity);
+      homePage.bindSearchForm(pvt.search);
       homePage.bindFacebookLoginButton(facebook.login);
     };
 
@@ -53,7 +51,6 @@ var home = function () {
         pvt.latitude = latitude;
         pvt.longitude = longitude;
         pvt.geolocationFetched = true;
-        homePage.enableSearchNearbyButton();
         geolocation.city(latitude, longitude, function (city) {
           if (homePage.searchCityInputValue() == null || homePage.searchCityInputValue()  == '') {
             homePage.setSearchCityInputValue(city);
@@ -70,17 +67,22 @@ var home = function () {
         });
     };
 
-    pvt.searchVenuesByNameAndCity = function () {
+    pvt.search = function () {
       homePage.prepareToSearch();
       var name = homePage.searchNameInputValue();
-      var city = homePage.searchCityInputValue();
-      if (name == null || name == '' || city == null || city == '') {
-        name = '_';
-        city = '_';
+      if (name == null || name == '') {
+        pvt.searchNearbyVenues();
+        return;
+      } else {
+        var city = homePage.searchCityInputValue();
+        if (name == null || name == '' || city == null || city == '') {
+          name = '_';
+          city = '_';
+        }
+        foursquare.search_venues_by_name_and_city(name, city, function (venues) {
+          homePage.showSearchResult(venues, pvt.startShow);
+        });
       }
-      foursquare.search_venues_by_name_and_city(name, city, function (venues) {
-        homePage.showSearchResult(venues, pvt.startShow);
-      });
     };
 
     pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall.initialize(venueId); }); };

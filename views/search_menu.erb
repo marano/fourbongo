@@ -1,18 +1,12 @@
 <div id='searchMenu'>
   <div id='searchMenuFields'>
-    <h3>where?</h3>
+    <h3>where are you?</h3>
 
-    <form id="searchNearby" class="search_form">
-      <input type='submit' id='btnSearchNearby' value="nearby" class='searchButton' />
-    </form>
-
-    <label class='searchLabel'>or</label>
-
-    <form id="searchByNameAndCity" class="search_form">
-      <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='by name' />
-      <label class='searchLabel'>at</label>
-      <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='and city' />
-      <input type='submit' value="go" class='searchButton' />
+    <form id="searchForm">
+      <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
+      <label class='searchLabel'>in</label>
+      <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
+      <input type='submit' value="go" id='searchButton' />
     </form>
   </div>
 

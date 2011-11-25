@@ -65,20 +65,29 @@ body {
   opacity: 0.85;
 }
 
+#catchphrase {
+  font-family: 'Georgia', serif;
+  text-align: center;
+  opacity: 0.60;
+  position: relative;
+  top: -63px;
+  left: -20px;
+}
+
 #searchMenuFields {
   margin-top: 12px;
-  margin-left: 80px;
+  margin-left: 45px;
   float: left;
 }
 
-#searchByNameAndCity {
-  width: 600px;
+#searchForm {
+  width: auto;
 }
 
 #spinning {
   display: inline-block;
   margin-top: 15px;
-  margin-left: 20px;
+  margin-left: 5px;
 }
 
 #searchMenuFields *, #spinning * {
@@ -101,42 +110,46 @@ body {
   -moz-box-shadow: 0 10px 30px 0 black;
 }
 
-#bar h3, .searchLabel, .searchButton, .searchInput {
+#bar h3, .searchLabel, #searchButton, .searchInput {
   font-size: 24px;
   margin-left: 3px;
   margin-right: 3px;
 }
 
 #searchMenu h3 {
-  padding-right: 10px;
+  padding-right: 5px;
 }
 
 #bar h3, .searchLabel {
+  font-family: 'Georgia', serif;
   color: white;
 }
 
-.searchButton, .searchInput {
+#searchButton, .searchInput {
   color: #444;
 }
 
-#btnSearchNearby {
-  width: 100px;
-}
-
-.searchButton {
+#searchButton {
   cursor: pointer;
 }
 
 .searchInput {
   border-width: 0px;
-  width: 240px;
 
   box-shadow: inset 0 0 2px 0 black;
   -moz-box-shadow: inset 0 0 2px 0 black;
   -webkit-box-shadow: inset 0 0 2px 0 black;
 }
 
-#searchMenu h3, .search_form {
+#inputSearchName {
+  width: 410px;
+}
+
+#inputSearchCity {
+  width: 220px;
+}
+
+#searchMenu h3, #searchForm {
   margin: 0;
 }
 
