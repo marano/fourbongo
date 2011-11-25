@@ -133,7 +133,7 @@ var postsList = function () {
       if (!pvt.shouldShowLocationBasedTweets && postItem.post.isTweetByLocation) {
         return false;
       }
-      if (postItem.post.isTweetByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > postItem.currentLocationBasedTweetsDistanceRange) {
+      if (postItem.post.isTweetByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedTweetsDistanceRange) {
         return false;
       }
       return pvt.currentTimeRange.validate(postItem, now);
