@@ -97,48 +97,10 @@ var PostsListItem = function (item) {
   return api;
 };
 
-var randomSort = function () {
-  var api = {};
-
-  api.name = 'random';
-
-  api.next = function (currentPost, allPosts) {
-    return allPosts[Math.floor(Math.random() * allPosts.length)];
-  };
-
-  return api;
-}();
-
-var publicationSort = function () {
-  var api = {};
-
-  api.name = 'publication';
-
-  api.next = function (currentPost, allPosts) {
-    var now = new Date().getTime();
-    var sortedPosts = _(allPosts).sortBy(function (post) { return now - post.post.createdAt.getTime(); });
-    if (currentPost == null) {
-      return _(sortedPosts).first();
-    } else {
-      var nextPost = _(sortedPosts).find(function (post) {
-        return post.post.createdAt.getTime() < currentPost.post.createdAt.getTime();
-      });
-      if (nextPost == null) {
-        return _(sortedPosts).first();
-      } else {
-        return nextPost;
-      }
-    }
-  };
-
-  return api;
-}();
-
 var postsList = function () {
   var api = {};
   var pvt = {
     posts: [],
-    sortOrder: null, 
     currentPost: null,
     currentTimeRange: null,
     shouldShowLocationBasedTweets: null,
@@ -151,7 +113,7 @@ var postsList = function () {
   };
 
   api.initialize = function () {
-    pvt.loadSortOrder();
+    sortOrderSetting.load();
     pvt.loadTimeRange();
     pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
@@ -200,7 +162,7 @@ var postsList = function () {
     if(_(validPosts).isEmpty()) {
       return null;
     } else {
-      var next = pvt.sortOrder.next(pvt.currentPost, validPosts);
+      var next = sortOrderSetting.next(pvt.currentPost, validPosts);
       next.viewed = true;
       pvt.currentPost = next;
       return next;
@@ -216,15 +178,6 @@ var postsList = function () {
     }
   }
   
-  pvt.loadSortOrder = function () {
-    var sortOrderName = $.cookie('sort_order');
-    if (sortOrderName != null) {
-      pvt.sortOrder = pvt.findSortOrderByName(sortOrderName);
-    } else {
-      pvt.sortOrder = publicationSort;
-    }
-  };
-
   pvt.loadShouldFetchLocationBasedTweets = function () {
     var cookieShouldFetchLocationBasedTweets = $.cookie('fetch_location_based_tweets');
     if (cookieShouldFetchLocationBasedTweets != undefined) {
@@ -261,8 +214,6 @@ var postsList = function () {
     }
   };
 
-  api.currentSortOrderName = function () { return pvt.sortOrder.name; };
-  
   api.currentTimeRange = function () { return pvt.currentTimeRange; };
 
   api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
@@ -281,11 +232,6 @@ var postsList = function () {
   pvt.findSortOrderByName = function (sortName) {
     var sorts = [publicationSort, randomSort];
     return _(sorts).find(function (sort) { return sort.name == sortName });
-  };
-
-  api.setSortOrderByName = function (sortName) {
-    pvt.sortOrder = pvt.findSortOrderByName(sortName);
-    $.cookie('sort_order', sortName);
   };
 
   api.setShouldFetchLocationBasedTweets = function (value) {

@@ -23,12 +23,102 @@ var timeRanges = [
   TimeRange(9, 48 * 60 * 60 * 1000, 'Two days')
 ];
 
+var cookieSettingLoader = function (cookieKey, defaultValue) {
+  var api = {};
+  var pvt = {
+    cookieKey: cookieKey,
+    defaultValue: defaultValue
+  };
+
+  api.save = function (value) { $.cookie(pvt.cookieKey, value); };
+
+  api.load = function () {
+    var cookieValue = $.cookie(pvt.cookieKey);
+    if (cookieValue == null) {
+      return defaultValue;
+    } else {
+      return cookieValue;
+    }
+  };
+
+  return api;
+};
+
+var randomSort = function () {
+  var api = {};
+
+  api.name = 'random';
+
+  api.next = function (currentPost, allPosts) {
+    return allPosts[Math.floor(Math.random() * allPosts.length)];
+  };
+
+  return api;
+}();
+
+var publicationSort = function () {
+  var api = {};
+
+  api.name = 'publication';
+
+  api.next = function (currentPost, allPosts) {
+    var now = new Date().getTime();
+    var sortedPosts = _(allPosts).sortBy(function (post) { return now - post.post.createdAt.getTime(); });
+    if (currentPost == null) {
+      return _(sortedPosts).first();
+    } else {
+      var nextPost = _(sortedPosts).find(function (post) {
+        return post.post.createdAt.getTime() < currentPost.post.createdAt.getTime();
+      });
+      if (nextPost == null) {
+        return _(sortedPosts).first();
+      } else {
+        return nextPost;
+      }
+    }
+  };
+
+  return api;
+}();
+
+var sortOrderSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('sort_order', 2),
+    current: null
+  };
+  
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) {
+    var sorts = [publicationSort, randomSort];
+    return _(sorts).find(function (sort) { return sort.name == rawValue });
+  };
+
+  api.bindEvents = function () {
+    wallPage.bindToSortByRandomButton(pvt.set);
+    wallPage.bindToSortByPublicationButton(pvt.set);
+  };
+
+  api.fillPage = function () { wallPage.selectSortOrder(pvt.current.name); };
+
+  api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
+
+  return api;
+}();
+
 var settings = function () {
   var api = {};
   var pvt = {
     lastHover: 0,
     isIconDisplayed: false,
-    areOptionsDisplayed: false
+    areOptionsDisplayed: false,
+    list: [sortOrderSetting]
   };
 
   api.initialize = function () {
@@ -54,7 +144,12 @@ var settings = function () {
     pvt.areOptionsDisplayed = true;
     wallPage.showSettingsOptions(function () {
       pvt.fillPostsCount();
-      wallPage.selectSortOrder(postsList.currentSortOrderName());
+
+      _(pvt.list).each(function (setting) {
+        setting.fillPage();
+        setting.bindEvents();
+      });
+
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       wallPage.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
       wallPage.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
@@ -69,8 +164,6 @@ var settings = function () {
         postsList.setCurrentLocationBasedUpdatesDistanceRange(range);
         pvt.fillPostsCount();
       });
-      wallPage.bindToSortByRandomButton(postsList.setSortOrderByName);
-      wallPage.bindToSortByPublicationButton(postsList.setSortOrderByName);
       wallPage.bindToFetchLocationBasedTweetsButton(function (value) {
         postsList.setShouldFetchLocationBasedTweets(value);
         pvt.fillPostsCount();
