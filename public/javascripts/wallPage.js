@@ -88,12 +88,20 @@ var wallPage = function () {
     $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').attr('checked')); });
   };
 
+  api.bindToFetchLocationBasedFlickrPicsButton = function (callback) {
+    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').attr('checked')); });
+  };
+
   api.setShouldFetchLocationBasedTweets = function (value) {
     $('#fetchLocationBasedTweets').attr('checked', value);
   }
 
   api.setShouldFetchLocationBasedInstagramPics = function (value) {
     $('#fetchLocationBasedInstagramPics').attr('checked', value);
+  }
+
+  api.setShouldFetchLocationBasedFlickrPics = function (value) {
+    $('#fetchLocationBasedFlickrPics').attr('checked', value);
   }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 

@@ -57,6 +57,7 @@ var settings = function () {
       wallPage.selectSortOrder(postsList.currentSortOrderName());
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       wallPage.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
+      wallPage.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
       wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRange) {
         var timeRange = timeRanges[timeRange];
         wallPage.setCurrentTimeRangeLabel(timeRange);
@@ -76,6 +77,10 @@ var settings = function () {
       });
       wallPage.bindToFetchLocationBasedInstagramPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedInstagramPics(value);
+        pvt.fillPostsCount();
+      });
+      wallPage.bindToFetchLocationBasedFlickrPicsButton(function (value) {
+        postsList.setShouldFetchLocationBasedFlickrPics(value);
         pvt.fillPostsCount();
       });
     });

@@ -143,6 +143,7 @@ var postsList = function () {
     currentTimeRange: null,
     shouldShowLocationBasedTweets: null,
     shouldShowLocationBasedInstagramPics: null,
+    shouldShowLocationBasedFlickrPics: null,
     currentLocationBasedUpdatesDistanceRange: null,
     venueLat: null,
     venueLng: null,
@@ -154,6 +155,7 @@ var postsList = function () {
     pvt.loadTimeRange();
     pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
+    pvt.loadShouldFetchLocationBasedFlickrPics();
     pvt.loadLocationBasedTweetsDistanceRange();
   };
 
@@ -181,6 +183,9 @@ var postsList = function () {
         return false;
       }
       if (!pvt.shouldShowLocationBasedInstagramPics && postItem.post.isUpdateByLocation && postItem.post.isInstagramPic) {
+        return false;
+      }
+      if (!pvt.shouldShowLocationBasedFlickrPics && postItem.post.isUpdateByLocation && postItem.post.isFlickrPic) {
         return false;
       }
       if (postItem.post.isUpdateByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedUpdatesDistanceRange) {
@@ -238,6 +243,15 @@ var postsList = function () {
     }
   }
 
+  pvt.loadShouldFetchLocationBasedFlickrPics = function () {
+    var cookieShouldFetchLocationBasedFlickrPics = $.cookie('fetch_location_based_flickr_pics');
+    if (cookieShouldFetchLocationBasedFlickrPics != undefined) {
+      pvt.shouldShowLocationBasedFlickrPics = cookieShouldFetchLocationBasedFlickrPics == 'true';
+    } else {
+      pvt.shouldShowLocationBasedFlickrPics = true;
+    }
+  }
+
   pvt.loadLocationBasedTweetsDistanceRange = function () {
     var range = $.cookie('location_based_updates_distance_range');
     if (range != null) {
@@ -254,6 +268,8 @@ var postsList = function () {
   api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
   
   api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
+
+  api.shouldShowLocationBasedFlickrPics = function () { return pvt.shouldShowLocationBasedFlickrPics; };
 
   api.currentLocationBasedUpdatesDistanceRange = function () { return pvt.currentLocationBasedUpdatesDistanceRange; };
 
@@ -282,6 +298,10 @@ var postsList = function () {
     $.cookie('fetch_location_based_instagram_pics', value);
   };
 
+  api.setShouldFetchLocationBasedFlickrPics = function (value) {
+    pvt.shouldShowLocationBasedFlickrPics = value;
+    $.cookie('fetch_location_based_flickr_pics', value);
+  };
   api.setCurrentLocationBasedUpdatesDistanceRange = function (value) {
     pvt.currentLocationBasedUpdatesDistanceRange = +value;
     $.cookie('location_based_updates_distance_range', value);
