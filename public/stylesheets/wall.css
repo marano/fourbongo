@@ -26,7 +26,7 @@
   margin: 0 35px 10px 10px;
 }
 
-.flickr_avatar {
+.avatar_container {
   float: left;
   height: 1000px;
 }
@@ -39,6 +39,7 @@
 .username {
   font-weight: bold;
   font-size: 120%;
+  margin-right: 20px;
 }
 
 .screen_name {

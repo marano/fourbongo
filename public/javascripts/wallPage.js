@@ -110,7 +110,7 @@ var wallPage = function () {
 
   api.tweetHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
@@ -122,7 +122,7 @@ var wallPage = function () {
 
   api.instagramMediaHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
@@ -136,7 +136,7 @@ var wallPage = function () {
 
   api.flickrPicHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<div class="flickr_avatar">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
     userData.append($('<span>', {'class': 'username'}).text(post.username));
