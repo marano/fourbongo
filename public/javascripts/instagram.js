@@ -11,7 +11,7 @@ var instagram = function () {
         if (media.caption != null) {
           caption = media.caption.text;
         }
-        return InstagramMedia({id: media.id, username: media.user.username, fullname: media.user.full_name, avatar: media.user.profile_picture, latitude: media.location.latitude, longitude: media.location.longitude, media: media.images.standard_resolution.url, caption: caption, createdAt: new Date(parseInt(media.created_time) * 1000)});
+        return InstagramMedia({id: media.id, username: media.user.username, fullname: media.user.full_name, avatar: media.user.profile_picture, isUpdateByLocation: true, latitude: media.location.latitude, longitude: media.location.longitude, media: media.images.standard_resolution.url, caption: caption, createdAt: new Date(parseInt(media.created_time) * 1000)});
       });
       callback(medias);
     });

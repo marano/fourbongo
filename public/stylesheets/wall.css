@@ -96,12 +96,13 @@
   display: inline-block;
   width: 160px;
 }
-#currentLocationBasedTweetsDistanceRangeLabel {
+
+#currentLocationBasedUpdatesDistanceRangeLabel {
   display: inline-block;
   width: 100px;
 }
 
-#currentTimeRangeSlider, #currentLocationBasedTweetsDistanceRangeSlider {
+#currentTimeRangeSlider, #currentLocationBasedUpdatesDistanceRangeSlider {
   width: 220px;
 }
 

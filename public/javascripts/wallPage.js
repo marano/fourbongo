@@ -61,17 +61,17 @@ var wallPage = function () {
     pvt.setCurrentTimeRange(currentValue);
   }
 
-  pvt.setCurrentLocationBasedTweetDistanceRange = function (range) {
-    api.setCurrentLocationBasedTweetDistanceRangeLabel(range);
-    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('value', range);
+  pvt.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
+    api.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value', range);
   };
   
-  api.setCurrentLocationBasedTweetDistanceRangeLabel = function (range) { $('#currentLocationBasedTweetsDistanceRangeLabel').text(range + "m"); };
+  api.setCurrentLocationBasedUpdatesDistanceRangeLabel = function (range) { $('#currentLocationBasedUpdatesDistanceRangeLabel').text(range + "m"); };
 
-  api.prepareLocationBasedTweetsDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
-    $('#currentLocationBasedTweetsDistanceRangeSlider').change(function () { callback($('#currentLocationBasedTweetsDistanceRangeSlider').attr('value')); });
-    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
-    pvt.setCurrentLocationBasedTweetDistanceRange(currentValue);
+  api.prepareLocationBasedUpdatesDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').change(function () { callback($('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value')); });
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
+    pvt.setCurrentLocationBasedUpdatesDistanceRange(currentValue);
   };
   
   api.bindToSortByPublicationButton = function (callback) {
@@ -84,8 +84,16 @@ var wallPage = function () {
     $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').attr('checked')); });
   };
 
+  api.bindToFetchLocationBasedInstagramPicsButton = function (callback) {
+    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').attr('checked')); });
+  };
+
   api.setShouldFetchLocationBasedTweets = function (value) {
     $('#fetchLocationBasedTweets').attr('checked', value);
+  }
+
+  api.setShouldFetchLocationBasedInstagramPics = function (value) {
+    $('#fetchLocationBasedInstagramPics').attr('checked', value);
   }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 

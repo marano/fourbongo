@@ -16,9 +16,10 @@ var Tweet = function (tweetData) {
     content: tweetData.content,
     createdAt: tweetData.createdAt,
     avatar: tweetData.avatar.replace('_normal', ''),
-    isTweetByLocation: tweetData.isTweetByLocation,
+    isUpdateByLocation: tweetData.isUpdateByLocation,
     latitude: tweetData.latitude,
-    longitude: tweetData.longitude
+    longitude: tweetData.longitude,
+    isTweet: true
   };
 
   api.isSame = function (otherPost) { return api.id == otherPost.id; };
@@ -53,8 +54,10 @@ var InstagramMedia = function (mediaData) {
     caption: mediaData.caption,
     createdAt: mediaData.createdAt,
     avatar: mediaData.avatar,
+    isUpdateByLocation: mediaData.isUpdateByLocation,
     latitude: mediaData.latitude,
-    longitude: mediaData.longitude
+    longitude: mediaData.longitude,
+    isInstagramPic: true
   };
 
   api.isSame = function (otherPost) { return api.id == otherPost.id; };
@@ -117,7 +120,8 @@ var postsList = function () {
     currentPost: null,
     currentTimeRange: null,
     shouldShowLocationBasedTweets: null,
-    currentLocationBasedTweetsTimeRange: null,
+    shouldShowLocationBasedInstagramPics: null,
+    currentLocationBasedUpdatesDistanceRange: null,
     venueLat: null,
     venueLng: null,
     onchangeCallback: null
@@ -127,6 +131,7 @@ var postsList = function () {
     pvt.loadSortOrder();
     pvt.loadTimeRange();
     pvt.loadShouldFetchLocationBasedTweets();
+    pvt.loadShouldFetchLocationBasedInstagramPics();
     pvt.loadLocationBasedTweetsDistanceRange();
   };
 
@@ -150,10 +155,13 @@ var postsList = function () {
   api.validPosts = function () {
     var now = new Date().getTime();
     return _(pvt.posts).filter(function (postItem) {
-      if (!pvt.shouldShowLocationBasedTweets && postItem.post.isTweetByLocation) {
+      if (!pvt.shouldShowLocationBasedTweets && postItem.post.isUpdateByLocation && postItem.post.isTweet) {
         return false;
       }
-      if (postItem.post.isTweetByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedTweetsDistanceRange) {
+      if (!pvt.shouldShowLocationBasedInstagramPics && postItem.post.isUpdateByLocation && postItem.post.isInstagramPic) {
+        return false;
+      }
+      if (postItem.post.isUpdateByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedUpdatesDistanceRange) {
         return false;
       }
       return pvt.currentTimeRange.validate(postItem, now);
@@ -199,12 +207,21 @@ var postsList = function () {
     }
   }
 
-  pvt.loadLocationBasedTweetsDistanceRange = function () {
-    var range = $.cookie('location_based_tweets_distance_range');
-    if (range != null) {
-      pvt.currentLocationBasedTweetsDistanceRange = +range;
+  pvt.loadShouldFetchLocationBasedInstagramPics = function () {
+    var cookieShouldFetchLocationBasedInstagramPics = $.cookie('fetch_location_based_instagram_pics');
+    if (cookieShouldFetchLocationBasedInstagramPics != undefined) {
+      pvt.shouldShowLocationBasedInstagramPics = cookieShouldFetchLocationBasedInstagramPics == 'true';
     } else {
-      pvt.currentLocationBasedTweetsDistanceRange = 100;
+      pvt.shouldShowLocationBasedInstagramPics = true;
+    }
+  }
+
+  pvt.loadLocationBasedTweetsDistanceRange = function () {
+    var range = $.cookie('location_based_updates_distance_range');
+    if (range != null) {
+      pvt.currentLocationBasedUpdatesDistanceRange = +range;
+    } else {
+      pvt.currentLocationBasedUpdatesDistanceRange = 100;
     }
   };
 
@@ -213,8 +230,10 @@ var postsList = function () {
   api.currentTimeRange = function () { return pvt.currentTimeRange; };
 
   api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
+  
+  api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
 
-  api.currentLocationBasedTweetsDistanceRange = function () { return pvt.currentLocationBasedTweetsDistanceRange; };
+  api.currentLocationBasedUpdatesDistanceRange = function () { return pvt.currentLocationBasedUpdatesDistanceRange; };
 
   api.setCurrentTimeRange = function (timeRange) {
     pvt.currentTimeRange = timeRange;
@@ -236,9 +255,14 @@ var postsList = function () {
     $.cookie('fetch_location_based_tweets', value);
   };
 
-  api.setCurrentLocationBasedTweetDistanceRange = function (value) {
-    pvt.currentLocationBasedTweetsDistanceRange = +value;
-    $.cookie('location_based_tweets_distance_range', value);
+  api.setShouldFetchLocationBasedInstagramPics = function (value) {
+    pvt.shouldShowLocationBasedInstagramPics = value;
+    $.cookie('fetch_location_based_instagram_pics', value);
+  };
+
+  api.setCurrentLocationBasedUpdatesDistanceRange = function (value) {
+    pvt.currentLocationBasedUpdatesDistanceRange = +value;
+    $.cookie('location_based_updates_distance_range', value);
   };
 
   api.setVenueLatLng = function (venueLat, venueLng) {
