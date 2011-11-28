@@ -67,6 +67,28 @@ var InstagramMedia = function (mediaData) {
   return api;
 };
 
+var FlickrPic = function (picData) {
+  var api = {
+    id: picData.id,
+    username: picData.username,
+    fullname: picData.fullname,
+    media: picData.media,
+    caption: picData.caption,
+    createdAt: picData.createdAt,
+    avatar: picData.avatar,
+    isUpdateByLocation: picData.isUpdateByLocation,
+    latitude: picData.latitude,
+    longitude: picData.longitude,
+    isFlickrPic: true
+  };
+
+  api.isSame = function (otherPost) { return api.id == otherPost.id; };
+
+  api.html = function (post) { return wallPage.flickrPicHtml(post); };
+
+  return api;
+};
+
 var PostsListItem = function (item) {
   var api = {
     post: item,
@@ -335,10 +357,12 @@ var wall = function () {
 
     pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
     pvt.fetchInstagramMedia(venue.latitude, venue.longitude);
+    pvt.fetchFlickrMedia(venue.latitude, venue.longitude);
     pvt.fetchCheckins(venue.id);
 
     setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, 300000);
+    setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
@@ -350,6 +374,10 @@ var wall = function () {
 
   pvt.fetchInstagramMedia = function (latitude, longitude) {
     instagram.mediaByLocation(latitude, longitude, postsList.addAll);
+  };
+
+  pvt.fetchFlickrMedia = function (latitude, longitude) {
+    flickr.picsByLocation(latitude, longitude, postsList.addAll);
   };
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
