@@ -44,6 +44,26 @@ var FacebookUpdate = function (updateData) {
   return api;
 };
 
+var InstagramMedia = function (mediaData) {
+  var api = {
+    id: mediaData.id,
+    username: mediaData.username,
+    fullname: mediaData.fullname,
+    media: mediaData.media,
+    caption: mediaData.caption,
+    createdAt: mediaData.createdAt,
+    avatar: mediaData.avatar,
+    latitude: mediaData.latitude,
+    longitude: mediaData.longitude
+  };
+
+  api.isSame = function (otherPost) { return api.id == otherPost.id; };
+
+  api.html = function (post) { return wallPage.instagramMediaHtml(post); };
+
+  return api;
+};
+
 var PostsListItem = function (item) {
   var api = {
     post: item,
@@ -232,11 +252,16 @@ var postsList = function () {
 var slidesCoordinator = function () {
   var api = {};
   var pvt = {
+    paused: false,
     needsToHideLoading: true,
     isShowingNoUpdates: false
   };
   
   api.start = function (slider) { setInterval(function () { pvt.next(slider); }, 10000); };
+
+  api.pause = function () { pvt.paused = true; };
+
+  api.resume = function () { pvt.paused = false; };
 
   pvt.noUpdates = function (slider) {
     if (!pvt.isShowingNoUpdates) {
@@ -246,6 +271,7 @@ var slidesCoordinator = function () {
   };
 
   pvt.next = function (slider) {
+    if (pvt.paused) { return; }
     if (postsList.isNotEmpty()) {
       if (pvt.needsToHideLoading) {
         pvt.needsToHideLoading = false;
@@ -268,8 +294,7 @@ var slidesCoordinator = function () {
 
 var wall = function () {
   var api = {};
-  var pvt = {
-  };
+  var pvt = {};
 
   api.initialize = function (venueId) {
     wallPage.createWallContainerHtml();
@@ -285,9 +310,11 @@ var wall = function () {
     setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
 
     pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
+    pvt.fetchInstagramMedia(venue.latitude, venue.longitude);
     pvt.fetchCheckins(venue.id);
 
     setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 300000);
+    setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
@@ -295,6 +322,10 @@ var wall = function () {
 
   pvt.fetchLocationBasedTweets = function (latitude, longitude) {
     twitter.byLocation(latitude, longitude, postsList.addAll);
+  };
+
+  pvt.fetchInstagramMedia = function (latitude, longitude) {
+    instagram.mediaByLocation(latitude, longitude, postsList.addAll);
   };
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };

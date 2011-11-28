@@ -112,6 +112,20 @@ var wallPage = function () {
     return container;
   };
 
+  api.instagramMediaHtml = function (post) {
+    var container = $('<div>', {'class': 'publication_container'});
+    container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
+    var userData = $('<div>', {'class': 'user_data_container'});
+    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<span>', {'class': 'username'}).text(post.fullname));
+    userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
+    container.append(userData);
+    var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
+    var caption = $('<div>', {'class': 'instagram_caption'}).text(post.caption);
+    container.append($('<div>').append(media).append(caption));
+    return container;
+  };
+
   api.facebookUpdateHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
     container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));

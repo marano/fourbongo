@@ -1,11 +1,10 @@
 .publication_container {
   font-size: 350%;
-  top: 20%;
   margin: 0 auto 0 auto;
   position:absolute;
   height: 600px;
-  margin-top: -1em;
-  padding-left: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
   min-width: 95%;
   max-width: 95%;
 }
@@ -43,6 +42,20 @@
 
 .publication_time {
   font-size: 50%;
+}
+
+.instagram_media {
+  margin-top: 20px;
+  margin-right: 20px;
+  height: 1000px;
+}
+
+.instagram_media, .instagram_media img {
+  float: left;
+}
+
+.instagram_caption {
+  font-size: 80%;
 }
 
 #venue_cover {
