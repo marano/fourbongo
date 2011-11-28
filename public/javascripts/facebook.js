@@ -14,7 +14,7 @@ var facebook = function () {
         oauth      : true, // enable OAuth 2.0
         xfbml      : true  // parse XFBML
       });
-      
+
       FB.getLoginStatus(function(response) {
         if (response.authResponse) { pvt.authenticated = true; }
         callback();
