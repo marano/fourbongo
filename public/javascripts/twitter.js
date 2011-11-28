@@ -12,11 +12,11 @@ var twitter = function () {
   };
 
   api.byLocation = function (latitude, longitude, callback) {
-    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',2km&rpp=100&callback=?', function (data) {
+    $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',10km&rpp=100&callback=?', function (data) {
       var tweetsWithLocation = _(data.results).filter(function (tweet) { return pvt.locationInfo(tweet) != null; });
       var tweets = _(tweetsWithLocation).map(function (tweet) {
         var locationInfo = pvt.locationInfo(tweet);
-        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), isTweetByLocation: true, latitude: locationInfo.latitude, longitude: locationInfo.longitude});
+        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), isUpdateByLocation: true, latitude: locationInfo.latitude, longitude: locationInfo.longitude});
       });
       callback(tweets);
     });

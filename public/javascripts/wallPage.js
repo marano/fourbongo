@@ -61,17 +61,17 @@ var wallPage = function () {
     pvt.setCurrentTimeRange(currentValue);
   }
 
-  pvt.setCurrentLocationBasedTweetDistanceRange = function (range) {
-    api.setCurrentLocationBasedTweetDistanceRangeLabel(range);
-    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('value', range);
+  pvt.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
+    api.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value', range);
   };
   
-  api.setCurrentLocationBasedTweetDistanceRangeLabel = function (range) { $('#currentLocationBasedTweetsDistanceRangeLabel').text(range + "m"); };
+  api.setCurrentLocationBasedUpdatesDistanceRangeLabel = function (range) { $('#currentLocationBasedUpdatesDistanceRangeLabel').text(range + "m"); };
 
-  api.prepareLocationBasedTweetsDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
-    $('#currentLocationBasedTweetsDistanceRangeSlider').change(function () { callback($('#currentLocationBasedTweetsDistanceRangeSlider').attr('value')); });
-    $('#currentLocationBasedTweetsDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
-    pvt.setCurrentLocationBasedTweetDistanceRange(currentValue);
+  api.prepareLocationBasedUpdatesDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').change(function () { callback($('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value')); });
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
+    pvt.setCurrentLocationBasedUpdatesDistanceRange(currentValue);
   };
   
   api.bindToSortByPublicationButton = function (callback) {
@@ -84,8 +84,24 @@ var wallPage = function () {
     $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').attr('checked')); });
   };
 
+  api.bindToFetchLocationBasedInstagramPicsButton = function (callback) {
+    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').attr('checked')); });
+  };
+
+  api.bindToFetchLocationBasedFlickrPicsButton = function (callback) {
+    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').attr('checked')); });
+  };
+
   api.setShouldFetchLocationBasedTweets = function (value) {
     $('#fetchLocationBasedTweets').attr('checked', value);
+  }
+
+  api.setShouldFetchLocationBasedInstagramPics = function (value) {
+    $('#fetchLocationBasedInstagramPics').attr('checked', value);
+  }
+
+  api.setShouldFetchLocationBasedFlickrPics = function (value) {
+    $('#fetchLocationBasedFlickrPics').attr('checked', value);
   }
 
   api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
@@ -102,13 +118,40 @@ var wallPage = function () {
 
   api.tweetHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
     container.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
+    return container;
+  };
+
+  api.instagramMediaHtml = function (post) {
+    var container = $('<div>', {'class': 'publication_container'});
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
+    var userData = $('<div>', {'class': 'user_data_container'});
+    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<span>', {'class': 'username'}).text(post.fullname));
+    userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
+    container.append(userData);
+    var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
+    var caption = $('<div>', {'class': 'instagram_caption'}).text(post.caption);
+    container.append($('<div>').append(media).append(caption));
+    return container;
+  };
+
+  api.flickrPicHtml = function (post) {
+    var container = $('<div>', {'class': 'publication_container'});
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
+    var userData = $('<div>', {'class': 'user_data_container'});
+    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<span>', {'class': 'username'}).text(post.username));
+    container.append(userData);
+    var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
+    var caption = $('<div>', {'class': 'instagram_caption'}).text(post.caption);
+    container.append($('<div>').append(media).append(caption));
     return container;
   };
 
