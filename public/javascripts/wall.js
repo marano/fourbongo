@@ -210,7 +210,7 @@ var postsList = function () {
     if (range != null) {
       pvt.currentLocationBasedUpdatesDistanceRange = +range;
     } else {
-      pvt.currentLocationBasedUpdatesDistanceRange = 100;
+      pvt.currentLocationBasedUpdatesDistanceRange = 10000;
     }
   };
 
