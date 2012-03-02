@@ -118,7 +118,7 @@ var postsList = function () {
     pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
     pvt.loadShouldFetchLocationBasedFlickrPics();
-    pvt.loadLocationBasedTweetsDistanceRange();
+    pvt.loadLocationBasedUpdatesDistanceRange();
   };
 
   api.onchange = function (callback) {
@@ -172,7 +172,7 @@ var postsList = function () {
  pvt.loadTimeRange = function () {
     var cookieTimeRange = $.cookie('time_range');
     if (cookieTimeRange == null) {
-      pvt.currentTimeRange = timeRanges[2];
+      pvt.currentTimeRange = timeRanges[9];
     } else {
       pvt.currentTimeRange = timeRanges[cookieTimeRange];
     }
@@ -205,7 +205,7 @@ var postsList = function () {
     }
   }
 
-  pvt.loadLocationBasedTweetsDistanceRange = function () {
+  pvt.loadLocationBasedUpdatesDistanceRange = function () {
     var range = $.cookie('location_based_updates_distance_range');
     if (range != null) {
       pvt.currentLocationBasedUpdatesDistanceRange = +range;
