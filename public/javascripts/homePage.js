@@ -4,8 +4,8 @@ var homePage = function () {
 
   api.bindToMouseMovement = function (callback) {
     $('body').mousemove(callback);
-    $('body').touchstart(callback);
-    $('body').touchmove(callback);
+    $('body').bind('touchstart', callback);
+    $('body').bind('touchmove', callback);
   };
 
   api.bindSearchForm = function (callback) {
