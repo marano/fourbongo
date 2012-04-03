@@ -153,8 +153,8 @@ var settings = function () {
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       wallPage.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
       wallPage.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRange) {
-        var timeRange = timeRanges[timeRange];
+      wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRangeIndex) {
+        var timeRange = timeRanges[timeRangeIndex];
         wallPage.setCurrentTimeRangeLabel(timeRange);
         postsList.setCurrentTimeRange(timeRange);
         pvt.fillPostsCount();
