@@ -2,7 +2,11 @@ var homePage = function () {
   api = {};
   pvt = { thereIsASearchResult: false };
 
-  api.bindToMouseMovement = function (callback) { $('body').mousemove(callback); };
+  api.bindToMouseMovement = function (callback) {
+    $('body').mousemove(callback);
+    $('body').touchstart(callback);
+    $('body').touchmove(callback);
+  };
 
   api.bindSearchForm = function (callback) {
     $("#searchForm").submit(function (event) {
