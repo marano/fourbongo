@@ -84,7 +84,7 @@ var publicationSort = function () {
 var sortOrderSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('sort_order', 2),
+    cookieSetting: cookieSettingLoader('sort_order', 'publication'),
     current: null
   };
   
