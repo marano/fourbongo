@@ -81,15 +81,15 @@ var wallPage = function () {
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
 
   api.bindToFetchLocationBasedTweetsButton = function (callback) {
-    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').attr('checked')); });
+    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').is(':checked')); });
   };
 
   api.bindToFetchLocationBasedInstagramPicsButton = function (callback) {
-    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').attr('checked')); });
+    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').is(':checked')); });
   };
 
   api.bindToFetchLocationBasedFlickrPicsButton = function (callback) {
-    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').attr('checked')); });
+    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').is(':checked')); });
   };
 
   api.setShouldFetchLocationBasedTweets = function (value) {
