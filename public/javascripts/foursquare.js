@@ -23,7 +23,7 @@ var foursquare = function () {
   };
   
   api.search_venues_by_location = function (latitude, longitude, callback) {
-    $.getJSON('https://api.foursquare.com/v2/venues/search?v=20111117&ll=' + latitude + ',' + longitude + '&radius=1000&intent=browse&limit=50&oauth_token=' + pvt.token, function (data) {
+    $.getJSON('https://api.foursquare.com/v2/venues/search?v=20111117&ll=' + latitude + ',' + longitude + '&radius=1000&intent=browse&limit=50&oauth_token=' + pvt.token + '&callback=?', function (data) {
       var venues = _(data.response.venues).map(function (venue) {
         return {foursquare_id: venue.id, name: venue.name};
       });
