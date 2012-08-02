@@ -7,6 +7,7 @@ gem 'json'
 gem 'capistrano'
 gem 'rvm-capistrano'
 gem 'unicorn'
+gem 'pry'
 
 group :test do
   gem 'rspec'
