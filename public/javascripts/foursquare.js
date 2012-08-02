@@ -52,7 +52,8 @@ var foursquare = function () {
   };
 
   api.login = function () {
-    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=GBFO0NELBGW0SEP2BGDY1KID00VO45TGNTJQ4OZHVJKIFP5Z&response_type=token&redirect_uri=' + encodeURI('http://fourbongo.com/foursquare/authentication_callback');
+    var client_id = $('meta[name=foursquare_client_id]').attr('content');
+    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=' + client_id + '&response_type=token&redirect_uri=' + encodeURI(window.location.origin + '/foursquare/authentication_callback');
   };
 
   return api;

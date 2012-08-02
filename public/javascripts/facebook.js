@@ -4,10 +4,11 @@ var facebook = function () {
 
   api.initialize = function (callback) {
     $('body').append($('<div>', {id: 'fb-root'}));
+    var app_id = $('meta[name=facebook_app_id]').attr('content');
 
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '101544976563660', // App ID
+        appId      : app_id,
         channelURL : '//fourbongo.com/channel.html', // Channel File
         status     : true, // check login status
         cookie     : true, // enable cookies to allow the server to access the session
