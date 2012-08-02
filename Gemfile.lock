@@ -54,6 +54,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capistrano
   fakeweb
   httparty
   json
