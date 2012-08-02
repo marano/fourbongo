@@ -102,7 +102,6 @@ var postsList = function () {
   var pvt = {
     posts: [],
     currentPost: null,
-    currentTimeRange: null,
     shouldShowLocationBasedTweets: null,
     shouldShowLocationBasedInstagramPics: null,
     shouldShowLocationBasedFlickrPics: null,
@@ -113,8 +112,6 @@ var postsList = function () {
   };
 
   api.initialize = function () {
-    sortOrderSetting.load();
-    pvt.loadTimeRange();
     pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
     pvt.loadShouldFetchLocationBasedFlickrPics();
@@ -153,7 +150,7 @@ var postsList = function () {
       if (postItem.post.isUpdateByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedUpdatesDistanceRange) {
         return false;
       }
-      return pvt.currentTimeRange.validate(postItem, now);
+      return timeRangeSetting.validate(postItem, now);
     });
   };
 
@@ -169,15 +166,6 @@ var postsList = function () {
     }
   };
 
- pvt.loadTimeRange = function () {
-    var cookieTimeRange = $.cookie('time_range');
-    if (cookieTimeRange == null) {
-      pvt.currentTimeRange = timeRanges[9];
-    } else {
-      pvt.currentTimeRange = timeRanges[cookieTimeRange];
-    }
-  }
-  
   pvt.loadShouldFetchLocationBasedTweets = function () {
     var cookieShouldFetchLocationBasedTweets = $.cookie('fetch_location_based_tweets');
     if (cookieShouldFetchLocationBasedTweets != undefined) {
@@ -214,8 +202,6 @@ var postsList = function () {
     }
   };
 
-  api.currentTimeRange = function () { return pvt.currentTimeRange; };
-
   api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
   
   api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
@@ -223,11 +209,6 @@ var postsList = function () {
   api.shouldShowLocationBasedFlickrPics = function () { return pvt.shouldShowLocationBasedFlickrPics; };
 
   api.currentLocationBasedUpdatesDistanceRange = function () { return pvt.currentLocationBasedUpdatesDistanceRange; };
-
-  api.setCurrentTimeRange = function (timeRange) {
-    pvt.currentTimeRange = timeRange;
-    $.cookie('time_range', timeRange.index);
-  };
 
   pvt.findSortOrderByName = function (sortName) {
     var sorts = [publicationSort, randomSort];
@@ -248,6 +229,7 @@ var postsList = function () {
     pvt.shouldShowLocationBasedFlickrPics = value;
     $.cookie('fetch_location_based_flickr_pics', value);
   };
+
   api.setCurrentLocationBasedUpdatesDistanceRange = function (value) {
     pvt.currentLocationBasedUpdatesDistanceRange = +value;
     $.cookie('location_based_updates_distance_range', value);

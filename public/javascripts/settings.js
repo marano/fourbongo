@@ -81,6 +81,39 @@ var publicationSort = function () {
   return api;
 }();
 
+var timeRangeSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('time_range', '9'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    wallPage.setCurrentTimeRangeLabel(pvt.current.description);
+    settings.fillPostsCount();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) {
+    return timeRanges[parseInt(rawValue)];
+  };
+
+  api.bindEvents = function () {
+    wallPage.prepareTimeRangeSlider(timeRanges.length, pvt.set);
+  };
+
+  api.fillPage = function () { wallPage.setCurrentTimeRange(pvt.current.description, pvt.current.index); };
+
+  api.validate = function (postItem, now) {
+    return pvt.current.validate(postItem, now);
+  }
+
+  return api;
+}();
+
 var sortOrderSetting = function () {
   var api = {};
   var pvt = {
@@ -118,12 +151,15 @@ var settings = function () {
     lastHover: 0,
     isIconDisplayed: false,
     areOptionsDisplayed: false,
-    list: [sortOrderSetting]
+    list: [timeRangeSetting, sortOrderSetting]
   };
 
   api.initialize = function () {
+    _(pvt.list).each(function (setting) {
+      setting.load();
+    });
     homePage.bindToMouseMovement(pvt.mouseMovement);
-    postsList.onchange(pvt.fillPostsCount);
+    postsList.onchange(api.fillPostsCount);
   }
 
   pvt.mouseMovement = function () {
@@ -132,7 +168,7 @@ var settings = function () {
     pvt.showSettingsIcon();
   };
 
-  pvt.fillPostsCount = function () {
+  api.fillPostsCount = function () {
     wallPage.setPostsCountLabel(postsList.validPosts().length);
   };
 
@@ -143,7 +179,7 @@ var settings = function () {
     }
     pvt.areOptionsDisplayed = true;
     wallPage.showSettingsOptions(function () {
-      pvt.fillPostsCount();
+      api.fillPostsCount();
 
       _(pvt.list).each(function (setting) {
         setting.fillPage();
@@ -153,28 +189,22 @@ var settings = function () {
       wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       wallPage.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
       wallPage.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      wallPage.prepareTimeRangeSlider(postsList.currentTimeRange(), timeRanges.length, function (timeRangeIndex) {
-        var timeRange = timeRanges[timeRangeIndex];
-        wallPage.setCurrentTimeRangeLabel(timeRange);
-        postsList.setCurrentTimeRange(timeRange);
-        pvt.fillPostsCount();
-      });
       wallPage.prepareLocationBasedUpdatesDistanceRangeSlider(postsList.currentLocationBasedUpdatesDistanceRange(), 20, 10000, function (range) {
         wallPage.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
         postsList.setCurrentLocationBasedUpdatesDistanceRange(range);
-        pvt.fillPostsCount();
+        api.fillPostsCount();
       });
       wallPage.bindToFetchLocationBasedTweetsButton(function (value) {
         postsList.setShouldFetchLocationBasedTweets(value);
-        pvt.fillPostsCount();
+        api.fillPostsCount();
       });
       wallPage.bindToFetchLocationBasedInstagramPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedInstagramPics(value);
-        pvt.fillPostsCount();
+        api.fillPostsCount();
       });
       wallPage.bindToFetchLocationBasedFlickrPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedFlickrPics(value);
-        pvt.fillPostsCount();
+        api.fillPostsCount();
       });
     });
     pvt.moreTime();
@@ -183,12 +213,6 @@ var settings = function () {
   pvt.showSettingsIcon = function () {
     wallPage.showSettingsIcon(function () { wallPage.bindToSettingsIconHover(pvt.settingsIconHover); });
     pvt.moreTime();
-  };
-
-  api.timeRangeChanged = function (value) {
-    var currentRange = timeRanges[value];
-    wallPage.setCurrentTimeRangeLabel(currentRange);
-    postsList.setCurrentTimeRange(currentRange);
   };
 
   pvt.moreTime = function () {

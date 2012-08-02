@@ -48,17 +48,16 @@ var wallPage = function () {
   
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
-  pvt.setCurrentTimeRange = function (range) {
-    api.setCurrentTimeRangeLabel(range);
-    $('#currentTimeRangeSlider').attr('value', range.index);
+  api.setCurrentTimeRange = function (label, index) {
+    api.setCurrentTimeRangeLabel(label);
+    $('#currentTimeRangeSlider').attr('value', index);
   };
   
-  api.setCurrentTimeRangeLabel = function (range) { $('#currentTimeRangeLabel').text(range.description); };
+  api.setCurrentTimeRangeLabel = function (description) { $('#currentTimeRangeLabel').text(description); };
 
-  api.prepareTimeRangeSlider = function (currentValue, sliderSize, callback) {
+  api.prepareTimeRangeSlider = function (sliderSize, callback) {
     $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
     $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
-    pvt.setCurrentTimeRange(currentValue);
   }
 
   pvt.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
