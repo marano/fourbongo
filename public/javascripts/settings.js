@@ -91,7 +91,7 @@ var timeRangeSetting = function () {
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
-    wallPage.setCurrentTimeRangeLabel(pvt.current.description);
+    settingsView.setCurrentTimeRangeLabel(pvt.current.description);
     settings.fillPostsCount();
   }
 
@@ -102,10 +102,10 @@ var timeRangeSetting = function () {
   };
 
   api.bindEvents = function () {
-    wallPage.prepareTimeRangeSlider(timeRanges.length, pvt.set);
+    settingsView.prepareTimeRangeSlider(timeRanges.length, pvt.set);
   };
 
-  api.fillPage = function () { wallPage.setCurrentTimeRange(pvt.current.description, pvt.current.index); };
+  api.fillPage = function () { settingsView.setCurrentTimeRange(pvt.current.description, pvt.current.index); };
 
   api.validate = function (postItem, now) {
     return pvt.current.validate(postItem, now);
@@ -134,11 +134,11 @@ var sortOrderSetting = function () {
   };
 
   api.bindEvents = function () {
-    wallPage.bindToSortByRandomButton(pvt.set);
-    wallPage.bindToSortByPublicationButton(pvt.set);
+    settingsView.bindToSortByRandomButton(pvt.set);
+    settingsView.bindToSortByPublicationButton(pvt.set);
   };
 
-  api.fillPage = function () { wallPage.selectSortOrder(pvt.current.name); };
+  api.fillPage = function () { settingsView.selectSortOrder(pvt.current.name); };
 
   api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
 
@@ -169,7 +169,7 @@ var settings = function () {
   };
 
   api.fillPostsCount = function () {
-    wallPage.setPostsCountLabel(postsList.validPosts().length);
+    settingsView.setPostsCountLabel(postsList.validPosts().length);
   };
 
   pvt.settingsIconHover = function () {
@@ -178,7 +178,7 @@ var settings = function () {
       return;
     }
     pvt.areOptionsDisplayed = true;
-    wallPage.showSettingsOptions(function () {
+    settingsView.showSettingsOptions(function () {
       api.fillPostsCount();
 
       _(pvt.list).each(function (setting) {
@@ -186,23 +186,23 @@ var settings = function () {
         setting.bindEvents();
       });
 
-      wallPage.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
-      wallPage.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
-      wallPage.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      wallPage.prepareLocationBasedUpdatesDistanceRangeSlider(postsList.currentLocationBasedUpdatesDistanceRange(), 20, 10000, function (range) {
-        wallPage.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
+      settingsView.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
+      settingsView.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
+      settingsView.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
+      settingsView.prepareLocationBasedUpdatesDistanceRangeSlider(postsList.currentLocationBasedUpdatesDistanceRange(), 20, 10000, function (range) {
+        settingsView.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
         postsList.setCurrentLocationBasedUpdatesDistanceRange(range);
         api.fillPostsCount();
       });
-      wallPage.bindToFetchLocationBasedTweetsButton(function (value) {
+      settingsView.bindToFetchLocationBasedTweetsButton(function (value) {
         postsList.setShouldFetchLocationBasedTweets(value);
         api.fillPostsCount();
       });
-      wallPage.bindToFetchLocationBasedInstagramPicsButton(function (value) {
+      settingsView.bindToFetchLocationBasedInstagramPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedInstagramPics(value);
         api.fillPostsCount();
       });
-      wallPage.bindToFetchLocationBasedFlickrPicsButton(function (value) {
+      settingsView.bindToFetchLocationBasedFlickrPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedFlickrPics(value);
         api.fillPostsCount();
       });
@@ -211,7 +211,7 @@ var settings = function () {
   };
 
   pvt.showSettingsIcon = function () {
-    wallPage.showSettingsIcon(function () { wallPage.bindToSettingsIconHover(pvt.settingsIconHover); });
+    settingsView.showSettingsIcon(function () { settingsView.bindToSettingsIconHover(pvt.settingsIconHover); });
     pvt.moreTime();
   };
 
@@ -219,7 +219,7 @@ var settings = function () {
     pvt.lastHover = new Date().getTime();
     setTimeout(function () {
       if ((new Date().getTime() - pvt.lastHover) >= 5000) {
-        wallPage.hideSettings();
+        settingsView.hideSettings();
         pvt.isIconDisplayed = false;
         pvt.areOptionsDisplayed = false;
       }
