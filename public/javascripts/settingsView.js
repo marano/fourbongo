@@ -41,14 +41,14 @@ var settingsView = function () {
   api.bindToSortByRandomButton = function (callback) {
     $('#sortByRandom').click(function () { callback($('#sortByRandom').attr('value')); });
   };
-  
+
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
   api.setCurrentTimeRange = function (label, index) {
     api.setCurrentTimeRangeLabel(label);
     $('#currentTimeRangeSlider').attr('value', index);
   };
-  
+
   api.setCurrentTimeRangeLabel = function (description) { $('#currentTimeRangeLabel').text(description); };
 
   api.prepareTimeRangeSlider = function (sliderSize, callback) {
@@ -60,7 +60,7 @@ var settingsView = function () {
     api.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
     $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value', range);
   };
-  
+
   api.setCurrentLocationBasedUpdatesDistanceRangeLabel = function (range) { $('#currentLocationBasedUpdatesDistanceRangeLabel').text(range + "m"); };
 
   api.prepareLocationBasedUpdatesDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
