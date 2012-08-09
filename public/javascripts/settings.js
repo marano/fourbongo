@@ -101,8 +101,12 @@ var timeRangeSetting = function () {
     return timeRanges[parseInt(rawValue)];
   };
 
+  api.prepare = function () {
+    settingsView.prepareTimeRangeSlider(timeRanges.length);
+  };
+
   api.bindEvents = function () {
-    settingsView.prepareTimeRangeSlider(timeRanges.length, pvt.set);
+    settingsView.bindTimeRangeSlider(pvt.set);
   };
 
   api.fillPage = function () { settingsView.setCurrentTimeRange(pvt.current.description, pvt.current.index); };

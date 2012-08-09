@@ -51,9 +51,12 @@ var settingsView = function () {
 
   api.setCurrentTimeRangeLabel = function (description) { $('#currentTimeRangeLabel').text(description); };
 
-  api.prepareTimeRangeSlider = function (sliderSize, callback) {
-    $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
+  api.prepareTimeRangeSlider = function (sliderSize) {
     $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
+  }
+
+  api.bindTimeRangeSlider = function (callback) {
+    $('#currentTimeRangeSlider').change(function () { callback($('#currentTimeRangeSlider').attr('value')); });
   }
 
   api.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
