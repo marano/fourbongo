@@ -114,6 +114,45 @@ var timeRangeSetting = function () {
   return api;
 }();
 
+var locationBasedUpdatesDistanceRangeSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('distance_range', '10000'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    settingsView.setCurrentLocationBasedUpdatesDistanceRangeLabel(pvt.current);
+    settings.fillPostsCount();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) { return parseInt(rawValue); };
+
+  api.prepare = function () {
+    settingsView.prepareLocationBasedUpdatesDistanceRangeSlider(0, 10000);
+  };
+
+  api.bindEvents = function () {
+    settingsView.bindLocationBasedUpdatesDistanceRangeSlider(pvt.set);
+  };
+
+  api.fillPage = function () { settingsView.setCurrentLocationBasedUpdatesDistanceRange(pvt.current); };
+
+  api.validate = function (postItem, now) {
+    if (postItem.post.isUpdateByLocation) {
+      return pvt.current >= map.distance(postItem.post.latitude, postItem.post.longitude, wall.venueLat, wall.venueLng);
+    } else {
+      return true;
+    }
+  }
+
+  return api;
+}();
+
 var sortOrderSetting = function () {
   var api = {};
   var pvt = {
@@ -151,7 +190,7 @@ var settings = function () {
     lastHover: 0,
     isIconDisplayed: false,
     areOptionsDisplayed: false,
-    list: [timeRangeSetting, sortOrderSetting]
+    list: [locationBasedUpdatesDistanceRangeSetting, timeRangeSetting, sortOrderSetting]
   };
 
   api.initialize = function () {
@@ -182,6 +221,9 @@ var settings = function () {
       api.fillPostsCount();
 
       _(pvt.list).each(function (setting) {
+        if (setting.prepare) {
+          setting.prepare();
+        }
         setting.fillPage();
         setting.bindEvents();
       });
@@ -189,11 +231,6 @@ var settings = function () {
       settingsView.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       settingsView.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
       settingsView.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      settingsView.prepareLocationBasedUpdatesDistanceRangeSlider(postsList.currentLocationBasedUpdatesDistanceRange(), 20, 10000, function (range) {
-        settingsView.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
-        postsList.setCurrentLocationBasedUpdatesDistanceRange(range);
-        api.fillPostsCount();
-      });
       settingsView.bindToFetchLocationBasedTweetsButton(function (value) {
         postsList.setShouldFetchLocationBasedTweets(value);
         api.fillPostsCount();

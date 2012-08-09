@@ -105,9 +105,6 @@ var postsList = function () {
     shouldShowLocationBasedTweets: null,
     shouldShowLocationBasedInstagramPics: null,
     shouldShowLocationBasedFlickrPics: null,
-    currentLocationBasedUpdatesDistanceRange: null,
-    venueLat: null,
-    venueLng: null,
     onchangeCallback: null
   };
 
@@ -115,7 +112,6 @@ var postsList = function () {
     pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
     pvt.loadShouldFetchLocationBasedFlickrPics();
-    pvt.loadLocationBasedUpdatesDistanceRange();
   };
 
   api.onchange = function (callback) {
@@ -147,10 +143,7 @@ var postsList = function () {
       if (!pvt.shouldShowLocationBasedFlickrPics && postItem.post.isUpdateByLocation && postItem.post.isFlickrPic) {
         return false;
       }
-      if (postItem.post.isUpdateByLocation && map.distance(postItem.post.latitude, postItem.post.longitude, pvt.venueLat, pvt.venueLng) > pvt.currentLocationBasedUpdatesDistanceRange) {
-        return false;
-      }
-      return timeRangeSetting.validate(postItem, now);
+      return locationBasedUpdatesDistanceRangeSetting.validate(postItem) && timeRangeSetting.validate(postItem, now);
     });
   };
 
@@ -193,22 +186,11 @@ var postsList = function () {
     }
   }
 
-  pvt.loadLocationBasedUpdatesDistanceRange = function () {
-    var range = $.cookie('location_based_updates_distance_range');
-    if (range != null) {
-      pvt.currentLocationBasedUpdatesDistanceRange = +range;
-    } else {
-      pvt.currentLocationBasedUpdatesDistanceRange = 10000;
-    }
-  };
-
   api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
   
   api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
 
   api.shouldShowLocationBasedFlickrPics = function () { return pvt.shouldShowLocationBasedFlickrPics; };
-
-  api.currentLocationBasedUpdatesDistanceRange = function () { return pvt.currentLocationBasedUpdatesDistanceRange; };
 
   pvt.findSortOrderByName = function (sortName) {
     var sorts = [publicationSort, randomSort];
@@ -228,16 +210,6 @@ var postsList = function () {
   api.setShouldFetchLocationBasedFlickrPics = function (value) {
     pvt.shouldShowLocationBasedFlickrPics = value;
     $.cookie('fetch_location_based_flickr_pics', value);
-  };
-
-  api.setCurrentLocationBasedUpdatesDistanceRange = function (value) {
-    pvt.currentLocationBasedUpdatesDistanceRange = +value;
-    $.cookie('location_based_updates_distance_range', value);
-  };
-
-  api.setVenueLatLng = function (venueLat, venueLng) {
-    pvt.venueLat = venueLat;
-    pvt.venueLng = venueLng;
   };
 
   return api;
@@ -287,7 +259,10 @@ var slidesCoordinator = function () {
 }();
 
 var wall = function () {
-  var api = {};
+  var api = {
+    venueLat: null,
+    venueLng: null
+  };
   var pvt = {};
 
   api.initialize = function (venueId) {
@@ -297,7 +272,8 @@ var wall = function () {
   };
 
   pvt.startShow = function (venue) {
-    postsList.setVenueLatLng(venue.latitude, venue.longitude);
+    api.venueLat = venue.latitude;
+    api.venueLng = venue.longitude;
 
     var slider = slideShow($('#wallContainer'));
     introduction.showCover(venue.name, slider);

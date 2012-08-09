@@ -56,19 +56,21 @@ var settingsView = function () {
     $('#currentTimeRangeSlider').attr('max', sliderSize - 1);
   }
 
-  pvt.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
+  api.setCurrentLocationBasedUpdatesDistanceRange = function (range) {
     api.setCurrentLocationBasedUpdatesDistanceRangeLabel(range);
     $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value', range);
   };
 
   api.setCurrentLocationBasedUpdatesDistanceRangeLabel = function (range) { $('#currentLocationBasedUpdatesDistanceRangeLabel').text(range + "m"); };
 
-  api.prepareLocationBasedUpdatesDistanceRangeSlider = function (currentValue, sliderMin, sliderMax, callback) {
-    $('#currentLocationBasedUpdatesDistanceRangeSlider').change(function () { callback($('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value')); });
-    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('max', sliderMax).attr('min', sliderMin);
-    pvt.setCurrentLocationBasedUpdatesDistanceRange(currentValue);
+  api.prepareLocationBasedUpdatesDistanceRangeSlider = function (sliderMin, sliderMax) {
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').attr('max', sliderMax).attr('min');
   };
   
+  api.bindLocationBasedUpdatesDistanceRangeSlider = function (callback) {
+    $('#currentLocationBasedUpdatesDistanceRangeSlider').change(function () { callback($('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value')); });
+  };
+
   api.bindToSortByPublicationButton = function (callback) {
     $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
   };
