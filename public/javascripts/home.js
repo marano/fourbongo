@@ -65,14 +65,12 @@ var home = function () {
         });
     };
 
-    pvt.search = function () {
+    pvt.search = function (name, city) {
       homePage.prepareToSearch();
-      var name = homePage.searchNameInputValue();
       if (name == null || name == '') {
         pvt.searchNearbyVenues();
         return;
       } else {
-        var city = homePage.searchCityInputValue();
         if (name == null || name == '' || city == null || city == '') {
           name = '_';
           city = '_';

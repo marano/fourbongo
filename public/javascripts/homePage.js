@@ -11,7 +11,7 @@ var homePage = function () {
   api.bindSearchForm = function (callback) {
     $("#searchForm").submit(function (event) {
       event.preventDefault();
-      callback();
+      callback($('#inputSearchName').val(), $('#inputSearchCity').val());
     });
   };
 
@@ -36,8 +36,6 @@ var homePage = function () {
       callback();
     }});
   };
-
-  api.searchNameInputValue = function () { return $('#inputSearchName').val(); };
 
   api.searchCityInputValue = function () { return $('#inputSearchCity').val(); };
 
