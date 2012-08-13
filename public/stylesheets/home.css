@@ -131,6 +131,7 @@ body {
 
 #searchButton {
   cursor: pointer;
+  -webkit-appearance: button;
 }
 
 .searchInput {
