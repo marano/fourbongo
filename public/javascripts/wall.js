@@ -136,11 +136,6 @@ var postsList = function () {
     }
   };
 
-  pvt.findSortOrderByName = function (sortName) {
-    var sorts = [publicationSort, randomSort];
-    return _(sorts).find(function (sort) { return sort.name == sortName });
-  };
-
   return api;
 }();
 
