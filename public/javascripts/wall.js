@@ -102,14 +102,7 @@ var postsList = function () {
   var pvt = {
     posts: [],
     currentPost: null,
-    shouldShowLocationBasedInstagramPics: null,
-    shouldShowLocationBasedFlickrPics: null,
     onchangeCallback: null
-  };
-
-  api.initialize = function () {
-    pvt.loadShouldFetchLocationBasedInstagramPics();
-    pvt.loadShouldFetchLocationBasedFlickrPics();
   };
 
   api.onchange = function (callback) {
@@ -132,13 +125,9 @@ var postsList = function () {
   api.validPosts = function () {
     var now = new Date().getTime();
     return _(pvt.posts).filter(function (postItem) {
-      if (!pvt.shouldShowLocationBasedInstagramPics && postItem.post.isUpdateByLocation && postItem.post.isInstagramPic) {
-        return false;
-      }
-      if (!pvt.shouldShowLocationBasedFlickrPics && postItem.post.isUpdateByLocation && postItem.post.isFlickrPic) {
-        return false;
-      }
       return shouldFetchLocationBasedTweetSetting.validate(postItem) &&
+        shouldFetchLocationBasedInstagramPicsSetting.validate(postItem) &&
+        shouldFetchLocationBasedFlickrPicsSetting.validate(postItem) &&
         locationBasedUpdatesDistanceRangeSetting.validate(postItem) &&
         timeRangeSetting.validate(postItem, now);
     });
@@ -156,41 +145,9 @@ var postsList = function () {
     }
   };
 
-  pvt.loadShouldFetchLocationBasedInstagramPics = function () {
-    var cookieShouldFetchLocationBasedInstagramPics = $.cookie('fetch_location_based_instagram_pics');
-    if (cookieShouldFetchLocationBasedInstagramPics != undefined) {
-      pvt.shouldShowLocationBasedInstagramPics = cookieShouldFetchLocationBasedInstagramPics == 'true';
-    } else {
-      pvt.shouldShowLocationBasedInstagramPics = true;
-    }
-  }
-
-  pvt.loadShouldFetchLocationBasedFlickrPics = function () {
-    var cookieShouldFetchLocationBasedFlickrPics = $.cookie('fetch_location_based_flickr_pics');
-    if (cookieShouldFetchLocationBasedFlickrPics != undefined) {
-      pvt.shouldShowLocationBasedFlickrPics = cookieShouldFetchLocationBasedFlickrPics == 'true';
-    } else {
-      pvt.shouldShowLocationBasedFlickrPics = true;
-    }
-  }
-
-  api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
-
-  api.shouldShowLocationBasedFlickrPics = function () { return pvt.shouldShowLocationBasedFlickrPics; };
-
   pvt.findSortOrderByName = function (sortName) {
     var sorts = [publicationSort, randomSort];
     return _(sorts).find(function (sort) { return sort.name == sortName });
-  };
-
-  api.setShouldFetchLocationBasedInstagramPics = function (value) {
-    pvt.shouldShowLocationBasedInstagramPics = value;
-    $.cookie('fetch_location_based_instagram_pics', value);
-  };
-
-  api.setShouldFetchLocationBasedFlickrPics = function (value) {
-    pvt.shouldShowLocationBasedFlickrPics = value;
-    $.cookie('fetch_location_based_flickr_pics', value);
   };
 
   return api;

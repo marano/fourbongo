@@ -84,12 +84,12 @@ var settingsView = function () {
     $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').is(':checked') + ''); });
   };
 
-  api.bindToFetchLocationBasedInstagramPicsButton = function (callback) {
-    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').is(':checked')); });
+  api.bindToShouldFetchLocationBasedInstagramPicsButton = function (callback) {
+    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').is(':checked') + ''); });
   };
 
-  api.bindToFetchLocationBasedFlickrPicsButton = function (callback) {
-    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').is(':checked')); });
+  api.bindToShouldFetchLocationBasedFlickrPicsButton = function (callback) {
+    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').is(':checked') + ''); });
   };
 
   api.setShouldFetchLocationBasedTweets = function (value) {

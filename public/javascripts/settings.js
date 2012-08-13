@@ -211,11 +211,79 @@ var shouldFetchLocationBasedTweetSetting = function () {
 
   api.fillPage = function () { settingsView.setShouldFetchLocationBasedTweets(pvt.current) };
 
-  api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
-
   api.validate = function (postItem) {
     if (pvt.current == false) {
       return !(postItem.post.isUpdateByLocation && postItem.post.isTweet);
+    } else {
+      return true;
+    }
+  };
+
+  return api;
+}();
+
+var shouldFetchLocationBasedInstagramPicsSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('fetch_location_based_instagram_pics', 'true'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    settings.fillPostsCount();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) { return rawValue == 'true'; };
+
+  api.bindEvents = function () {
+    settingsView.bindToShouldFetchLocationBasedInstagramPicsButton(pvt.set);
+  };
+
+  api.fillPage = function () {
+    settingsView.setShouldFetchLocationBasedInstagramPics(pvt.current)
+  };
+
+  api.validate = function (postItem) {
+    if (pvt.current == false) {
+      return !(postItem.post.isUpdateByLocation && postItem.post.isInstagramPic);
+    } else {
+      return true;
+    }
+  };
+
+  return api;
+}();
+
+var shouldFetchLocationBasedFlickrPicsSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('fetch_location_based_flickr_pics', 'true'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    settings.fillPostsCount();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) { return rawValue == 'true'; };
+
+  api.bindEvents = function () {
+    settingsView.bindToShouldFetchLocationBasedFlickrPicsButton(pvt.set);
+  };
+
+  api.fillPage = function () { settingsView.setShouldFetchLocationBasedFlickrPics(pvt.current) };
+
+  api.validate = function (postItem) {
+    if (pvt.current == false) {
+      return !(postItem.post.isUpdateByLocation && postItem.post.isFlickrPic);
     } else {
       return true;
     }
@@ -232,6 +300,8 @@ var settings = function () {
     areOptionsDisplayed: false,
     list: [
       shouldFetchLocationBasedTweetSetting,
+      shouldFetchLocationBasedInstagramPicsSetting,
+      shouldFetchLocationBasedFlickrPicsSetting,
       locationBasedUpdatesDistanceRangeSetting,
       timeRangeSetting,
       sortOrderSetting
@@ -271,17 +341,6 @@ var settings = function () {
         }
         setting.fillPage();
         setting.bindEvents();
-      });
-
-      settingsView.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
-      settingsView.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      settingsView.bindToFetchLocationBasedInstagramPicsButton(function (value) {
-        postsList.setShouldFetchLocationBasedInstagramPics(value);
-        api.fillPostsCount();
-      });
-      settingsView.bindToFetchLocationBasedFlickrPicsButton(function (value) {
-        postsList.setShouldFetchLocationBasedFlickrPics(value);
-        api.fillPostsCount();
       });
     });
     pvt.moreTime();

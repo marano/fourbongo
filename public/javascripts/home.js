@@ -10,7 +10,6 @@ var home = function () {
     api.initialize = function () {
       homePage.showTitle();
       foursquare.initialize();
-      postsList.initialize();
       settings.initialize();
       facebook.initialize(function () {
         if (!foursquare.isAuthenticated()) {
