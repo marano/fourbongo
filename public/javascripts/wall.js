@@ -102,14 +102,12 @@ var postsList = function () {
   var pvt = {
     posts: [],
     currentPost: null,
-    shouldShowLocationBasedTweets: null,
     shouldShowLocationBasedInstagramPics: null,
     shouldShowLocationBasedFlickrPics: null,
     onchangeCallback: null
   };
 
   api.initialize = function () {
-    pvt.loadShouldFetchLocationBasedTweets();
     pvt.loadShouldFetchLocationBasedInstagramPics();
     pvt.loadShouldFetchLocationBasedFlickrPics();
   };
@@ -134,16 +132,15 @@ var postsList = function () {
   api.validPosts = function () {
     var now = new Date().getTime();
     return _(pvt.posts).filter(function (postItem) {
-      if (!pvt.shouldShowLocationBasedTweets && postItem.post.isUpdateByLocation && postItem.post.isTweet) {
-        return false;
-      }
       if (!pvt.shouldShowLocationBasedInstagramPics && postItem.post.isUpdateByLocation && postItem.post.isInstagramPic) {
         return false;
       }
       if (!pvt.shouldShowLocationBasedFlickrPics && postItem.post.isUpdateByLocation && postItem.post.isFlickrPic) {
         return false;
       }
-      return locationBasedUpdatesDistanceRangeSetting.validate(postItem) && timeRangeSetting.validate(postItem, now);
+      return shouldFetchLocationBasedTweetSetting.validate(postItem) &&
+        locationBasedUpdatesDistanceRangeSetting.validate(postItem) &&
+        timeRangeSetting.validate(postItem, now);
     });
   };
 
@@ -158,15 +155,6 @@ var postsList = function () {
       return next;
     }
   };
-
-  pvt.loadShouldFetchLocationBasedTweets = function () {
-    var cookieShouldFetchLocationBasedTweets = $.cookie('fetch_location_based_tweets');
-    if (cookieShouldFetchLocationBasedTweets != undefined) {
-      pvt.shouldShowLocationBasedTweets = cookieShouldFetchLocationBasedTweets == 'true';
-    } else {
-      pvt.shouldShowLocationBasedTweets = true;
-    }
-  }
 
   pvt.loadShouldFetchLocationBasedInstagramPics = function () {
     var cookieShouldFetchLocationBasedInstagramPics = $.cookie('fetch_location_based_instagram_pics');
@@ -186,8 +174,6 @@ var postsList = function () {
     }
   }
 
-  api.shouldShowLocationBasedTweets = function () { return pvt.shouldShowLocationBasedTweets; };
-  
   api.shouldShowLocationBasedInstagramPics = function () { return pvt.shouldShowLocationBasedInstagramPics; };
 
   api.shouldShowLocationBasedFlickrPics = function () { return pvt.shouldShowLocationBasedFlickrPics; };
@@ -195,11 +181,6 @@ var postsList = function () {
   pvt.findSortOrderByName = function (sortName) {
     var sorts = [publicationSort, randomSort];
     return _(sorts).find(function (sort) { return sort.name == sortName });
-  };
-
-  api.setShouldFetchLocationBasedTweets = function (value) {
-    pvt.shouldShowLocationBasedTweets = value;
-    $.cookie('fetch_location_based_tweets', value);
   };
 
   api.setShouldFetchLocationBasedInstagramPics = function (value) {

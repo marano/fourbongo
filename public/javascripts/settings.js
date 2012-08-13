@@ -188,13 +188,54 @@ var sortOrderSetting = function () {
   return api;
 }();
 
+var shouldFetchLocationBasedTweetSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('fetch_location_based_tweets', 'true'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    settings.fillPostsCount();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) { return rawValue == 'true'; };
+
+  api.bindEvents = function () {
+    settingsView.bindToShouldFetchLocationBasedTweetsButton(pvt.set);
+  };
+
+  api.fillPage = function () { settingsView.setShouldFetchLocationBasedTweets(pvt.current) };
+
+  api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
+
+  api.validate = function (postItem) {
+    if (pvt.current == false) {
+      return !(postItem.post.isUpdateByLocation && postItem.post.isTweet);
+    } else {
+      return true;
+    }
+  };
+
+  return api;
+}();
+
 var settings = function () {
   var api = {};
   var pvt = {
     lastHover: 0,
     isIconDisplayed: false,
     areOptionsDisplayed: false,
-    list: [locationBasedUpdatesDistanceRangeSetting, timeRangeSetting, sortOrderSetting]
+    list: [
+      shouldFetchLocationBasedTweetSetting,
+      locationBasedUpdatesDistanceRangeSetting,
+      timeRangeSetting,
+      sortOrderSetting
+    ]
   };
 
   api.initialize = function () {
@@ -232,13 +273,8 @@ var settings = function () {
         setting.bindEvents();
       });
 
-      settingsView.setShouldFetchLocationBasedTweets(postsList.shouldShowLocationBasedTweets());
       settingsView.setShouldFetchLocationBasedInstagramPics(postsList.shouldShowLocationBasedInstagramPics());
       settingsView.setShouldFetchLocationBasedFlickrPics(postsList.shouldShowLocationBasedFlickrPics());
-      settingsView.bindToFetchLocationBasedTweetsButton(function (value) {
-        postsList.setShouldFetchLocationBasedTweets(value);
-        api.fillPostsCount();
-      });
       settingsView.bindToFetchLocationBasedInstagramPicsButton(function (value) {
         postsList.setShouldFetchLocationBasedInstagramPics(value);
         api.fillPostsCount();

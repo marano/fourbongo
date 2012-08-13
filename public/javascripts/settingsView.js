@@ -80,8 +80,8 @@ var settingsView = function () {
 
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
 
-  api.bindToFetchLocationBasedTweetsButton = function (callback) {
-    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').is(':checked')); });
+  api.bindToShouldFetchLocationBasedTweetsButton = function (callback) {
+    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').is(':checked') + ''); });
   };
 
   api.bindToFetchLocationBasedInstagramPicsButton = function (callback) {
