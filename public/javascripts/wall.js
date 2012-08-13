@@ -122,16 +122,7 @@ var postsList = function () {
 
   api.isNotEmpty = function () { return pvt.posts.length > 0; };
 
-  api.validPosts = function () {
-    var now = new Date().getTime();
-    return _(pvt.posts).filter(function (postItem) {
-      return shouldFetchLocationBasedTweetSetting.validate(postItem) &&
-        shouldFetchLocationBasedInstagramPicsSetting.validate(postItem) &&
-        shouldFetchLocationBasedFlickrPicsSetting.validate(postItem) &&
-        locationBasedUpdatesDistanceRangeSetting.validate(postItem) &&
-        timeRangeSetting.validate(postItem, now);
-    });
-  };
+  api.validPosts = function () { return _(pvt.posts).select(settings.validate); };
 
   api.next = function () {
     var validPosts = api.validPosts();

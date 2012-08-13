@@ -111,7 +111,8 @@ var timeRangeSetting = function () {
 
   api.fillPage = function () { settingsView.setCurrentTimeRange(pvt.current.description, pvt.current.index); };
 
-  api.validate = function (postItem, now) {
+  api.validate = function (postItem) {
+    var now = new Date().getTime();
     return pvt.current.validate(postItem, now);
   }
 
@@ -314,16 +315,21 @@ var settings = function () {
     });
     homePage.bindToMouseMovement(pvt.mouseMovement);
     postsList.onchange(api.fillPostsCount);
-  }
+  };
+
+  api.validate = function (postItem) {
+    var filterSettings = _(pvt.list).select(function (setting) { return setting.validate; });
+    return _(filterSettings).all(function (filterSetting) { return filterSetting.validate(postItem); })
+  };
+
+  api.fillPostsCount = function () {
+    settingsView.setPostsCountLabel(postsList.validPosts().length);
+  };
 
   pvt.mouseMovement = function () {
     if (pvt.isIconDisplayed) { return; }
     pvt.isIconDisplayed = true;
     pvt.showSettingsIcon();
-  };
-
-  api.fillPostsCount = function () {
-    settingsView.setPostsCountLabel(postsList.validPosts().length);
   };
 
   pvt.settingsIconHover = function () {
