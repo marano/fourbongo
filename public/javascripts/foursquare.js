@@ -53,7 +53,7 @@ var foursquare = function () {
 
   api.login = function () {
     var client_id = $('meta[name=foursquare_client_id]').attr('content');
-    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=' + client_id + '&response_type=token&redirect_uri=' + encodeURI(window.location.origin + '/foursquare/authentication_callback');
+    window.location = 'https://foursquare.com/oauth2/authenticate?client_id=' + client_id + '&response_type=token&redirect_uri=' + encodeURI(window.location.protocol + "//" + window.location.host + '/foursquare/authentication_callback');
   };
 
   return api;
