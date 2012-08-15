@@ -22,6 +22,15 @@ var twitter = function () {
     });
   };
 
+  api.byTag = function (tag, callback) {
+    $.getJSON('http://search.twitter.com/search.json?q=%23' + tag + '&callback=?', function (data) {
+      var tweets = _(data.results).map(function (tweet) {
+        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at)});
+      });
+      callback(tweets);
+    });
+  };
+
   pvt.locationInfo = function (tweet) {
     var geoInfo = tweet.geo;
     if (geoInfo == null) {
