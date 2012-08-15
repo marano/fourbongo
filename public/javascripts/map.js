@@ -19,6 +19,15 @@ var map = function () {
       };
 
       var map = new google.maps.Map(wallPage.mapCanvasDocumentElement(), myOptions);
+      var zooms = [];
+      for (var i = 20; i >= 2; i--) {
+        zooms.push(i);
+      }
+      var delay = 1000;
+      $(zooms).each(function (index, zoom) {
+        setTimeout(function () { map.setZoom(zoom); }, delay);
+        delay += 600;
+      });
     });
   };
 
