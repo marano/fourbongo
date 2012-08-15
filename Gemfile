@@ -7,10 +7,13 @@ gem 'json'
 gem 'capistrano'
 gem 'rvm-capistrano'
 gem 'unicorn'
-gem 'pry'
 
 group :test do
   gem 'rspec'
   gem 'vcr'
   gem 'fakeweb'
+end
+
+group :development do
+  gem 'pry'
 end
