@@ -13,7 +13,3 @@ group :test do
   gem 'vcr'
   gem 'fakeweb'
 end
-
-group :development do
-  gem 'pry'
-end
