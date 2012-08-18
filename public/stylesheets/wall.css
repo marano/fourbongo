@@ -68,6 +68,9 @@
   font-size: 150px;
   text-align: center;
   margin-top: 50px;
+  position: absolute;
+  min-width: 95%;
+  max-width: 95%;
 }
 
 #settings {
