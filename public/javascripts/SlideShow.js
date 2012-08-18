@@ -23,7 +23,7 @@ function slideShow(container) {
     self.currentDiv = $('<div>').css('margin-left', -self.window.width());
     self.window.append(self.currentDiv);
     self.currentDiv.append(self.nextDivContent);
-    if (callback != undefined) { callback() };
+    if (callback != undefined) { callback(); };
     self.currentDiv.animate({'margin-left' : '0px'}, {easing: 'easeOutQuint', duration: 1000});
   };
 
