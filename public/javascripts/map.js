@@ -36,14 +36,14 @@ var map = function () {
   };
 
   pvt.smoothZoom = function (map, counter) {
-    if (counter <= 1) {
+    if (counter <= 2) {
       return;
     } else {
       z = google.maps.event.addListener(map, 'zoom_changed', function (event) {
         google.maps.event.removeListener(z);
         pvt.smoothZoom(map, counter - 1);
       });
-      setTimeout(function () { map.setZoom(counter); }, 550);
+      setTimeout(function () { map.setZoom(counter); }, 600);
     }
   }
 
