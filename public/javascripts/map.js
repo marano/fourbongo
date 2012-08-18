@@ -1,5 +1,6 @@
 var map = function () {
   var api = {};
+  var pvt = {};
   
   api.show = function (latitude, longitude, slider) {
     var mapContainer = wallPage.mapContainerHtml();
@@ -19,15 +20,8 @@ var map = function () {
       };
 
       var map = new google.maps.Map(wallPage.mapCanvasDocumentElement(), myOptions);
-      var zooms = [];
-      for (var i = 20; i >= 2; i--) {
-        zooms.push(i);
-      }
-      var delay = 1000;
-      $(zooms).each(function (index, zoom) {
-        setTimeout(function () { map.setZoom(zoom); }, delay);
-        delay += 600;
-      });
+
+      setTimeout(function () { pvt.smoothZoom(map, 20); }, 1000);
     });
   };
 
@@ -40,6 +34,18 @@ var map = function () {
     var d = R * c; // Distance in km
     return d * 1000;
   };
+
+  pvt.smoothZoom = function (map, counter) {
+    if (counter <= 1) {
+      return;
+    } else {
+      z = google.maps.event.addListener(map, 'zoom_changed', function (event) {
+        google.maps.event.removeListener(z);
+        pvt.smoothZoom(map, counter - 1);
+      });
+      setTimeout(function () { map.setZoom(counter); }, 550);
+    }
+  }
 
   return api;
 }();
