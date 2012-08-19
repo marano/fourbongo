@@ -1,3 +1,68 @@
+var searchTab = function (type, otherTab) {
+  var api = {
+    otherTab: otherTab
+  };
+  var pvt = {
+    tab: $($('#searchBy' + type + 'Tab')[0]),
+    tabLink: $($('#searchBy' + type + 'TabLink')[0]),
+  };
+
+  api.selected = function () {
+    pvt.tab.css('zoom', '100%');
+    pvt.tab.css('z-index', '1');
+    pvt.tab.css('pointer-events', 'none');
+    pvt.tabLink.addClass('selectedSearchTabLink');
+    pvt.tabLink.removeClass('disabledSearchTabLink');
+  };
+
+  api.notSelected = function () {
+    pvt.tab.css('opacity', '0.7');
+    pvt.tab.css('top', '1px');
+    pvt.tab.css('zoom', '98%');
+    pvt.tab.css('z-index', '0');
+    pvt.tab.removeClass('selectedSearchTab');
+    pvt.tabLink.removeClass('selectedSearchTabLink');
+    pvt.tabLink.addClass('disabledSearchTabLink');
+  };
+
+  api.addEvents = function () {
+    pvt.tab.on('mouseenter', '.disabledSearchTabLink', pvt.mouseenter);
+    pvt.tab.on('mouseout', '.disabledSearchTabLink', pvt.mouseout);
+    pvt.tab.on('click', '.disabledSearchTabLink', pvt.click);
+  };
+
+  pvt.mouseenter = function () {
+    pvt.tab.animate({'opacity' : '0.85', 'top' : '-10px'}, {easing: 'easeInQuint', duration: 80});
+  };
+
+  pvt.mouseout = function () {
+    pvt.tab.animate({'opacity' : '0.7', 'top' : '1px'}, {easing: 'easeInQuint', duration: 80});
+  };
+
+  api.zoomOut1 = function () {
+    pvt.tab.animate({'opacity' : '0.95', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80});
+  }
+
+  api.zoomOut2 = function (callback) {
+    pvt.tab.animate({'opacity' : '0.7', 'top' : '1px', 'zoom' : '98%'}, {easing: 'easeInQuint', duration: 80, complete: callback});
+  }
+
+  api.goBehind = function () { pvt.tab.css('z-index', '0'); }
+
+  pvt.click = function () {
+    api.otherTab.zoomOut1();
+    pvt.tab.animate({'opacity' : '0.95', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
+      api.otherTab.goBehind();
+      api.otherTab.zoomOut2(api.otherTab.notSelected);
+      pvt.tab.css('z-index', '1');
+      pvt.tab.animate({'opacity' : '1', 'top' : '0', 'zoom' : '100%'}, {easing: 'easeInQuint', duration: 80, complete: function () { api.otherTab.notSelected(); }});
+      api.selected();
+    }});
+  }
+
+  return api;
+};
+
 var homePage = function () {
   api = {};
   pvt = { thereIsASearchResult: false };
@@ -43,12 +108,12 @@ var homePage = function () {
 
   api.showTitle = function () { pvt.smoothShow('#title'); };
 
-  pvt.showBar = function () { pvt.smoothShow('#bar'); };
+  pvt.showBar = function () { pvt.smoothShow('#homeBar'); };
 
   pvt.hideBar = function (callback) {
-    var elementOpacity = $('#bar').css('opacity');
-    $('#bar').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
-      $('#bar').hide().css('opacity', elementOpacity);
+    var elementOpacity = $('#homeBar').css('opacity');
+    $('#homeBar').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
+      $('#homeBar').hide().css('opacity', elementOpacity);
       callback();
     }});
   };
@@ -60,7 +125,20 @@ var homePage = function () {
 
   api.buildSearchMenu = function (callback) {
     $.get('/search_menu', function (html) {
-      $('#bar').append(html);
+      $('#homeBar').append(html);
+
+      var searchByLocationTab = searchTab('Location');
+      var searchByTagTab = searchTab('Tag');
+
+      searchByLocationTab.otherTab = searchByTagTab;
+      searchByTagTab.otherTab = searchByLocationTab;
+
+      searchByLocationTab.selected();
+      searchByTagTab.notSelected();
+
+      searchByLocationTab.addEvents();
+      searchByTagTab.addEvents();
+
       pvt.showBar();
       callback();
     });
@@ -68,7 +146,7 @@ var homePage = function () {
 
   api.buildFoursquareAuthenticationMenu = function (callback) {
     $.get('/foursquare/authentication_menu', function (html) {
-      $('#bar').append(html);
+      $('#homeBar').append(html);
       pvt.showBar();
       callback();
     });
@@ -76,7 +154,7 @@ var homePage = function () {
 
   api.buildFacebookAuthenticationMenu = function (callback) {
     $.get('/facebook/authentication_menu', function (html) {
-      $('#bar').append(html);
+      $('#homeBar').append(html);
       pvt.showBar();
       callback();
     });

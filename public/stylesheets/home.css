@@ -1,6 +1,6 @@
 body {
   margin: 0;
- font-family: 'Times New Roman', serif;
+ font-family: 'Arial', serif;
 }
 
 .authentication_menu {
@@ -24,6 +24,10 @@ body {
 
 .authentication_menu_message {
   margin-top: 10px;
+}
+
+#searchMenu {
+  position: relative;
 }
 
 #searchMenu, #searchResult {
@@ -68,7 +72,7 @@ body {
 
 #searchMenuFields {
   margin-top: 13px;
-  margin-left: 30px;
+  margin-left: 15px;
   float: left;
 }
 
@@ -86,39 +90,81 @@ body {
   display: inline-block;
 }
 
-#bar {
+.bar, .searchTabLink {
+  background-color: rgb(39, 39, 39);
+}
+
+.searchTabLink {
+  font-size: 24px;
+  color: rgb(255, 255, 255);
+
+  display: inline-block;
+
+  padding-left: 12px;
+  padding-right: 12px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  z-index: 10;
+  position: relative;
+}
+
+.disabledSearchTabLink {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.selectedSearchTabLink {
+  cursor: auto;
+}
+
+.bar {
   height: 60px;
   width: 1024px;
   margin-left: auto;
   margin-right: auto;
-  background-color: black;
-  opacity: 0.85;
   
   border-radius: 3px;
   -moz-border-radius: 3px;
+
+  border-top-left-radius: 0px;
   
-  box-shadow: 0 10px 30px 0 black;
-  -webkit-box-shadow: 0 10px 30px 0 black;
-  -moz-box-shadow: 0 10px 30px 0 black;
+  box-shadow: 0 15px 25px 0 #999;
+  -moz-box-shadow: 0 10px 30px 0 #999;
+
+  pointer-events: all;
 }
 
-#bar h3, .searchLabel, #searchButton, .searchInput {
+.searchLabel, #searchButton, .searchInput {
   font-size: 24px;
   margin-left: 3px;
   margin-right: 3px;
 }
 
-#searchMenu h3 {
-  padding-right: 5px;
+.searchTab {
+  position: absolute;
+  margin-top: 0;
+  margin-left: 0;
 }
 
-#bar h3, .searchLabel {
-  font-family: 'Georgia', serif;
-  color: white;
+#searchByTagTabLink {
+  margin-left: 145px;
+}
+
+#searchByLocationTabLink {
+  margin-left: 0px;
+}
+
+.bar .searchLabel {
+  color: rgb(255, 255, 255);
 }
 
 #searchButton, .searchInput {
-  color: #444;
+  color: rgb(96, 96, 96);
   height: 37px;
   border-radius: 5px;
 }
@@ -140,14 +186,14 @@ body {
 }
 
 #inputSearchName {
-  width: 432px;
+  width: 476px;
 }
 
 #inputSearchCity {
   width: 220px;
 }
 
-#searchMenu h3, #searchForm {
+#searchForm {
   margin: 0;
 }
 

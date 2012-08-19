@@ -1,16 +1,33 @@
 <div id='searchMenu'>
-  <div id='searchMenuFields'>
-    <h3>where are you?</h3>
+  <div id='searchByLocationTab' class='searchTab'>
+    <div id='searchByLocationTabLink' class='searchTabLink'>by location</div>
+    <div class='bar'>
+      <div id='searchMenuFields'>
+        <form id="searchForm">
+          <label class='searchLabel' for='inputSearchName'>where are you?</label>
+          <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
+          <label class='searchLabel' for='inputSearchCity'>in</label>
+          <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
+          <input type='submit' value="go" id='searchButton' />
+        </form>
+      </div>
 
-    <form id="searchForm">
-      <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
-      <label class='searchLabel'>in</label>
-      <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
-      <input type='submit' value="go" id='searchButton' />
-    </form>
+      <div id='spinning' class='hidden'>
+        <img src='/spinning.gif' />
+      </div>
+    </div>
   </div>
 
-  <div id='spinning' class='hidden'>
-    <img src='/spinning.gif' />
+  <div id='searchByTagTab' class='searchTab'>
+    <div id='searchByTagTabLink' class='searchTabLink'>by tag</div>
+    <div class='bar'>
+      <div id='searchMenuFields'>
+        <form id="searchForm">
+          <label class='searchLabel' for='inputSearchTag'>what do you want to hear about?</label>
+          <input type='text' id='inputSearchTag' name='tag' class='searchInput' placeholder='#love' />
+          <input type='submit' value="go" id='searchButton' />
+        </form>
+      </div>
+    </div>
   </div>
 </div>
