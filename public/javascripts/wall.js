@@ -3,6 +3,8 @@ var introduction = function () {
 
   api.showCover = function (venueName, slider) { slider.slide(wallPage.coverHtml(venueName)); };
 
+  api.showTagCover = function (tag, slider) { slider.slide(wallPage.tagCoverHtml(tag)); };
+
   api.showMap = function (latitude, longitude, slider) { map.show(latitude, longitude, slider); };
 
   return api;
@@ -181,6 +183,26 @@ var slidesCoordinator = function () {
 
   return api;
 }();
+
+var tagWall = function (tag) {
+  var api = {};
+
+  wallPage.createWallContainerHtml();
+  wallPage.showLoading();
+  startShow();
+
+  function startShow() {
+    var slider = slideShow($('#wallContainer'));
+    introduction.showTagCover(tag, slider);
+
+    instagram.mediaByTag(tag, postsList.addAll);
+    twitter.byTag(tag, postsList.addAll);
+
+    setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
+  }
+
+  return api;
+};
 
 var wall = function () {
   var api = {

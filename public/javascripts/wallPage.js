@@ -10,7 +10,9 @@ var wallPage = function () {
 
   api.hideLoading = function () { $('#loading').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#loading').remove(); }}); };
 
-  api.coverHtml = function (venueName) { return $('<div>', {id: 'venue_cover'}).text(venueName); };
+  api.coverHtml = function (venueName) { return $('<div>', {id: 'cover_title'}).text(venueName); };
+
+  api.tagCoverHtml = function (tag) { return $('<div>', {id: 'cover_title'}).text(tag); };
 
   api.mapContainerHtml = function () { return $('<div>', {id:'venue_map'}); };
 

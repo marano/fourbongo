@@ -41,7 +41,7 @@ var home = function () {
 
     pvt.prepareSearchMenu = function () {
       pvt.queryGeolocation();
-      homePage.bindSearchForm(pvt.search);
+      homePage.bindSearchForm(pvt.search, pvt.searchByTag);
     };
 
     pvt.queryGeolocation = function () {
@@ -81,7 +81,18 @@ var home = function () {
       }
     };
 
+    pvt.searchByTag = function (tag) {
+      homePage.prepareToSearch();
+      if (!tag) {
+        return;
+      }
+
+      pvt.startTagShow(tag);
+    };
+
     pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall.initialize(venueId); }); };
+
+    pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag); }); };
 
     return api;
 }();

@@ -73,10 +73,14 @@ var homePage = function () {
     $('body').bind('touchmove', callback);
   };
 
-  api.bindSearchForm = function (callback) {
+  api.bindSearchForm = function (searchCallback, searchByTagCallback) {
     $("#searchForm").submit(function (event) {
       event.preventDefault();
-      callback($('#inputSearchName').val(), $('#inputSearchCity').val());
+      searchCallbak($('#inputSearchName').val(), $('#inputSearchCity').val());
+    });
+    $("#searchByTagForm").submit(function (event) {
+      event.preventDefault();
+      searchByTagCallback($('#inputSearchTag').val());
     });
   };
 
