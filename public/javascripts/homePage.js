@@ -52,11 +52,12 @@ var searchTab = function (type, otherTab) {
   pvt.click = function () {
     api.otherTab.zoomOut1();
     pvt.tab.animate({'opacity' : '0.95', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
+      pvt.tab.css('z-index', '1');
       api.otherTab.goBehind();
       api.otherTab.zoomOut2(api.otherTab.notSelected);
-      pvt.tab.css('z-index', '1');
-      pvt.tab.animate({'opacity' : '1', 'top' : '0', 'zoom' : '100%'}, {easing: 'easeInQuint', duration: 80, complete: function () { api.otherTab.notSelected(); }});
-      api.selected();
+      pvt.tab.animate({'opacity' : '1', 'top' : '0', 'zoom' : '100%'}, {easing: 'easeOutBounce', duration: 160, complete: function () {
+        api.selected();
+      }});
     }});
   }
 
