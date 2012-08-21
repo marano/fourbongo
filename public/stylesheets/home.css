@@ -201,6 +201,7 @@ body {
   width: 900px;
   overflow: hidden;
   position: relative;
+  margin-top: 125px;
   margin-left: auto;
   margin-right: auto;
 }
