@@ -139,7 +139,7 @@ body {
   pointer-events: all;
 }
 
-.searchLabel, #searchButton, .searchInput {
+.searchLabel, .searchButton, .searchInput {
   font-size: 24px;
   margin-left: 3px;
   margin-right: 3px;
@@ -163,13 +163,13 @@ body {
   color: rgb(255, 255, 255);
 }
 
-#searchButton, .searchInput {
+.searchButton, .searchInput {
   color: rgb(96, 96, 96);
   height: 37px;
   border-radius: 5px;
 }
 
-#searchButton {
+.searchButton {
   margin-right: 0px;
   padding: 3px 5px 1px 5px;
   cursor: pointer;
