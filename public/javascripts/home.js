@@ -102,5 +102,3 @@ var home = function () {
 
     return api;
 }();
-
-$(document).ready(function () { home.initialize(); });
