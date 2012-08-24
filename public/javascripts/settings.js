@@ -119,7 +119,7 @@ var timeRangeSetting = function () {
   return api;
 }();
 
-var locationBasedUpdatesDistanceRangeSetting = function () {
+var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('distance_range', '10000'),
@@ -149,14 +149,14 @@ var locationBasedUpdatesDistanceRangeSetting = function () {
 
   api.validate = function (postItem, now) {
     if (postItem.post.isUpdateByLocation) {
-      return pvt.current >= map.distance(postItem.post.latitude, postItem.post.longitude, wall.venueLat, wall.venueLng);
+      return pvt.current >= map.distance(postItem.post.latitude, postItem.post.longitude, venueLat, venueLng);
     } else {
       return true;
     }
   }
 
   return api;
-}();
+};
 
 var sortOrderSetting = function () {
   var api = {};
@@ -294,23 +294,18 @@ var shouldFetchLocationBasedFlickrPicsSetting = function () {
 }();
 
 var settings = function () {
-  var api = {};
+  var api = {
+    list: []
+  };
+
   var pvt = {
     lastHover: 0,
     isIconDisplayed: false,
     areOptionsDisplayed: false,
-    list: [
-      shouldFetchLocationBasedTweetSetting,
-      shouldFetchLocationBasedInstagramPicsSetting,
-      shouldFetchLocationBasedFlickrPicsSetting,
-      locationBasedUpdatesDistanceRangeSetting,
-      timeRangeSetting,
-      sortOrderSetting
-    ]
   };
 
   api.initialize = function () {
-    _(pvt.list).each(function (setting) {
+    _(api.list).each(function (setting) {
       setting.load();
     });
     homePage.bindToMouseMovement(pvt.mouseMovement);
@@ -318,7 +313,7 @@ var settings = function () {
   };
 
   api.validate = function (postItem) {
-    var filterSettings = _(pvt.list).select(function (setting) { return setting.validate; });
+    var filterSettings = _(api.list).select(function (setting) { return setting.validate; });
     return _(filterSettings).all(function (filterSetting) { return filterSetting.validate(postItem); })
   };
 
@@ -341,7 +336,7 @@ var settings = function () {
     settingsView.showSettingsOptions(function () {
       api.fillPostsCount();
 
-      _(pvt.list).each(function (setting) {
+      _(api.list).each(function (setting) {
         if (setting.prepare) {
           setting.prepare();
         }

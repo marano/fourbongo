@@ -184,19 +184,28 @@ var slidesCoordinator = function () {
   return api;
 }();
 
-var tagWall = function (tag) {
+var tagWall = function (tag, settings) {
   var api = {};
 
+  var raw_tag = tag.replace(/#/g, '');
+  window.location.hash = 'tag=' + raw_tag;
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
   startShow();
 
+  settings.list = [
+    timeRangeSetting,
+    sortOrderSetting
+  ]
+
+  settings.initialize();
+
   function startShow() {
     var slider = slideShow($('#wallContainer'));
-    introduction.showTagCover(tag, slider);
+    introduction.showTagCover('#' + raw_tag, slider);
 
-    instagram.mediaByTag(tag, postsList.addAll);
-    twitter.byTag(tag, postsList.addAll);
+    instagram.mediaByTag(raw_tag, postsList.addAll);
+    twitter.byTag(raw_tag, postsList.addAll);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
   }
@@ -204,20 +213,31 @@ var tagWall = function (tag) {
   return api;
 };
 
-var wall = function () {
+var wall = function (venueId, settings) {
   var api = {
     venueLat: null,
     venueLng: null
   };
+
   var pvt = {};
 
-  api.initialize = function (venueId) {
-    wallPage.createWallContainerHtml();
-    wallPage.showLoading();
-    foursquare.venue(venueId, pvt.startShow);
-  };
+  window.location.hash = 'venueId=' + venueId;
+  wallPage.createWallContainerHtml();
+  wallPage.showLoading();
+  foursquare.venue(venueId, startShow);
 
-  pvt.startShow = function (venue) {
+  function startShow(venue) {
+    settings.list = [
+      shouldFetchLocationBasedTweetSetting,
+      shouldFetchLocationBasedInstagramPicsSetting,
+      shouldFetchLocationBasedFlickrPicsSetting,
+      locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
+      timeRangeSetting,
+      sortOrderSetting
+    ]
+
+    settings.initialize();
+
     api.venueLat = venue.latitude;
     api.venueLng = venue.longitude;
 
@@ -260,4 +280,4 @@ var wall = function () {
   };
 
   return api;
-}();
+};

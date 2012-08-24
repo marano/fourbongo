@@ -4,13 +4,13 @@ var home = function () {
     var pvt = {
       latitude: null,
       longitude: null,
-      geolocationFetched: false
+      geolocationFetched: false,
+      settings: settings
     };
 
     api.initialize = function () {
       homePage.showTitle();
       foursquare.initialize();
-      settings.initialize();
       facebook.initialize(function () {
         if (!foursquare.isAuthenticated()) {
           homePage.buildFoursquareAuthenticationMenu(function () {
@@ -31,11 +31,17 @@ var home = function () {
     };
 
     pvt.initializeFourbongo = function () {
-      if (window.location.hash != '') {
-        var venueId = window.location.hash.replace('#', '')
-        pvt.startShow(venueId);
-      } else {
+      var hash = window.location.hash;
+      if (!hash) {
         homePage.buildSearchMenu(pvt.prepareSearchMenu);
+      } else {
+        if (hash.indexOf('venueId=') != -1) {
+          var venueId = hash.replace('#venueId=', '');
+          pvt.startShow(venueId);
+        } else {
+          var tag = hash.replace('#tag=', '');
+          pvt.startTagShow(tag);
+        }
       }
     };
 
@@ -90,9 +96,9 @@ var home = function () {
       pvt.startTagShow(tag);
     };
 
-    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall.initialize(venueId); }); };
+    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall(venueId, pvt.settings); }); };
 
-    pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag); }); };
+    pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag, pvt.settings); }); };
 
     return api;
 }();
