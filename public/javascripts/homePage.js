@@ -50,6 +50,7 @@ var searchTab = function (type, otherTab) {
   api.goBehind = function () { pvt.tab.css('z-index', '0'); }
 
   pvt.click = function () {
+    homePage.hideSearchResult();
     api.otherTab.zoomOut1();
     pvt.tab.animate({'opacity' : '0.95', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
       pvt.tab.css('z-index', '1');
@@ -194,6 +195,10 @@ var homePage = function () {
 
   api.prepareToSearch = function () {
     pvt.showSpinning();
+    api.hideSearchResult();
+  };
+
+  api.hideSearchResult = function () {
     if(pvt.thereIsASearchResult) {
       resultContainer = $('#searchResultContainer');
       resultContainer.animate({top: -resultContainer.height()}, {easing: 'easeOutBounce', duration: 1000});
