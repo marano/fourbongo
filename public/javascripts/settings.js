@@ -1,5 +1,5 @@
 var TimeRange = function (index, timeInThePast, description) {
-  api = {
+  var api = {
     timeInThePast: timeInThePast,
     description: description,
     index: index

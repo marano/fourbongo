@@ -66,8 +66,8 @@ var searchTab = function (type, otherTab) {
 };
 
 var homePage = function () {
-  api = {};
-  pvt = { thereIsASearchResult: false };
+  var api = {};
+  var pvt = { thereIsASearchResult: false };
 
   api.bindToMouseMovement = function (callback) {
     $('body').mousemove(callback);
