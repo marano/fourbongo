@@ -78,7 +78,7 @@ var homePage = function () {
   api.bindSearchForm = function (searchCallback, searchByTagCallback) {
     $("#searchForm").submit(function (event) {
       event.preventDefault();
-      searchCallbak($('#inputSearchName').val(), $('#inputSearchCity').val());
+      searchCallback($('#inputSearchName').val(), $('#inputSearchCity').val());
     });
     $("#searchByTagForm").submit(function (event) {
       event.preventDefault();
