@@ -189,10 +189,10 @@ var sortOrderSetting = function () {
   return api;
 }();
 
-var shouldFetchLocationBasedTweetSetting = function () {
+var showTwitterSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('fetch_location_based_tweets', 'true'),
+    cookieSetting: cookieSettingLoader('show_twitter', 'true'),
     current: null
   };
 
@@ -206,27 +206,19 @@ var shouldFetchLocationBasedTweetSetting = function () {
 
   pvt.transform = function (rawValue) { return rawValue == 'true'; };
 
-  api.bindEvents = function () {
-    settingsView.bindToShouldFetchLocationBasedTweetsButton(pvt.set);
-  };
+  api.bindEvents = function () { settingsView.bindToShowTwitterButton(pvt.set); };
 
-  api.fillPage = function () { settingsView.setShouldFetchLocationBasedTweets(pvt.current) };
+  api.fillPage = function () { settingsView.setShowTwitter(pvt.current) };
 
-  api.validate = function (postItem) {
-    if (pvt.current == false) {
-      return !(postItem.post.isUpdateByLocation && postItem.post.isTweet);
-    } else {
-      return true;
-    }
-  };
+  api.validate = function (postItem) { return pvt.current || !postItem.post.isTweet; };
 
   return api;
-}();
+};
 
-var shouldFetchLocationBasedInstagramPicsSetting = function () {
+var showInstagramSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('fetch_location_based_instagram_pics', 'true'),
+    cookieSetting: cookieSettingLoader('show_instagram', 'true'),
     current: null
   };
 
@@ -240,29 +232,19 @@ var shouldFetchLocationBasedInstagramPicsSetting = function () {
 
   pvt.transform = function (rawValue) { return rawValue == 'true'; };
 
-  api.bindEvents = function () {
-    settingsView.bindToShouldFetchLocationBasedInstagramPicsButton(pvt.set);
-  };
+  api.bindEvents = function () { settingsView.bindToShowInstagramButton(pvt.set); };
 
-  api.fillPage = function () {
-    settingsView.setShouldFetchLocationBasedInstagramPics(pvt.current)
-  };
+  api.fillPage = function () { settingsView.setShowInstagram(pvt.current) };
 
-  api.validate = function (postItem) {
-    if (pvt.current == false) {
-      return !(postItem.post.isUpdateByLocation && postItem.post.isInstagramPic);
-    } else {
-      return true;
-    }
-  };
+  api.validate = function (postItem) { return pvt.current || !postItem.post.isInstagramPic; };
 
   return api;
-}();
+};
 
-var shouldFetchLocationBasedFlickrPicsSetting = function () {
+var showFlickrSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('fetch_location_based_flickr_pics', 'true'),
+    cookieSetting: cookieSettingLoader('show_flickr', 'true'),
     current: null
   };
 
@@ -276,22 +258,14 @@ var shouldFetchLocationBasedFlickrPicsSetting = function () {
 
   pvt.transform = function (rawValue) { return rawValue == 'true'; };
 
-  api.bindEvents = function () {
-    settingsView.bindToShouldFetchLocationBasedFlickrPicsButton(pvt.set);
-  };
+  api.bindEvents = function () { settingsView.bindToShowFlickrButton(pvt.set); };
 
-  api.fillPage = function () { settingsView.setShouldFetchLocationBasedFlickrPics(pvt.current) };
+  api.fillPage = function () { settingsView.setShowFlickr(pvt.current) };
 
-  api.validate = function (postItem) {
-    if (pvt.current == false) {
-      return !(postItem.post.isUpdateByLocation && postItem.post.isFlickrPic);
-    } else {
-      return true;
-    }
-  };
+  api.validate = function (postItem) { return pvt.current || !postItem.post.isFlickrPic; };
 
   return api;
-}();
+};
 
 var settings = function () {
   var api = {

@@ -37,6 +37,7 @@ var FacebookUpdate = function (updateData) {
     username: updateData.username,
     content: updateData.content,
     createdAt: updateData.createdAt,
+    isUpdateByLocation: false,
     avatar: 'https://graph.facebook.com/' + updateData.userId + '/picture?type=large'
   };
 
@@ -195,7 +196,9 @@ var tagWall = function (tag, settings) {
 
   settings.list = [
     timeRangeSetting,
-    sortOrderSetting
+    sortOrderSetting,
+    showTwitterSetting(),
+    showInstagramSetting()
   ]
 
   settings.initialize();
@@ -228,9 +231,9 @@ var wall = function (venueId, settings) {
 
   function startShow(venue) {
     settings.list = [
-      shouldFetchLocationBasedTweetSetting,
-      shouldFetchLocationBasedInstagramPicsSetting,
-      shouldFetchLocationBasedFlickrPicsSetting,
+      showTwitterSetting(),
+      showInstagramSetting(),
+      showFlickrSetting(),
       locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
       timeRangeSetting,
       sortOrderSetting

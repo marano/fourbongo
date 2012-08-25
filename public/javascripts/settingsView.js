@@ -80,28 +80,28 @@ var settingsView = function () {
 
   api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
 
-  api.bindToShouldFetchLocationBasedTweetsButton = function (callback) {
-    $('#fetchLocationBasedTweets').click(function () { callback($('#fetchLocationBasedTweets').is(':checked') + ''); });
+  api.bindToShowTwitterButton = function (callback) {
+    $('#showTwitter').click(function () { callback($('#showTwitter').is(':checked') + ''); });
   };
 
-  api.bindToShouldFetchLocationBasedInstagramPicsButton = function (callback) {
-    $('#fetchLocationBasedInstagramPics').click(function () { callback($('#fetchLocationBasedInstagramPics').is(':checked') + ''); });
+  api.bindToShowInstagramButton = function (callback) {
+    $('#showInstagram').click(function () { callback($('#showInstagram').is(':checked') + ''); });
   };
 
-  api.bindToShouldFetchLocationBasedFlickrPicsButton = function (callback) {
-    $('#fetchLocationBasedFlickrPics').click(function () { callback($('#fetchLocationBasedFlickrPics').is(':checked') + ''); });
+  api.bindToShowFlickrButton = function (callback) {
+    $('#showFlickr').click(function () { callback($('#showFlickr').is(':checked') + ''); });
   };
 
-  api.setShouldFetchLocationBasedTweets = function (value) {
-    $('#fetchLocationBasedTweets').attr('checked', value);
+  api.setShowTwitter = function (value) {
+    $('#showTwitter').attr('checked', value);
   }
 
-  api.setShouldFetchLocationBasedInstagramPics = function (value) {
-    $('#fetchLocationBasedInstagramPics').attr('checked', value);
+  api.setShowInstagram = function (value) {
+    $('#showInstagram').attr('checked', value);
   }
 
-  api.setShouldFetchLocationBasedFlickrPics = function (value) {
-    $('#fetchLocationBasedFlickrPics').attr('checked', value);
+  api.setShowFlickr = function (value) {
+    $('#showFlickr').attr('checked', value);
   }
 
   return api;

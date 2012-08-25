@@ -73,48 +73,6 @@
   max-width: 95%;
 }
 
-#settings {
-  font-size: 26px;
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  padding: 7px;
-  z-index: 5;
-  background-color: #C8C8C8;
-  color: black;
-  opacity: .6;
-  border-radius: 15px;
-  -moz-border-radius: 15px;
-}
-
-#settings h3 {
-  margin: 0;
-  font-size: 40 px;
-}
-
-#settingsContainer {
-  margin: 20px;
-}
-
-.settingsSection {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#currentTimeRangeLabel {
-  display: inline-block;
-  width: 160px;
-}
-
-#currentLocationBasedUpdatesDistanceRangeLabel {
-  display: inline-block;
-  width: 100px;
-}
-
-#currentTimeRangeSlider, #currentLocationBasedUpdatesDistanceRangeSlider {
-  width: 220px;
-}
-
 #loading {
   position: absolute;
   left: 20px;
