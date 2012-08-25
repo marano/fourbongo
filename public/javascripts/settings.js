@@ -85,14 +85,15 @@ var timeRangeSetting = function () {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('time_range', '9'),
-    current: null
+    current: null,
+    changeCallback: null
   };
 
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
     settingsView.setCurrentTimeRangeLabel(pvt.current.description);
-    settings.fillPostsCount();
+    pvt.changeCallback();
   }
 
   api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
@@ -109,6 +110,8 @@ var timeRangeSetting = function () {
     settingsView.bindTimeRangeSlider(pvt.set);
   };
 
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
+
   api.fillPage = function () { settingsView.setCurrentTimeRange(pvt.current.description, pvt.current.index); };
 
   api.validate = function (postItem) {
@@ -123,14 +126,15 @@ var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('distance_range', '10000'),
-    current: null
+    current: null,
+    changeCallback: null
   };
 
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
     settingsView.setCurrentLocationBasedUpdatesDistanceRangeLabel(pvt.current);
-    settings.fillPostsCount();
+    pvt.changeCallback();
   }
 
   api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
@@ -144,6 +148,8 @@ var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
   api.bindEvents = function () {
     settingsView.bindLocationBasedUpdatesDistanceRangeSlider(pvt.set);
   };
+
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
 
   api.fillPage = function () { settingsView.setCurrentLocationBasedUpdatesDistanceRange(pvt.current); };
 
@@ -162,7 +168,7 @@ var sortOrderSetting = function () {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('sort_order', 'publication'),
-    current: null
+    current: null,
   };
   
   pvt.set = function (value) {
@@ -182,6 +188,8 @@ var sortOrderSetting = function () {
     settingsView.bindToSortByPublicationButton(pvt.set);
   };
 
+  api.onchange = function (callback) {};
+
   api.fillPage = function () { settingsView.selectSortOrder(pvt.current.name); };
 
   api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
@@ -193,13 +201,14 @@ var showTwitterSetting = function () {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('show_twitter', 'true'),
-    current: null
+    current: null,
+    changeCallback: null
   };
 
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
-    settings.fillPostsCount();
+    pvt.changeCallback();
   }
 
   api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
@@ -207,6 +216,8 @@ var showTwitterSetting = function () {
   pvt.transform = function (rawValue) { return rawValue == 'true'; };
 
   api.bindEvents = function () { settingsView.bindToShowTwitterButton(pvt.set); };
+
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
 
   api.fillPage = function () { settingsView.setShowTwitter(pvt.current) };
 
@@ -219,13 +230,14 @@ var showInstagramSetting = function () {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('show_instagram', 'true'),
-    current: null
+    current: null,
+    changeCallback: null
   };
 
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
-    settings.fillPostsCount();
+    pvt.changeCallback();
   }
 
   api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
@@ -233,6 +245,8 @@ var showInstagramSetting = function () {
   pvt.transform = function (rawValue) { return rawValue == 'true'; };
 
   api.bindEvents = function () { settingsView.bindToShowInstagramButton(pvt.set); };
+
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
 
   api.fillPage = function () { settingsView.setShowInstagram(pvt.current) };
 
@@ -245,13 +259,14 @@ var showFlickrSetting = function () {
   var api = {};
   var pvt = {
     cookieSetting: cookieSettingLoader('show_flickr', 'true'),
-    current: null
+    current: null,
+    changeCallback: null
   };
 
   pvt.set = function (value) {
     pvt.current = pvt.transform(value);
     pvt.cookieSetting.save(value);
-    settings.fillPostsCount();
+    pvt.changeCallback();
   }
 
   api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
@@ -260,6 +275,8 @@ var showFlickrSetting = function () {
 
   api.bindEvents = function () { settingsView.bindToShowFlickrButton(pvt.set); };
 
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
+
   api.fillPage = function () { settingsView.setShowFlickr(pvt.current) };
 
   api.validate = function (postItem) { return pvt.current || !postItem.post.isFlickrPic; };
@@ -267,10 +284,8 @@ var showFlickrSetting = function () {
   return api;
 };
 
-var settings = function () {
-  var api = {
-    list: []
-  };
+var Settings = function (list) {
+  var api = {};
 
   var pvt = {
     lastHover: 0,
@@ -278,16 +293,21 @@ var settings = function () {
     areOptionsDisplayed: false,
   };
 
+  var postsList = null;
+
   api.initialize = function () {
-    _(api.list).each(function (setting) {
+    _(list).each(function (setting) {
       setting.load();
     });
     homePage.bindToMouseMovement(pvt.mouseMovement);
-    postsList.onchange(api.fillPostsCount);
+  };
+
+  api.setPostsList = function (newPostsList) {
+    postsList = newPostsList;
   };
 
   api.validate = function (postItem) {
-    var filterSettings = _(api.list).select(function (setting) { return setting.validate; });
+    var filterSettings = _(list).select(function (setting) { return setting.validate; });
     return _(filterSettings).all(function (filterSetting) { return filterSetting.validate(postItem); })
   };
 
@@ -310,12 +330,13 @@ var settings = function () {
     settingsView.showSettingsOptions(function () {
       api.fillPostsCount();
 
-      _(api.list).each(function (setting) {
+      _(list).each(function (setting) {
         if (setting.prepare) {
           setting.prepare();
         }
         setting.fillPage();
         setting.bindEvents();
+        setting.onchange(api.fillPostsCount);
       });
     });
     pvt.moreTime();
@@ -338,4 +359,4 @@ var settings = function () {
   };
 
   return api;
-}();
+};

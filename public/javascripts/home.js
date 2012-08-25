@@ -5,7 +5,6 @@ var home = function () {
       latitude: null,
       longitude: null,
       geolocationFetched: false,
-      settings: settings
     };
 
     api.initialize = function () {
@@ -96,9 +95,9 @@ var home = function () {
       pvt.startTagShow(tag);
     };
 
-    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall(venueId, pvt.settings); }); };
+    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall(venueId); }); };
 
-    pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag, pvt.settings); }); };
+    pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag); }); };
 
     return api;
 }();

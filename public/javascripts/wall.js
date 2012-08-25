@@ -100,49 +100,44 @@ var PostsListItem = function (item) {
   return api;
 };
 
-var postsList = function () {
+var PostsList = function (settings) {
   var api = {};
-  var pvt = {
-    posts: [],
-    currentPost: null,
-    onchangeCallback: null
-  };
 
-  api.onchange = function (callback) {
-    pvt.onchangeCallback = callback;
-  };
+  var posts = [];
+  var currentPost = null;
+  settings.setPostsList(api);
 
-  api.addAll = function (posts) { _(posts).each(pvt.add); };
+  api.addAll = function (newPosts) { _(newPosts).each(add); };
 
-  pvt.add = function (post) {
-    if (!pvt.contains(post)) {
-      pvt.posts.push(PostsListItem(post));
-      pvt.onchangeCallback();
+  function add(post) {
+    if (!contains(post)) {
+      posts.push(PostsListItem(post));
+      settings.fillPostsCount();
     }
   };
 
-  pvt.contains = function (post) { return _(pvt.posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
+  function contains(post) { return _(posts).any(function (eachPost) { return eachPost.post.isSame(post); }); };
 
-  api.isNotEmpty = function () { return pvt.posts.length > 0; };
+  api.isNotEmpty = function () { return posts.length > 0; };
 
-  api.validPosts = function () { return _(pvt.posts).select(settings.validate); };
+  api.validPosts = function () { return _(posts).select(settings.validate); };
 
   api.next = function () {
     var validPosts = api.validPosts();
     if(_(validPosts).isEmpty()) {
       return null;
     } else {
-      var next = sortOrderSetting.next(pvt.currentPost, validPosts);
+      var next = sortOrderSetting.next(currentPost, validPosts);
       next.viewed = true;
-      pvt.currentPost = next;
+      currentPost = next;
       return next;
     }
   };
 
   return api;
-}();
+};
 
-var slidesCoordinator = function () {
+var SlidesCoordinator = function (postsList) {
   var api = {};
   var pvt = {
     paused: false,
@@ -183,9 +178,9 @@ var slidesCoordinator = function () {
   };
 
   return api;
-}();
+};
 
-var tagWall = function (tag, settings) {
+var tagWall = function (tag) {
   var api = {};
 
   var raw_tag = tag.replace(/#/g, '');
@@ -194,14 +189,19 @@ var tagWall = function (tag, settings) {
   wallPage.showLoading();
   startShow();
 
-  settings.list = [
+  var settingsList = [
     timeRangeSetting,
     sortOrderSetting,
     showTwitterSetting(),
     showInstagramSetting()
   ]
 
+  var settings = Settings(settingsList);
   settings.initialize();
+
+  var postsList = PostsList(settings);
+
+  var slidesCoordinator = SlidesCoordinator(postsList);
 
   function startShow() {
     var slider = slideShow($('#wallContainer'));
@@ -216,7 +216,7 @@ var tagWall = function (tag, settings) {
   return api;
 };
 
-var wall = function (venueId, settings) {
+var wall = function (venueId) {
   var api = {
     venueLat: null,
     venueLng: null
@@ -224,13 +224,16 @@ var wall = function (venueId, settings) {
 
   var pvt = {};
 
+  var postsList = null;
+  var slidesCoordinator = null;
+
   window.location.hash = 'venueId=' + venueId;
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
   foursquare.venue(venueId, startShow);
 
   function startShow(venue) {
-    settings.list = [
+    var settingsList = [
       showTwitterSetting(),
       showInstagramSetting(),
       showFlickrSetting(),
@@ -239,7 +242,12 @@ var wall = function (venueId, settings) {
       sortOrderSetting
     ]
 
+    var settings = Settings(settingsList);
     settings.initialize();
+
+    postsList = PostsList(settings);
+
+    slidesCoordinator = SlidesCoordinator(postsList);
 
     api.venueLat = venue.latitude;
     api.venueLng = venue.longitude;
