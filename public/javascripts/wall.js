@@ -198,7 +198,9 @@ var tagWall = function (tag) {
     showInstagramSetting()
   ]
 
-  var settings = Settings(settingsList);
+  var hideDistanceRangeSetting = true;
+  var hideFlickrSetting = true;
+  var settings = Settings(settingsList, hideDistanceRangeSetting, hideFlickrSetting);
   settings.initialize();
 
   var postsList = PostsList(settings);
@@ -246,7 +248,9 @@ var wall = function (venueId) {
       sortOrderSetting
     ]
 
-    var settings = Settings(settingsList);
+    var hideDistanceRangeSetting = false;
+    var hideFlickrSetting = false;
+    var settings = Settings(settingsList, hideDistanceRangeSetting, hideFlickrSetting);
     settings.initialize();
 
     postsList = PostsList(settings);

@@ -104,5 +104,14 @@ var settingsView = function () {
     $('#showFlickr').attr('checked', value);
   }
 
+  api.hideDistanceRange = function () {
+    $('#distanceRange').hide();
+  };
+
+  api.hideShowFlickr = function () {
+    $('#showFlickr').hide();
+    $('#showFlickrLabel').hide();
+  };
+
   return api;
 }();

@@ -284,7 +284,7 @@ var showFlickrSetting = function () {
   return api;
 };
 
-var Settings = function (list) {
+var Settings = function (list, hideDistanceRangeSetting, hideFlickrSetting) {
   var api = {};
 
   var pvt = {
@@ -338,6 +338,12 @@ var Settings = function (list) {
         setting.bindEvents();
         setting.onchange(api.fillPostsCount);
       });
+      if (hideDistanceRangeSetting) {
+        settingsView.hideDistanceRange()
+      };
+      if (hideFlickrSetting) {
+        settingsView.hideShowFlickr()
+      };
     });
     pvt.moreTime();
   };
