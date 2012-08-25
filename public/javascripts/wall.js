@@ -145,7 +145,10 @@ var SlidesCoordinator = function (postsList) {
     isShowingNoUpdates: false
   };
   
-  api.start = function (slider) { setInterval(function () { pvt.next(slider); }, 10000); };
+  api.start = function (slider) {
+    pvt.next(slider);
+    setInterval(function () { pvt.next(slider); }, 10000);
+  };
 
   api.pause = function () { pvt.paused = true; };
 
@@ -187,7 +190,6 @@ var tagWall = function (tag) {
   window.location.hash = 'tag=' + raw_tag;
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
-  startShow();
 
   var settingsList = [
     timeRangeSetting,
@@ -203,6 +205,8 @@ var tagWall = function (tag) {
 
   var slidesCoordinator = SlidesCoordinator(postsList);
 
+  startShow();
+
   function startShow() {
     var slider = slideShow($('#wallContainer'));
     introduction.showTagCover('#' + raw_tag, slider);
@@ -210,7 +214,7 @@ var tagWall = function (tag) {
     instagram.mediaByTag(raw_tag, postsList.addAll);
     twitter.byTag(raw_tag, postsList.addAll);
 
-    setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
+    setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
   }
 
   return api;
