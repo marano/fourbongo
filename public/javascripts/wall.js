@@ -283,7 +283,7 @@ var wall = function (venueId) {
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
 
-  pvt.fetchProfiles = function (profilesIds) { _(profilesIds).each(function (profileId) { foursquare.profile(profileId, pvt.fetchPosts); }); };
+  pvt.fetchProfiles = function (profileIds) { _(profileIds).each(function (profileId) { foursquare.profile(profileId, pvt.fetchPosts); }); };
 
   pvt.fetchPosts = function (profile) {
     if (profile.twitter != undefined) { twitter.timeline(profile.twitter, postsList.addAll); };
