@@ -1,5 +1,4 @@
 .publication_container {
-  font-family: 'Times New Roman', serif;
   font-size: 350%;
   margin: 0 auto 0 auto;
   position: absolute;
@@ -64,7 +63,7 @@
 }
 
 #cover_title {
-  font-family: 'Times New Roman', serif;
+  font-family: 'Vidaloka', serif;
   font-size: 150px;
   text-align: center;
   margin-top: 50px;
@@ -79,7 +78,7 @@
   bottom: 20px;
   padding: 7px;
   z-index: 5;
-  font-size: 100px;
+  font-size: 90px;
   background-color: #C8C8C8;
   color: black;
   opacity: .6;
