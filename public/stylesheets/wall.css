@@ -13,8 +13,6 @@
 #wallContainer {
   position: relative;
   overflow: hidden;
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 .user_data_container {
