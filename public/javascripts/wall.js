@@ -274,7 +274,7 @@ var wall = function (venueId) {
     setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
 
-    setTimeout(function () { slidesCoordinator.start(slider); }, 5000);
+    setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
   };
 
   pvt.fetchLocationBasedTweets = function (latitude, longitude) {
