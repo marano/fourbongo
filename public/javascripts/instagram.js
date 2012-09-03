@@ -4,13 +4,9 @@ var instagram = function () {
   var clientId = 'ef0cec7f983646e4a6809a3d0dbd35bf';
 
   api.mediaByTag = function (tag, callback) {
-    $.getJSON('https://api.instagram.com/v1/tags/' + tag + '/media/recent?&client_id=' + clientId + '&count=60&callback=?', function (data) {
-      var isUpdateByLocation = false;
-      callback(mediasFromData(data.data, isUpdateByLocation));
-      var currentPage = 1;
-      var maxTagId = data.pagination.next_max_tag_id;
-      mediaByTagPaginated(tag, currentPage, maxTagId, callback);
-    });
+    var currentPage = 1;
+    var maxTagId = null;
+    mediaByTagPaginated(tag, currentPage, maxTagId, callback);
   };
   
   api.mediaByLocation = function (latitude, longitude, callback) {
@@ -22,18 +18,23 @@ var instagram = function () {
 
   function mediaByTagPaginated(tag, currentPage, maxTagId, callback) {
     var amountOfPagesToFetch = 5;
-    if (!maxTagId) {
-      return;
-    }
     if (currentPage > amountOfPagesToFetch) {
       return;
     }
-    $.getJSON('https://api.instagram.com/v1/tags/' + tag + '/media/recent?&client_id=' + clientId + '&max_tag_id=' + maxTagId + '&count=60&callback=?', function (data) {
+    $.getJSON(urlForTag(tag, maxTagId), function (data) {
       var isUpdateByLocation = false;
       callback(mediasFromData(data.data, isUpdateByLocation));
       var nextMaxTagId = data.pagination.next_max_tag_id;
+      if (!nextMaxTagId) {
+        return;
+      }
       mediaByTagPaginated(tag, currentPage + 1, nextMaxTagId, callback);
     });
+  }
+
+  function urlForTag(tag, maxTagId) {
+    var maxTagIdParameter = maxTagId ? '&max_tag_id=' + maxTagId : '';
+    return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?&client_id=' + clientId + maxTagIdParameter + '&count=60&callback=?';
   }
 
   function mediasFromData(data, isUpdateByLocation) {
