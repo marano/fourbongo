@@ -20,7 +20,8 @@ var timeRanges = [
   TimeRange(6, 2 * 60 * 60 * 1000, 'Two hours'),
   TimeRange(7, 12 * 60 * 60 * 1000, 'Twelve hours'),
   TimeRange(8, 24 * 60 * 60 * 1000, 'One day'),
-  TimeRange(9, 48 * 60 * 60 * 1000, 'Two days')
+  TimeRange(9, 3 * 24 * 60 * 60 * 1000, 'Three days'),
+  TimeRange(10, 7 * 24 * 60 * 60 * 1000, 'One week')
 ];
 
 var cookieSettingLoader = function (cookieKey, defaultValue) {
@@ -84,7 +85,7 @@ var publicationSort = function () {
 var timeRangeSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('time_range', '9'),
+    cookieSetting: cookieSettingLoader('time_range', (timeRanges.length - 1) + ''),
     current: null,
     changeCallback: null
   };
