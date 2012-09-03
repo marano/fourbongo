@@ -140,16 +140,20 @@ body:before {
   width: 1024px;
   margin-left: auto;
   margin-right: auto;
-  
-  border-radius: 3px;
-  -moz-border-radius: 3px;
 
-  border-top-left-radius: 0px;
-  
   box-shadow: 0 15px 25px 0 #999;
   -moz-box-shadow: 0 10px 30px 0 #999;
 
   pointer-events: all;
+}
+
+.bar-with-no-tab {
+  border-radius: 3px;
+}
+
+.bar-with-tab {
+  border-radius: 3px;
+  border-top-left-radius: 0px;
 }
 
 .searchLabel, .searchButton, .searchInput {
