@@ -6,14 +6,14 @@ var settingsView = function () {
 
   api.showSettingsIcon = function (callback) {
     var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('body'));
-    settingsDiv.animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000, complete: callback});
+    settingsDiv.animate({'opacity' : '.6'}, {easing: 'easeOutQuad', duration: 1000, complete: callback});
   };
 
   api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
 
   api.showSettingsOptions = function (callback) {
     var opacity = $('#settings').css('opacity');
-    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 500, complete: function () {
+    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 500, complete: function () {
       $('#settingsIcon').remove();
       if (pvt.settingsOptions == null) {
         $.get('/settings', function (html) {
@@ -29,7 +29,7 @@ var settingsView = function () {
   pvt.showLoadedSettingsOptions = function (opacity, callback) {
     $('#settings').append(pvt.settingsOptions);
     callback();
-    $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 500});
+    $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuad', duration: 500});
   };
 
   api.setPostsCountLabel = function (count) {
