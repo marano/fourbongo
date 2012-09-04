@@ -13,7 +13,7 @@ var settingsView = function () {
 
   api.showSettingsOptions = function (callback) {
     var opacity = $('#settings').css('opacity');
-    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
+    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 500, complete: function () {
       $('#settingsIcon').remove();
       if (pvt.settingsOptions == null) {
         $.get('/settings', function (html) {
@@ -29,7 +29,7 @@ var settingsView = function () {
   pvt.showLoadedSettingsOptions = function (opacity, callback) {
     $('#settings').append(pvt.settingsOptions);
     callback();
-    $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 1000});
+    $('#settings').animate({'opacity' : opacity}, {easing: 'easeOutQuint', duration: 500});
   };
 
   api.setPostsCountLabel = function (count) {
