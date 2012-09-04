@@ -19,7 +19,12 @@ var foursquare = function () {
   api.isAuthenticated = function () { return pvt.token != null };
 
   api.search_venues_by_name_and_city = function (name, city, callback) {
-    $.getJSON('/venues/search_by_name_and_city/' + encodeURIComponent(name) + '/' + encodeURIComponent(city), callback);
+    $.getJSON('https://api.foursquare.com/v2/venues/search?v=20111117&query=' + encodeURIComponent(name) + '&near=' + encodeURIComponent(city) + '&limit=50&oauth_token=' + pvt.token + '&callback=?', function (data) {
+      var venues = _(data.response.venues).map(function (venue) {
+        return {foursquare_id: venue.id, name: venue.name};
+      });
+      callback(venues);
+    });
   };
   
   api.search_venues_by_location = function (latitude, longitude, callback) {
