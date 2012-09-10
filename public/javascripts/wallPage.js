@@ -22,12 +22,19 @@ var wallPage = function () {
 
   api.tweetHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
+    if (post.mediaUrl) {
+      container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar_small, 'class': 'avatar'})));
+    } else {
+      container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
+    }
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
+    if (post.mediaUrl) {
+      container.append($('<div>', {'class': 'twitter_media'}).append($('<img>', {src: post.mediaUrl})));
+    }
     container.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
     return container;
   };

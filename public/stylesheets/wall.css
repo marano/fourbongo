@@ -48,13 +48,13 @@
   font-size: 50%;
 }
 
-.instagram_media {
+.instagram_media, .twitter_media {
   margin-top: 20px;
   margin-right: 20px;
   height: 1000px;
 }
 
-.instagram_media, .instagram_media img {
+.instagram_media, .twitter_media, .instagram_media img, .twitter_media img {
   float: left;
 }
 
