@@ -24,6 +24,9 @@ var instagram = function () {
     $.getJSON(urlForTag(tag, maxTagId), function (data) {
       var isUpdateByLocation = false;
       callback(mediasFromData(data.data, isUpdateByLocation));
+      if (!data.pagination) {
+        return;
+      }
       var nextMaxTagId = data.pagination.next_max_tag_id;
       if (!nextMaxTagId) {
         return;
