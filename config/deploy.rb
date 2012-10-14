@@ -19,7 +19,7 @@ set :unicorn_pid, "/tmp/nyumba.pid"
 
 namespace :deploy do
   task :start, :roles => :app, :except => { :no_release => true } do 
-    run "cd #{current_path} && bundle exec unicorn -c #{unicorn_config} -E production -D"
+    run "cd #{current_path} && bundle && bundle exec unicorn -c #{unicorn_config} -E production -D"
   end
   task :stop, :roles => :app, :except => { :no_release => true } do 
     run "kill `cat #{unicorn_pid}`"
