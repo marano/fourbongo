@@ -26,11 +26,11 @@
   margin-bottom: 20px;
 }
 
-#currentTimeRangeLabel, #currentLocationBasedUpdatesDistanceRangeLabel {
+#currentTimeRangeLabel, #currentLocationBasedUpdatesDistanceRangeLabel, #currentSpeedLabel {
   display: inline-block;
   width: 170px;
 }
 
-#currentTimeRangeSlider, #currentLocationBasedUpdatesDistanceRangeSlider {
+#currentTimeRangeSlider, #currentLocationBasedUpdatesDistanceRangeSlider, #currentSpeedSlider {
   width: 220px;
 }

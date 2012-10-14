@@ -156,7 +156,7 @@ var SlidesCoordinator = function (postsList) {
     if (pvt.isShowingNoUpdates) {
       setTimeout(function () { keepSliding(slider); }, 1000);
     } else {
-      setTimeout(function () { keepSliding(slider); }, 10000);
+      setTimeout(function () { keepSliding(slider); }, speedSetting.waitInSeconds() * 1000);
     }
   }
 
@@ -205,7 +205,8 @@ var tagWall = function (tag) {
     timeRangeSetting,
     sortOrderSetting,
     showTwitterSetting(),
-    showInstagramSetting()
+    showInstagramSetting(),
+    speedSetting
   ]
 
   var hideDistanceRangeSetting = true;
@@ -258,7 +259,8 @@ var wall = function (venueId) {
       showFlickrSetting(),
       locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
       timeRangeSetting,
-      sortOrderSetting
+      sortOrderSetting,
+      speedSetting
     ]
 
     var hideDistanceRangeSetting = false;

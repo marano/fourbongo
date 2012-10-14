@@ -24,6 +24,29 @@ var timeRanges = [
   TimeRange(10, 7 * 24 * 60 * 60 * 1000, 'One week')
 ];
 
+var Speed = function (index, waitInSeconds) {
+  var api = {};
+  api.index = index;
+  api.value = function () { return waitInSeconds; };
+  api.label = function () { return waitInSeconds + ' seconds'; };
+  return api;
+};
+
+var speeds = [
+  Speed(0, 1),
+  Speed(1, 2),
+  Speed(2, 3),
+  Speed(3, 4),
+  Speed(4, 5),
+  Speed(5, 7),
+  Speed(6, 10),
+  Speed(7, 15),
+  Speed(8, 20),
+  Speed(9, 30),
+  Speed(10, 60),
+  Speed(11, 90)
+];
+
 var cookieSettingLoader = function (cookieKey, defaultValue) {
   var api = {};
   var pvt = {
@@ -164,6 +187,44 @@ var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
 
   return api;
 };
+
+var speedSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('speed', '6'),
+    current: null,
+    changeCallback: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    settingsView.setCurrentSpeedLabel(pvt.current.label());
+    pvt.changeCallback();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) {
+    return speeds[parseInt(rawValue)];
+  };
+
+  api.prepare = function () {
+    settingsView.prepareSpeedSlider(speeds.length);
+  };
+
+  api.bindEvents = function () {
+    settingsView.bindSpeedSlider(pvt.set);
+  };
+
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
+
+  api.fillPage = function () { settingsView.setCurrentSpeed(pvt.current.label(), pvt.current.index); };
+
+  api.waitInSeconds = function () { return pvt.current.value(); };
+
+  return api;
+}();
 
 var sortOrderSetting = function () {
   var api = {};

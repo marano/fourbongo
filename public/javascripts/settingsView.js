@@ -44,6 +44,12 @@ var settingsView = function () {
 
   api.selectSortByPublication = function () { $('#sortByPublication').attr('checked', true); };
 
+  api.bindToSortByPublicationButton = function (callback) {
+    $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
+  };
+
+  api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
+
   api.setCurrentTimeRange = function (label, index) {
     api.setCurrentTimeRangeLabel(label);
     $('#currentTimeRangeSlider').attr('value', index);
@@ -74,11 +80,20 @@ var settingsView = function () {
     $('#currentLocationBasedUpdatesDistanceRangeSlider').change(function () { callback($('#currentLocationBasedUpdatesDistanceRangeSlider').attr('value')); });
   };
 
-  api.bindToSortByPublicationButton = function (callback) {
-    $('#sortByPublication').click(function () { callback($('#sortByPublication').attr('value')); });
+  api.setCurrentSpeed = function (label, index) {
+    api.setCurrentSpeedLabel(label);
+    $('#currentSpeedSlider').attr('value', index);
   };
 
-  api.selectSortOrder = function (sortOrder) { $('input:radio[value=' + sortOrder + ']').attr('checked', true); };
+  api.setCurrentSpeedLabel = function (description) { $('#currentSpeedLabel').text(description); };
+
+  api.prepareSpeedSlider = function (sliderSize) {
+    $('#currentSpeedSlider').attr('max', sliderSize - 1);
+  }
+
+  api.bindSpeedSlider = function (callback) {
+    $('#currentSpeedSlider').change(function () { callback($('#currentSpeedSlider').attr('value')); });
+  }
 
   api.bindToShowTwitterButton = function (callback) {
     $('#showTwitter').click(function () { callback($('#showTwitter').is(':checked') + ''); });
