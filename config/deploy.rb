@@ -10,6 +10,7 @@ set :scm, :git
 role :app, APP_SERVER
 role :web, APP_SERVER
 
+set :rvm_type, :system
 set :rvm_ruby_string, '1.9.3@fourbongo'
 set :deploy_to, "/var/www/#{application}"
 set :repository,  "git@fourbongo.com:fourbongo.git"
