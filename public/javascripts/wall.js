@@ -229,6 +229,7 @@ var tagWall = function (tag) {
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
     setInterval(function () { instagram.mediaByTag(raw_tag, postsList.addAll); }, 30000);
     setInterval(function () { twitter.byTag(raw_tag, postsList.addAll); }, 30000);
+    setInterval(settings.fillPostsCount, 2000);
   }
 
   return api;
@@ -285,6 +286,7 @@ var wall = function (venueId) {
     setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, 300000);
     setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
+    setInterval(settings.fillPostsCount, 2000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
   };
