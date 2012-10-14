@@ -291,17 +291,11 @@ var wall = function (venueId) {
     setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
   };
 
-  pvt.fetchLocationBasedTweets = function (latitude, longitude) {
-    twitter.byLocation(latitude, longitude, postsList.addAll);
-  };
+  pvt.fetchLocationBasedTweets = function (latitude, longitude) { twitter.byLocation(latitude, longitude, postsList.addAll); };
 
-  pvt.fetchInstagramMedia = function (latitude, longitude) {
-    instagram.mediaByLocation(latitude, longitude, postsList.addAll);
-  };
+  pvt.fetchInstagramMedia = function (latitude, longitude) { instagram.mediaByLocation(latitude, longitude, postsList.addAll); };
 
-  pvt.fetchFlickrMedia = function (latitude, longitude) {
-    flickr.picsByLocation(latitude, longitude, postsList.addAll);
-  };
+  pvt.fetchFlickrMedia = function (latitude, longitude) { flickr.picsByLocation(latitude, longitude, postsList.addAll); };
 
   pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
 
