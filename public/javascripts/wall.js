@@ -227,6 +227,8 @@ var tagWall = function (tag) {
     twitter.byTag(raw_tag, postsList.addAll);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
+    setInterval(function () { instagram.mediaByTag(raw_tag, postsList.addAll); }, 30000);
+    setInterval(function () { twitter.byTag(raw_tag, postsList.addAll); }, 30000);
   }
 
   return api;
