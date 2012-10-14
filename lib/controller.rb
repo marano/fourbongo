@@ -62,6 +62,8 @@ CATCHPHRASES = ['see the buzz around you',
                 'the democratic news',
                 'the democratic news',
                 'the democratic news',
+                'live!',
+                'pop',
                 'what do you think?',
                 'the rest are lies',
                 'see duckfaces around you']
