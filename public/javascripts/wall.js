@@ -148,9 +148,17 @@ var SlidesCoordinator = function (postsList) {
   };
   
   api.start = function (slider) {
-    pvt.next(slider);
-    setInterval(function () { pvt.next(slider); }, 10000);
+    keepSliding(slider);
   };
+
+  function keepSliding(slider) {
+    pvt.next(slider);
+    if (pvt.isShowingNoUpdates) {
+      setTimeout(function () { keepSliding(slider); }, 1000);
+    } else {
+      setTimeout(function () { keepSliding(slider); }, 10000);
+    }
+  }
 
   api.pause = function () { pvt.paused = true; };
 
