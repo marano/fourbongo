@@ -87,11 +87,10 @@ var home = function () {
     };
 
     pvt.searchByTag = function (tag) {
-      homePage.prepareToSearch();
+      homePage.hideSearchResult();
       if (!tag) {
         return;
       }
-
       pvt.startTagShow(tag);
     };
 
