@@ -6,7 +6,7 @@ var settingsView = function () {
 
   api.showSettingsIcon = function (callback) {
     var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('body'));
-    settingsDiv.animate({'opacity' : '.6'}, {easing: 'easeOutQuad', duration: 1000, complete: callback});
+    settingsDiv.animate({'opacity' : '.8'}, {easing: 'easeOutQuad', duration: 1000, complete: callback});
   };
 
   api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
