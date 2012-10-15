@@ -7,7 +7,8 @@ function slideShow(container) {
   self.slide = function (content, callback) {
     var nextDiv = $('<div>').css('margin-left', -slideWindow.width()).append(content);
     slideWindow.prepend(nextDiv);
-    setTimeout(function () {
+
+    var finishSliding = function () {
       if (callback != undefined) { callback(); };
 
       if (currentDiv != undefined) {
@@ -18,7 +19,25 @@ function slideShow(container) {
 
       nextDiv.animate({'margin-left' : 0}, {easing: 'easeOutQuint', duration: 1000});
       currentDiv = nextDiv;
-    }, 1000);
+    };
+
+    var images = nextDiv.find('img');
+    var currentImageLoadCount = 0;
+    if (images.length > 0) {
+      images.load(function () {
+        currentImageLoadCount = currentImageLoadCount + 1;
+        if (currentImageLoadCount == images.length) {
+          finishSliding();
+        }
+      }).error(function () {
+        currentImageLoadCount = currentImageLoadCount + 1;
+        if (currentImageLoadCount == images.length) {
+          finishSliding();
+        }
+      });
+    } else {
+      finishSliding();
+    }
   };
 
   container.append(slideWindow);
