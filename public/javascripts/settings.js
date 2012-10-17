@@ -191,7 +191,7 @@ var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
 var speedSetting = function () {
   var api = {};
   var pvt = {
-    cookieSetting: cookieSettingLoader('speed', '6'),
+    cookieSetting: cookieSettingLoader('speed', '4'),
     current: null,
     changeCallback: null
   };
