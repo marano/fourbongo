@@ -11,36 +11,42 @@ var home = function () {
       homePage.showTitle();
       foursquare.initialize();
       facebook.initialize(function () {
-        if (!foursquare.isAuthenticated()) {
-          homePage.buildFoursquareAuthenticationMenu(function () {
-            homePage.bindFoursquareLoginButton(foursquare.login);
-          });
-        } else if (!facebook.isAuthenticated()) {
-          homePage.buildFacebookAuthenticationMenu(function () {
-            homePage.bindFacebookLoginButton(function () {
-              facebook.login(function () {
-                homePage.hideFabookAuthenticationMenu(pvt.initializeFourbongo);
+        if (window.location.hash && window.location.hash.indexOf('tag=') != -1) {
+          pvt.initializeFourbongo();
+        } else {
+          if (!foursquare.isAuthenticated()) {
+            homePage.buildFoursquareAuthenticationMenu(function () {
+              homePage.bindFoursquareLoginButton(foursquare.login);
+            });
+          } else if (!facebook.isAuthenticated()) {
+            homePage.buildFacebookAuthenticationMenu(function () {
+              homePage.bindFacebookLoginButton(function () {
+                facebook.login(function () {
+                  homePage.hideFabookAuthenticationMenu(function () {
+                    if (window.location.hash) {
+                      pvt.initializeFourbongo();
+                    } else {
+                      homePage.buildSearchMenu(pvt.prepareSearchMenu);
+                    }
+                  });
+                });
               });
             });
-          });
-        } else {
-          pvt.initializeFourbongo();
+          } else {
+            homePage.buildSearchMenu(pvt.prepareSearchMenu);
+          }
         }
       });
     };
 
     pvt.initializeFourbongo = function () {
       var hash = window.location.hash;
-      if (!hash) {
-        homePage.buildSearchMenu(pvt.prepareSearchMenu);
+      if (hash.indexOf('venueId=') != -1) {
+        var venueId = hash.replace('#venueId=', '');
+        pvt.startShow(venueId);
       } else {
-        if (hash.indexOf('venueId=') != -1) {
-          var venueId = hash.replace('#venueId=', '');
-          pvt.startShow(venueId);
-        } else {
-          var tag = hash.replace('#tag=', '');
-          pvt.startTagShow(tag);
-        }
+        var tag = hash.replace('#tag=', '');
+        pvt.startTagShow(tag);
       }
     };
 
