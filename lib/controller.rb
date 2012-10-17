@@ -66,8 +66,8 @@ CATCHPHRASES = ['see the buzz around you',
                 'pop',
                 'what do you think?',
                 'the rest are lies',
-                'this is the virtual world'
-                'this is the virtual world'
-                'this is the virtual world'
-                'this is the virtual world'
+                'this is the virtual world',
+                'this is the virtual world',
+                'this is the virtual world',
+                'this is the virtual world',
                 'see duckfaces around you']
