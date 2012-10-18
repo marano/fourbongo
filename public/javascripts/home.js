@@ -11,8 +11,8 @@ var home = function () {
       homePage.showTitle();
       foursquare.initialize();
       facebook.initialize(function () {
-        if (window.location.hash && window.location.hash.indexOf('tag=') != -1) {
-          pvt.initializeFourbongo();
+        if (hasSearchByTagHash()) {
+          startSearchByTagFromHash();
         } else {
           if (!foursquare.isAuthenticated()) {
             homePage.buildFoursquareAuthenticationMenu(function () {
@@ -23,8 +23,8 @@ var home = function () {
               homePage.bindFacebookLoginButton(function () {
                 facebook.login(function () {
                   homePage.hideFabookAuthenticationMenu(function () {
-                    if (window.location.hash) {
-                      pvt.initializeFourbongo();
+                    if (hasSearchByLocationHash()) {
+                      startSearchByLocationFromHash();
                     } else {
                       homePage.buildSearchMenu(pvt.prepareSearchMenu);
                     }
@@ -32,6 +32,8 @@ var home = function () {
                 });
               });
             });
+          } else if (hasSearchByLocationHash()) {
+            startSearchByLocationFromHash();
           } else {
             homePage.buildSearchMenu(pvt.prepareSearchMenu);
           }
@@ -39,16 +41,25 @@ var home = function () {
       });
     };
 
-    pvt.initializeFourbongo = function () {
+    function hasSearchByTagHash() {
       var hash = window.location.hash;
-      if (hash.indexOf('venueId=') != -1) {
-        var venueId = hash.replace('#venueId=', '');
-        pvt.startShow(venueId);
-      } else {
-        var tag = hash.replace('#tag=', '');
-        pvt.startTagShow(tag);
-      }
-    };
+      return hash && hash.indexOf('tag=') != -1;
+    }
+
+    function hasSearchByLocationHash() {
+      var hash = window.location.hash;
+      return hash && hash.indexOf('venueId=') != -1;
+    }
+
+    function startSearchByTagFromHash() {
+      var tag = window.location.hash.replace('#tag=', '');
+      pvt.startTagShow(tag);
+    }
+
+    function startSearchByLocationFromHash() {
+      var venueId = window.location.hash.replace('#venueId=', '');
+      pvt.startShow(venueId);
+    }
 
     pvt.prepareSearchMenu = function () {
       pvt.queryGeolocation();
