@@ -15,10 +15,7 @@ var twitter = function () {
     $.getJSON('http://search.twitter.com/search.json?geocode=' + latitude + ',' + longitude + ',10km&rpp=100&include_entities=true&callback=?', function (data) {
       var tweetsWithLocation = _(data.results).filter(function (tweet) { return pvt.locationInfo(tweet) != null; });
       var tweets = _(tweetsWithLocation).map(function (tweet) {
-        var mediaUrl = null;
-        if (tweet.entities.media != null) {
-          mediaUrl = tweet.entities.media[0].media_url;
-        }
+        var mediaUrl = media(tweet);
         var locationInfo = pvt.locationInfo(tweet);
         return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), isUpdateByLocation: true, latitude: locationInfo.latitude, longitude: locationInfo.longitude, mediaUrl: mediaUrl});
       });
@@ -29,15 +26,22 @@ var twitter = function () {
   api.byTag = function (tag, callback) {
     $.getJSON('http://search.twitter.com/search.json?q=%23' + tag + '&rpp=100&include_entities=true&callback=?', function (data) {
       var tweets = _(data.results).map(function (tweet) {
-        var mediaUrl = null;
-        if (tweet.entities.media != null) {
-          mediaUrl = tweet.entities.media[0].media_url;
-        }
+        var mediaUrl = media(tweet);
         return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), mediaUrl: mediaUrl});
       });
       callback(tweets);
     });
   };
+
+  function media(tweet) {
+    var mediaUrl = null;
+    if (tweet.entities.media != null) {
+      mediaUrl = tweet.entities.media[0].media_url;
+    } else if (tweet.entities.urls.length > 0 && tweet.entities.urls[0].expanded_url.indexOf('http://twitpic.com/') != -1) {
+      mediaUrl = 'http://twitpic.com/show/full/' + tweet.entities.urls[0].expanded_url.replace('http://twitpic.com/', '');
+    }
+    return mediaUrl;
+  }
 
   pvt.locationInfo = function (tweet) {
     var geoInfo = tweet.geo;

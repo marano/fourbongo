@@ -60,6 +60,14 @@
   float: left;
 }
 
+.twitter_media {
+  height: 620px;
+}
+
+.twitter_media img {
+  height: 100%;
+}
+
 .instagram_caption {
   font-size: 80%;
 }
