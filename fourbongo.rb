@@ -5,6 +5,8 @@ require 'rubygems'
 require 'bundler'
 Bundler.require :default
 
+require 'yaml'
+
 CONFIG = YAML.load_file('config/env.yml')[Sinatra::Application.environment.to_s]
 
 set :app_file, __FILE__
