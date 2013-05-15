@@ -1,12 +1,3 @@
-source :gemcutter
+source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'capistrano'
-gem 'rvm-capistrano'
-gem 'unicorn'
-
-group :test do
-  gem 'rspec'
-  gem 'vcr'
-  gem 'fakeweb'
-end
