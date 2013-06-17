@@ -1,10 +1,12 @@
-var searchTab = function (type, otherTab) {
+var searchTab = function (type) {
   var api = {
-    otherTab: otherTab
+    otherTab: undefined
   };
+
   var pvt = {
     tab: $($('#searchBy' + type + 'Tab')[0]),
     tabLink: $($('#searchBy' + type + 'TabLink')[0]),
+    wasClicked: false
   };
 
   api.selected = function () {
@@ -13,6 +15,7 @@ var searchTab = function (type, otherTab) {
     pvt.tab.css('pointer-events', 'none');
     pvt.tabLink.addClass('selectedSearchTabLink');
     pvt.tabLink.removeClass('disabledSearchTabLink');
+    pvt.wasClicked = false;
   };
 
   api.notSelected = function () {
@@ -32,10 +35,16 @@ var searchTab = function (type, otherTab) {
   };
 
   pvt.mouseenter = function () {
+    if (pvt.wasClicked) {
+      return;
+    }
     pvt.tab.animate({'opacity' : '0.85', 'top' : '-10px'}, {easing: 'easeInQuint', duration: 80});
   };
 
   pvt.mouseout = function () {
+    if (pvt.wasClicked) {
+      return;
+    }
     pvt.tab.animate({'opacity' : '0.7', 'top' : '1px'}, {easing: 'easeInQuint', duration: 80});
   };
 
@@ -50,6 +59,10 @@ var searchTab = function (type, otherTab) {
   api.goBehind = function () { pvt.tab.css('z-index', '0'); }
 
   pvt.click = function () {
+    if (pvt.wasClicked) {
+      return;
+    }
+    pvt.wasClicked = true;
     homePage.hideSearchResult();
     api.otherTab.zoomOut1();
     pvt.tab.animate({'opacity' : '0.95', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
