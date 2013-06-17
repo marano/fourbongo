@@ -1,27 +1,28 @@
 var settingsView = function () {
   var api = {};
   var pvt = { settingsOptions: null };
+  var settingsOpacity = '.8'
 
   api.bindToSettingsIconHover = function (callback) { $('#settings').mousemove(callback); };
 
   api.showSettingsIcon = function (callback) {
     var settingsDiv = $('<div>', {id:'settings'}).css('opacity', '.0').html("<img id='settingsIcon' src='/settings.png' />").appendTo($('body'));
-    settingsDiv.animate({'opacity' : '.8'}, {easing: 'easeOutQuad', duration: 1000, complete: callback});
+    callback();
+    settingsDiv.animate({'opacity' : settingsOpacity}, {easing: 'easeOutQuad', duration: 1000});
   };
 
   api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settings').remove(); }}); };
 
   api.showSettingsOptions = function (callback) {
-    var opacity = $('#settings').css('opacity');
-    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 500, complete: function () {
+    $('#settings').stop().animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 500, complete: function () {
       $('#settingsIcon').remove();
       if (pvt.settingsOptions == null) {
         $.get('/settings', function (html) {
           pvt.settingsOptions = html;
-          pvt.showLoadedSettingsOptions(opacity, callback);
+          pvt.showLoadedSettingsOptions(settingsOpacity, callback);
         });
       } else {
-        pvt.showLoadedSettingsOptions(opacity, callback);
+        pvt.showLoadedSettingsOptions(settingsOpacity, callback);
       }
     }});
   };

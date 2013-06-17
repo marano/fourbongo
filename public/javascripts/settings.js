@@ -401,10 +401,10 @@ var Settings = function (list, hideDistanceRangeSetting, hideFlickrSetting) {
         setting.onchange(api.fillPostsCount);
       });
       if (hideDistanceRangeSetting) {
-        settingsView.hideDistanceRange()
+        settingsView.hideDistanceRange();
       };
       if (hideFlickrSetting) {
-        settingsView.hideShowFlickr()
+        settingsView.hideShowFlickr();
       };
     });
     pvt.moreTime();
