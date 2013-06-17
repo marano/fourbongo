@@ -230,7 +230,7 @@ var tagWall = function (rawTags) {
     fetchPublications();
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
-    setInterval(fetchPublications, 180000);
+    setInterval(fetchPublications, 300000);
     setInterval(settings.fillPostsCount, 5000);
   }
 
