@@ -1,7 +1,11 @@
 var instagram = function () {
   var api = {};
 
-  var clientId = 'ef0cec7f983646e4a6809a3d0dbd35bf';
+  var clientIds = ['ef0cec7f983646e4a6809a3d0dbd35bf', '86a8f41a1066466c8780fa68be17e71b'];
+
+  function clientId() {
+    return clientIds[Math.floor(Math.random() * clientIds.length)];;
+  }
 
   api.mediaByTag = function (tag, callback) {
     var currentPage = 1;
@@ -10,7 +14,7 @@ var instagram = function () {
   };
   
   api.mediaByLocation = function (latitude, longitude, callback) {
-    $.getJSON('https://api.instagram.com/v1/media/search?lat=' + latitude + '&lng=' + longitude + '&distance=5000&client_id=' + clientId + '&callback=?', function (data) {
+    $.getJSON('https://api.instagram.com/v1/media/search?lat=' + latitude + '&lng=' + longitude + '&distance=5000&client_id=' + clientId() + '&callback=?', function (data) {
       var isUpdateByLocation = true;
       callback(mediasFromData(data.data, isUpdateByLocation));
     });
@@ -37,7 +41,7 @@ var instagram = function () {
 
   function urlForTag(tag, maxTagId) {
     var maxTagIdParameter = maxTagId ? '&max_tag_id=' + maxTagId : '';
-    return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?&client_id=' + clientId + maxTagIdParameter + '&count=60&callback=?';
+    return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?&client_id=' + clientId() + maxTagIdParameter + '&count=60&callback=?';
   }
 
   function mediasFromData(data, isUpdateByLocation) {

@@ -27,7 +27,7 @@ get '/facebook/authentication_menu' do
 end
 
 get '/twitter/search' do
-  Twitter.search("#{params[:query]}", :result_type => 'recent', :count => 100, :include_entities => true).results.map { |result| result.attrs }.to_json
+  twitter.search("#{params[:query]}", :result_type => 'recent', :count => 100, :include_entities => true).results.map { |result| result.attrs }.to_json
 end
 
 class Array
@@ -42,6 +42,28 @@ class Array
     self.replace(randomize)
   end
 end
+
+def twitter
+  credentials = TWITTER_CREDENTIALS.sample
+  client = Twitter::Client.new(
+    :consumer_key => credentials[:consumer_key],
+    :consumer_secret => credentials[:consumer_secret],
+    :oauth_token => credentials[:oauth_token],
+    :oauth_token_secret => credentials[:oauth_token_secret]
+  )
+end
+
+TWITTER_CREDENTIALS = [{
+  :consumer_key =>'qAb5J3UuDgVG4Xd10VA',
+  :consumer_secret => 'ArxTdVamSwk5WufcObfqMtVDy6QQa5tBf6ZGlN7RDSw',
+  :oauth_token => '15903657-P0aYbGZSi3NJygkAvt2ZTRs3lswKq2Adv1JE8v2I',
+  :oauth_token_secret => 'OKxGyuWxAqdLAvnrx4ejJEbURMQDYJ6kJwNA9CYxg8'
+}, {
+  :consumer_key =>'47SOyTBpmqI7a9LHSIoiAg',
+  :consumer_secret => '0q6WEECClR8rLGBrBsU8njqmPBTRZHwb24fIbvQk',
+  :oauth_token => '15903657-RNusGPmGa8AlYTSydZJOm9k9yEhUzOMcXFsDJnAlc',
+  :oauth_token_secret => 'FthwBXAO4cov0hiyV4wzKufClyUHpgFq19kQIWvtU'
+}]
 
 CATCHPHRASES = ['see the buzz around you',
                 'see the buzz around you',
