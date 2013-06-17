@@ -63,6 +63,11 @@ TWITTER_CREDENTIALS = [{
   :consumer_secret => '0q6WEECClR8rLGBrBsU8njqmPBTRZHwb24fIbvQk',
   :oauth_token => '15903657-RNusGPmGa8AlYTSydZJOm9k9yEhUzOMcXFsDJnAlc',
   :oauth_token_secret => 'FthwBXAO4cov0hiyV4wzKufClyUHpgFq19kQIWvtU'
+}, {
+  :consumer_key =>'Q2Q4M2zZ7Yz9HE9q42bg',
+  :consumer_secret => 'Ty7FsGva3WFlgtaY9QQIvceV013fWETbOeOpqG5pIo',
+  :oauth_token => '15903657-oTYJzhoRUlJFEoARlo6Axli32zndYzP9IMyg0oGjc',
+  :oauth_token_secret => '0LzCsYaSNdo9hqvvMIfhc7gYFksrG56g8OmWpbe7mvE'
 }]
 
 CATCHPHRASES = ['see the buzz around you',
