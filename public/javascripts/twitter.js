@@ -24,10 +24,10 @@ var twitter = function () {
   };
 
   api.byTag = function (tag, callback) {
-    $.getJSON('http://search.twitter.com/search.json?q=%23' + tag + '&rpp=100&include_entities=true&callback=?', function (data) {
-      var tweets = _(data.results).map(function (tweet) {
+    $.getJSON('/twitter/search?query=' + tag, function (data) {
+      var tweets = _(data).map(function (tweet) {
         var mediaUrl = media(tweet);
-        return Tweet({id: tweet.id_str, username: tweet.from_user, fullname: tweet.from_user_name, content: cheatedUnescape(tweet.text), avatar: tweet.profile_image_url, createdAt: new Date(tweet.created_at), mediaUrl: mediaUrl});
+        return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: cheatedUnescape(tweet.text), avatar: tweet.user.profile_image_url, createdAt: new Date(tweet.created_at), mediaUrl: mediaUrl});
       });
       callback(tweets);
     });

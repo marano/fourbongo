@@ -26,6 +26,10 @@ get '/facebook/authentication_menu' do
   erb :facebook_authentication_menu
 end
 
+get '/twitter/search' do
+  Twitter.search("#{params[:query]}", :result_type => 'recent', :count => 100, :include_entities => true).results.map { |result| result.attrs }.to_json
+end
+
 class Array
   def randomize
     duplicated_original = self.dup
