@@ -111,7 +111,7 @@ var home = function () {
       pvt.startTagShow(tag);
     };
 
-    pvt.startShow = function (venueId) { homePage.slideContainer(function () { wall(venueId); }); };
+    pvt.startShow = function (venueId) { homePage.slideContainer(function () { venueWall(venueId); }); };
 
     pvt.startTagShow = function (tag) { homePage.slideContainer(function () { tagWall(tag); }); };
 

@@ -236,7 +236,7 @@ var tagWall = function (tag) {
   return api;
 };
 
-var wall = function (venueId) {
+var venueWall = function (venueId) {
   var api = {
     venueLat: null,
     venueLng: null
