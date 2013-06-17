@@ -193,11 +193,14 @@ var SlidesCoordinator = function (postsList) {
   return api;
 };
 
-var tagWall = function (tag) {
+var tagWall = function (rawTags) {
   var api = {};
 
-  var raw_tag = tag.replace(/#/g, '');
-  window.location.hash = 'tag=' + raw_tag;
+  var tags = _(rawTags.split(',')).map(function (eachRawTag) {
+    return eachRawTag.replace(/#/g, '').trim();
+  });
+
+  window.location.hash = 'tag=' + tags.join(',');
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
 
@@ -222,15 +225,20 @@ var tagWall = function (tag) {
 
   function startShow() {
     var slider = slideShow($('#wallContainer'));
-    introduction.showTagCover('#' + raw_tag, slider);
+    introduction.showTagCover('#' + tags.join(' #'), slider);
 
-    instagram.mediaByTag(raw_tag, postsList.addAll);
-    twitter.byTag(raw_tag, postsList.addAll);
+    fetchPublications();
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
-    setInterval(function () { instagram.mediaByTag(raw_tag, postsList.addAll); }, 30000);
-    setInterval(function () { twitter.byTag(raw_tag, postsList.addAll); }, 30000);
+    setInterval(fetchPublications, 30000);
     setInterval(settings.fillPostsCount, 2000);
+  }
+
+  function fetchPublications() {
+    _(tags).each(function (eachTag) {
+      instagram.mediaByTag(eachTag, postsList.addAll);
+      twitter.byTag(eachTag, postsList.addAll);
+    });
   }
 
   return api;
