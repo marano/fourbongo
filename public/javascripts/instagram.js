@@ -60,7 +60,7 @@ var instagram = function () {
       }
       return InstagramMedia({id: media.id, username: media.user.username, fullname: media.user.full_name, avatar: media.user.profile_picture, isUpdateByLocation: isUpdateByLocation, locationName: locationName, latitude: latitude, longitude: longitude, media: media.images.standard_resolution.url, caption: caption, createdAt: new Date(parseInt(media.created_time) * 1000)});
     });
-    return _(medias).filter(function (each) { return each.locationName != null; });
+    return medias;
   }
 
   return api;
