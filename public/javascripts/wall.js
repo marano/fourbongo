@@ -239,9 +239,9 @@ var tagWall = function (rawTags) {
   }
 
   function fetchPublications() {
+    twitter.byTag(tags, postsList.addAll);
     _(tags).each(function (eachTag) {
       instagram.mediaByTag(eachTag, postsList.addAll);
-      twitter.byTag(eachTag, postsList.addAll);
     });
   }
 
