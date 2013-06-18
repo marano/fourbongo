@@ -21,7 +21,7 @@ var instagram = function () {
   };
 
   function mediaByTagPaginated(tag, currentPage, maxTagId, callback) {
-    var amountOfPagesToFetch = 5;
+    var amountOfPagesToFetch = 2;
     if (currentPage > amountOfPagesToFetch) {
       return;
     }
