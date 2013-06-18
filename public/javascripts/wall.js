@@ -60,6 +60,7 @@ var InstagramMedia = function (mediaData) {
     createdAt: mediaData.createdAt,
     avatar: mediaData.avatar,
     isUpdateByLocation: mediaData.isUpdateByLocation,
+    locationName: mediaData.locationName,
     latitude: mediaData.latitude,
     longitude: mediaData.longitude,
     isInstagramPic: true

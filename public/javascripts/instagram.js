@@ -52,13 +52,15 @@ var instagram = function () {
       }
       var latitude;
       var longitude;
+      var locationName;
       if (media.location != null) {
+        locationName = media.location.name;
         latitude = media.location.latitude;
         longitude = media.location.longitude;
       }
-      return InstagramMedia({id: media.id, username: media.user.username, fullname: media.user.full_name, avatar: media.user.profile_picture, isUpdateByLocation: isUpdateByLocation, latitude: latitude, longitude: longitude, media: media.images.standard_resolution.url, caption: caption, createdAt: new Date(parseInt(media.created_time) * 1000)});
+      return InstagramMedia({id: media.id, username: media.user.username, fullname: media.user.full_name, avatar: media.user.profile_picture, isUpdateByLocation: isUpdateByLocation, locationName: locationName, latitude: latitude, longitude: longitude, media: media.images.standard_resolution.url, caption: caption, createdAt: new Date(parseInt(media.created_time) * 1000)});
     });
-    return medias;
+    return _(medias).filter(function (each) { return each.locationName != null; });
   }
 
   return api;

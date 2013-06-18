@@ -43,7 +43,7 @@ var wallPage = function () {
     var container = $('<div>', {'class': 'publication_container'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
-    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append($('<div>', {'class': 'publication_time'}).text(timeAndLocationText(post)));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
@@ -52,6 +52,15 @@ var wallPage = function () {
     container.append($('<div>').append(media).append(caption));
     return container;
   };
+
+  function timeAndLocationText(publication) {
+    var time = $.timeago(publication.createdAt);
+    if (publication.locationName != null) {
+      return time + ' at ' + publication.locationName;
+    } else {
+      return time;
+    }
+  }
 
   api.flickrPicHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
