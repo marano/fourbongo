@@ -144,7 +144,8 @@ var SlidesCoordinator = function (postsList) {
   var pvt = {
     paused: false,
     needsToHideLoading: true,
-    isShowingNoUpdates: false
+    isShowingNoUpdates: false,
+    started: false
   };
   
   api.start = function (slider) {
@@ -167,22 +168,25 @@ var SlidesCoordinator = function (postsList) {
   pvt.noUpdates = function (slider) {
     if (!pvt.isShowingNoUpdates) {
       pvt.isShowingNoUpdates = true;
-      slider.slide(wallPage.noUpdatesSlide());
+      if (pvt.started) {
+        slider.slide(wallPage.noUpdatesSlide());
+      }
     }
   };
 
   pvt.next = function (slider) {
     if (pvt.paused) { return; }
     if (postsList.isNotEmpty()) {
-      if (pvt.needsToHideLoading) {
-        pvt.needsToHideLoading = false;
-        wallPage.hideLoading();
-      }
       var post = postsList.next();
       if (post == null) {
         pvt.noUpdates(slider);
       } else {
         pvt.isShowingNoUpdates = false;
+        pvt.started = true;
+        if (pvt.needsToHideLoading) {
+          pvt.needsToHideLoading = false;
+          wallPage.hideLoading();
+        }
         slider.slide(post.post.html(post.post));
       }
     } else {
