@@ -28,7 +28,8 @@ var twitter = function () {
     $.getJSON('/twitter/search?query=' + query, function (data) {
       var tweets = _(data).map(function (tweet) {
         var mediaUrl = media(tweet);
-        return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: cheatedUnescape(tweet.text), avatar: tweet.user.profile_image_url, createdAt: new Date(tweet.created_at), mediaUrl: mediaUrl});
+        var locationInfo = pvt.locationInfo(tweet);
+        return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: cheatedUnescape(tweet.text), avatar: tweet.user.profile_image_url, createdAt: new Date(tweet.created_at), locationName: locationInfo.locationName, latitude: locationInfo.latitude, longitude: locationInfo.longitude, mediaUrl: mediaUrl});
       });
       callback(tweets);
     });
@@ -45,12 +46,15 @@ var twitter = function () {
   }
 
   pvt.locationInfo = function (tweet) {
-    var geoInfo = tweet.geo;
-    if (geoInfo == null) {
-      return null;
-    } else {
-      return {latitude: geoInfo.coordinates[0], longitude: geoInfo.coordinates[1]}
+    var info = {};
+    if (tweet.geo != null) {
+      info.latitude = tweet.geo.coordinates[0];
+      info.longitude = tweet.geo.coordinates[1];
     }
+    if (tweet.place != null) {
+      info.locationName = tweet.place.full_name + ', ' + tweet.place.country;
+    }
+    return info;
   };
 
   return api;

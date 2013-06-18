@@ -21,6 +21,7 @@ var Tweet = function (tweetData) {
     avatar: tweetData.avatar.replace('_normal', ''),
     mediaUrl: tweetData.mediaUrl,
     isUpdateByLocation: tweetData.isUpdateByLocation,
+    locationName: tweetData.locationName,
     latitude: tweetData.latitude,
     longitude: tweetData.longitude,
     isTweet: true
