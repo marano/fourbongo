@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 enable :sessions
 set :session_secret, "foajalkjsdfhkljashdfkashdfh"
 
@@ -9,7 +11,7 @@ use OmniAuth::Builder do
 end
 
 get '/' do
-  @catchphrase = CATCHPHRASES.randomize.first
+  @catchphrase = BRASIL_CATCHPHRASES.randomize.first
   @from_foursquare_authentication_callback = params[:from_foursquare_authentication_callback]
   erb :index
 end
@@ -78,25 +80,39 @@ def twitter
   )
 end
 
-CATCHPHRASES = ['see the buzz around you',
-                'see the buzz around you',
-                'see the buzz around you',
-                'see the buzz around you',
-                'see the buzz around you',
-                'see the buzz around you',
-                'the real life news',
-                'the real life news',
-                'the real life news',
-                'the real life news',
-                'the real life news',
-                'the real life news',
-                'the democratic news',
-                'the democratic news',
-                'the democratic news',
-                'the democratic news',
-                'live!',
-                'pop',
-                'what do you think?',
-                'the rest are lies',
-                'this is a virtual world',
-                'see duckfaces around you']
+BRASIL_CATCHPHRASES = [
+  'não é por vinte centavos jabor',
+  'quero ver na copa',
+  'o gigante acordou',
+  'não se faz país sem hospital ronaldo',
+  'mané é quem gasta 20 bilhões num estádio de futebol',
+  'amanhã vai ser maior',
+  'tacaram mentos na geração coca cola',
+  'vai pra pec que te pariu',
+  'verás que o filho teu não foge a luta'
+]
+
+CATCHPHRASES = [
+  'see the buzz around you',
+  'see the buzz around you',
+  'see the buzz around you',
+  'see the buzz around you',
+  'see the buzz around you',
+  'see the buzz around you',
+  'the real life news',
+  'the real life news',
+  'the real life news',
+  'the real life news',
+  'the real life news',
+  'the real life news',
+  'the democratic news',
+  'the democratic news',
+  'the democratic news',
+  'the democratic news',
+  'live!',
+  'pop',
+  'what do you think?',
+  'the rest are lies',
+  'this is a virtual world',
+  'see duckfaces around you'
+]
