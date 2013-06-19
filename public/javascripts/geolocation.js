@@ -9,11 +9,24 @@ var geolocation = function () {
 
   api.city = function (latitude, longitude, callback) {
     navigator.geolocation.getCurrentPosition(function (position) {
-      $.getJSON('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&addressdetails=1', function (data) {
+      reverse(latitude, longitude, function (data) {
         callback(data.address.city);
       });
     });
   };
+
+  api.displayName = function (latitude, longitude, callback) {
+    reverse(latitude, longitude, function (data) {
+      var name = _([data.address.road, data.address.state_district, data.address.city, data.address.country]).select(function (address) { return address && address !== ''; }).join(', ');
+      callback(name);
+    });
+  };
+
+  function reverse(latitude, longitude, callback) {
+    $.getJSON('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&addressdetails=1', function (data) {
+      callback(data);
+    });
+  }
   
   return api;
 }();

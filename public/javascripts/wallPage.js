@@ -28,7 +28,7 @@ var wallPage = function () {
       container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     }
     var userData = $('<div>', {'class': 'user_data_container'});
-    userData.append($('<div>', {'class': 'publication_time'}).text(timeAndLocationText(post)));
+    userData.append(timeAndLocationElement(post));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
@@ -43,7 +43,7 @@ var wallPage = function () {
     var container = $('<div>', {'class': 'publication_container'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
-    userData.append($('<div>', {'class': 'publication_time'}).text(timeAndLocationText(post)));
+    userData.append(timeAndLocationElement(post));
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
@@ -53,20 +53,25 @@ var wallPage = function () {
     return container;
   };
 
-  function timeAndLocationText(publication) {
+  function timeAndLocationElement(publication) {
+    var element = $('<div>', {'class': 'publication_time'});
     var time = $.timeago(publication.createdAt);
+    element.text(time);
     if (publication.locationName != null) {
-      return time + ' at ' + publication.locationName;
-    } else {
-      return time;
+      element.text(time + ' at ' + publication.locationName);
+    } else if (publication.latitude != null && publication.longitude != null) {
+      geolocation.displayName(publication.latitude, publication.longitude, function (name) {
+        element.text(time + ' at ' + name);
+      });
     }
+    return element;
   }
 
   api.flickrPicHtml = function (post) {
     var container = $('<div>', {'class': 'publication_container'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
-    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append(timeAndLocationElement(post));
     userData.append($('<span>', {'class': 'username'}).text(post.username));
     container.append(userData);
     var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
@@ -79,7 +84,7 @@ var wallPage = function () {
     var container = $('<div>', {'class': 'publication_container'});
     container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
     var userData = $('<div>', {'class': 'user_data_container'});
-    userData.append($('<div>', {'class': 'publication_time'}).text($.timeago(post.createdAt)));
+    userData.append(timeAndLocationElement(post));
     userData.append($('<span>', {'class': 'username'}).text(post.username));
     container.append(userData);
     container.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
