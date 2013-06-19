@@ -62,24 +62,6 @@
           </div>
 
           <div id='searchMenu'>
-            <div id='searchByLocationTab' class='searchTab'>
-              <div id='searchByLocationTabLink' class='searchTabLink'>Location</div>
-              <div class='bar'>
-                <div id='searchMenuFields'>
-                  <form id="searchForm">
-                    <label class='searchLabel' for='inputSearchName'>where are you?</label>
-                    <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
-                    <label class='searchLabel' for='inputSearchCity'>in</label>
-                    <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
-                    <input type='submit' value="go" class='searchButton' />
-                  </form>
-                </div>
-
-                <div id='spinning' class='hidden'>
-                  <img src='/spinning.gif' />
-                </div>
-              </div>
-            </div>
 
             <div id='searchByTagTab' class='searchTab'>
               <div id='searchByTagTabLink' class='searchTabLink'>Hashtag</div>
@@ -93,8 +75,28 @@
                 </div>
               </div>
             </div>
+
+            <div id='searchByLocationTab' class='searchTab'>
+              <div id='searchByLocationTabLink' class='searchTabLink'>Location</div>
+              <div class='bar'>
+                <div id='searchMenuFields'>
+                  <form id="searchForm">
+                    <label class='searchLabel' for='inputSearchName'>where are you?</label>
+                    <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
+                    <label class='searchLabel' for='inputSearchCity'>in</label>
+                    <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
+                    <input type='submit' value="go" class='searchButton' />
+                  </form>
+                </div>
+                <div id='spinning' class='hidden'>
+                  <img src='/spinning.gif' />
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+
         <div id='searchResult'></div>
       </div>
     </div>

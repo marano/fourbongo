@@ -166,11 +166,11 @@ body:before {
 }
 
 #searchByLocationTabLink {
-  margin-left: -120px;
+  margin-left: 120px;
 }
 
 #searchByTagTabLink {
-  margin-left: 120px;
+  margin-left: -120px;
 }
 
 .bar .searchLabel {
