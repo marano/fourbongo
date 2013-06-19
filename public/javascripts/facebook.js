@@ -17,8 +17,10 @@ var facebook = function () {
       });
 
       FB.getLoginStatus(function(response) {
-        if (response.authResponse) { pvt.authenticated = true; }
-        callback();
+        if (response.status === 'connected') {
+          if (response.authResponse) { pvt.authenticated = true; }
+          callback();
+        }
       });
     };
  

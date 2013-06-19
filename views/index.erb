@@ -5,7 +5,6 @@
     <link href='/stylesheets/wall.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/settings.css' media='all' rel='stylesheet' />
 
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.easie-min.js"></script>
@@ -37,13 +36,65 @@
     <meta name="foursquare_client_id" content="<%= CONFIG['foursquare_client_id'] %>" />
     <meta name="from_foursquare_authentication_callback" content="<%= @from_foursquare_authentication_callback %>" />
   </head>
+
   <body>
     <div id='wallContainer'></div>
     <div id='homeOuterContainer'>
       <div id="homeContainer">
-        <h1 id='title' style='display: none'>fourbongo</h1>
-        <h2 id='catchphrase'><%= @catchphrase %></h2>
-        <div id='homeBar' style='display: none'></div>
+        <h1 id='title' style='display: none'><span class='green'>fórum</span> <span class='yellow'>bangú</span></h1>
+        <h2 id='catchphrase' class='blue'><%= @catchphrase %></h2>
+        <div id='homeMenu' style='display: none'>
+          <div class='homeMenuQuestion'>
+            In which networks?
+          </div>
+
+          <div id='networksMenu'>
+            <ul>
+              <li class='twitter-icon'></li>
+              <li class='facebook-icon loading-status'></li>
+              <li class='instagram-icon'></li>
+              <li class='flickr-icon'></li>
+            </ul>
+          </div>
+
+          <div class='homeMenuQuestion'>
+            In what context?
+          </div>
+
+          <div id='searchMenu'>
+            <div id='searchByLocationTab' class='searchTab'>
+              <div id='searchByLocationTabLink' class='searchTabLink'>Location</div>
+              <div class='bar'>
+                <div id='searchMenuFields'>
+                  <form id="searchForm">
+                    <label class='searchLabel' for='inputSearchName'>where are you?</label>
+                    <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
+                    <label class='searchLabel' for='inputSearchCity'>in</label>
+                    <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
+                    <input type='submit' value="go" class='searchButton' />
+                  </form>
+                </div>
+
+                <div id='spinning' class='hidden'>
+                  <img src='/spinning.gif' />
+                </div>
+              </div>
+            </div>
+
+            <div id='searchByTagTab' class='searchTab'>
+              <div id='searchByTagTabLink' class='searchTabLink'>Hashtag</div>
+              <div class='bar'>
+                <div id='searchMenuFields'>
+                  <form id="searchByTagForm">
+                    <label class='searchLabel' for='inputSearchTag'>what do you want to hear about?</label>
+                    <input type='text' id='inputSearchTag' name='tag' class='searchInput' placeholder='OGiganteAcordou, vemprarua, vinagre, changebrazil' />
+                    <input type='submit' value="go" class='searchButton' />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id='searchResult'></div>
       </div>
     </div>

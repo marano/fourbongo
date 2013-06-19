@@ -16,28 +16,19 @@ body:before {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .8);
 }
 
-.authentication_menu {
+.authentication_menu_message {
+  float: left;
+  display: inline-block;
   font-size: 36px;
   color: white;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
-.authentication_menu a, .authentication_menu a:active, .authentication_menu a:visited {
+.authentication_menu_message a, .authentication_menu_message a:active, .authentication_menu_message a:visited {
   color: white;
   text-decoration: underline;
 } 
-
-.authentication_menu_image, .authentication_menu_message {
-  float: left;
-  display: inline-block;
-}
-
-.authentication_menu_image {
-  padding: 5px;
-}
-
-.authentication_menu_message {
-  margin-top: 10px;
-}
 
 #searchMenu {
   position: relative;
@@ -61,12 +52,12 @@ body:before {
   margin-right: auto;
   width: 1024px;
   position: relative;
+  text-align: center;
 }
 
 #title {
   font-family: 'Vidaloka', serif;
   letter-spacing: -15px;
-  text-align: center;
   font-size: 900%;
   margin-top: 30px;
   margin-bottom: 30px;
@@ -77,7 +68,7 @@ body:before {
 #catchphrase {
   font-family: 'Georgia', serif;
   text-align: center;
-  opacity: 0.60;
+  opacity: 0.85;
   position: relative;
   top: -63px;
   left: -20px;
@@ -105,6 +96,17 @@ body:before {
 
 .bar, .searchTabLink {
   background-color: rgb(39, 39, 39);
+}
+
+.homeMenuQuestion {
+  font-size: 38px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.searchTabLink.initialSelectionTabLink {
+  cursor: pointer;
+  border-radius: 10px;
 }
 
 .searchTabLink {
@@ -145,15 +147,9 @@ body:before {
   -moz-box-shadow: 0 10px 30px 0 #999;
 
   pointer-events: all;
-}
-
-.bar-with-no-tab {
   border-radius: 3px;
-}
 
-.bar-with-tab {
-  border-radius: 3px;
-  border-top-left-radius: 0px;
+  text-align: left;
 }
 
 .searchLabel, .searchButton, .searchInput {
@@ -166,14 +162,15 @@ body:before {
   position: absolute;
   margin-top: 0;
   margin-left: 0;
-}
-
-#searchByTagTabLink {
-  margin-left: 145px;
+  width: 1024px;
 }
 
 #searchByLocationTabLink {
-  margin-left: 0px;
+  margin-left: -120px;
+}
+
+#searchByTagTabLink {
+  margin-left: 120px;
 }
 
 .bar .searchLabel {
@@ -208,6 +205,10 @@ body:before {
 
 #inputSearchCity {
   width: 220px;
+}
+
+#inputSearchTag {
+  width: 545px;
 }
 
 #searchForm {
@@ -246,3 +247,72 @@ body:before {
   margin-left: 20px;
 }
 
+#networksMenu ul {
+  padding-left: 0;
+}
+
+#networksMenu ul li {
+  margin-right: 3px;
+  list-style: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.twitter-icon {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  background: url(/images/twitter-icon.png) center left no-repeat;
+}
+
+.facebook-icon {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  background: url(/images/facebook-icon.png) center left no-repeat;
+}
+
+.instagram-icon {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  background: url(/images/instagram-icon.png) center left no-repeat;
+}
+
+.flickr-icon {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  background: url(/images/flickr-icon.png) center left no-repeat;
+}
+
+.foursquare-icon {
+  float: left;
+  width: 48px;
+  height: 48px;
+  margin-top: 6px;
+  margin-left: 6px;
+  background: url(/images/foursquare-icon.png) center left no-repeat;
+  display: inline-block;
+}
+
+.loading-status {
+  opacity: 0.2;
+  cursor: inherit !important;
+}
+
+.pending-authentication {
+  opacity: 0.5;
+}
+
+.green {
+  color: #18B500;
+}
+
+.yellow {
+  color: #FFDB0F;
+}
+
+.blue {
+  color: #0078F0;
+}

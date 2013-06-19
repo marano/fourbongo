@@ -1,4 +1,4 @@
-var searchTab = function (type) {
+var searchTab = function (type, setupCallback) {
   var api = {
     otherTab: undefined
   };
@@ -9,7 +9,41 @@ var searchTab = function (type) {
     wasClicked: false
   };
 
-  api.selected = function () {
+  function initialize() {
+    pvt.tab.find('.bar').css('opacity', '0').css('display', 'none');
+    pvt.tab.find('#searchMenuFields').css('opacity', '0').css('display', 'none');
+    pvt.tabLink.addClass('initialSelectionTabLink');
+    pvt.tabLink.on('click', api.initialSelected);
+  }
+
+  api.initialSelected = function () {
+    pvt.tabLink.removeClass('initialSelectionTabLink');
+    pvt.tabLink.off('click');
+    pvt.selected();
+    api.otherTab.notInitialSelected();
+    pvt.tab.find('.bar').css('display', 'block').animate({opacity: '1'}, {easing: 'easeOutBounce', duration: 80, complete: setupMenu});
+  };
+
+  function setupMenu() {
+    pvt.addEvents();
+    setupCallback(showSearhMenuFields);
+  }
+
+  function showSearhMenuFields() {
+    pvt.tab.find('#searchMenuFields').css('display', 'block').css('opacity', '1');
+  }
+
+  api.notInitialSelected = function () {
+    pvt.tabLink.removeClass('initialSelectionTabLink');
+    pvt.tabLink.off('click');
+    pvt.tab.find('.bar').css('display', 'block').animate({opacity: '1'}, {easing: 'easeOutBounce', duration: 80});
+    api.zoomOut2(function () {
+      api.notSelected();
+      setupMenu();
+    });
+  };
+
+  pvt.selected = function () {
     pvt.tab.css('zoom', '100%');
     pvt.tab.css('z-index', '1');
     pvt.tab.css('pointer-events', 'none');
@@ -28,7 +62,7 @@ var searchTab = function (type) {
     pvt.tabLink.addClass('disabledSearchTabLink');
   };
 
-  api.addEvents = function () {
+  pvt.addEvents = function () {
     pvt.tab.on('mouseenter', '.disabledSearchTabLink', pvt.mouseenter);
     pvt.tab.on('mouseout', '.disabledSearchTabLink', pvt.mouseout);
     pvt.tab.on('click', '.disabledSearchTabLink', pvt.click);
@@ -49,11 +83,11 @@ var searchTab = function (type) {
   };
 
   api.zoomOut1 = function () {
-    pvt.tab.animate({'opacity' : '0.95', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80});
+    pvt.tab.animate({'opacity' : '0.95', 'margin-left' : '5px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80});
   }
 
   api.zoomOut2 = function (callback) {
-    pvt.tab.animate({'opacity' : '0.7', 'top' : '1px', 'zoom' : '98%'}, {easing: 'easeInQuint', duration: 80, complete: callback});
+    pvt.tab.animate({'opacity' : '0.7', 'margin-left' : '10px', 'top' : '1px', 'zoom' : '98%'}, {easing: 'easeInQuint', duration: 80, complete: callback});
   }
 
   api.goBehind = function () { pvt.tab.css('z-index', '0'); }
@@ -65,15 +99,17 @@ var searchTab = function (type) {
     pvt.wasClicked = true;
     homePage.hideSearchResult();
     api.otherTab.zoomOut1();
-    pvt.tab.animate({'opacity' : '0.95', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
+    pvt.tab.animate({'opacity' : '0.95', 'margin-left' : '5px', 'top' : '-30px', 'zoom' : '99%'}, {easing: 'easeInQuint', duration: 80, complete: function () {
       pvt.tab.css('z-index', '1');
       api.otherTab.goBehind();
       api.otherTab.zoomOut2(api.otherTab.notSelected);
-      pvt.tab.animate({'opacity' : '1', 'top' : '0', 'zoom' : '100%'}, {easing: 'easeOutBounce', duration: 160, complete: function () {
-        api.selected();
+      pvt.tab.animate({'opacity' : '1', 'margin-left' : '0px', 'top' : '0', 'zoom' : '100%'}, {easing: 'easeOutBounce', duration: 160, complete: function () {
+        pvt.selected();
       }});
     }});
   }
+
+  initialize();
 
   return api;
 };
@@ -95,7 +131,11 @@ var homePage = function () {
     });
     $("#searchByTagForm").submit(function (event) {
       event.preventDefault();
-      searchByTagCallback($('#inputSearchTag').val());
+      var tags = $('#inputSearchTag').val();
+      if (tags === '') {
+        tags = $('#inputSearchTag').attr('placeholder');
+      }
+      searchByTagCallback(tags);
     });
   };
 
@@ -106,7 +146,7 @@ var homePage = function () {
     });
   };
 
-  api.bindFoursquareLoginButton = function (callback) {
+  pvt.bindFoursquareLoginButton = function (callback) {
     $("#foursquareLogin").click(function (event) {
       event.preventDefault();
       callback();
@@ -127,12 +167,12 @@ var homePage = function () {
 
   api.showTitle = function () { pvt.smoothShow('#title'); };
 
-  pvt.showBar = function () { pvt.smoothShow('#homeBar'); };
+  pvt.showHomeMenu = function () { pvt.smoothShow('#homeMenu'); };
 
   pvt.hideBar = function (callback) {
-    var elementOpacity = $('#homeBar').css('opacity');
-    $('#homeBar').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
-      $('#homeBar').hide().css('opacity', elementOpacity);
+    var elementOpacity = $('#homeMenu').css('opacity');
+    $('#homeMenu').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () {
+      $('#homeMenu').hide().css('opacity', elementOpacity);
       callback();
     }});
   };
@@ -142,9 +182,20 @@ var homePage = function () {
     $(element).css('opacity', '.0').show().animate({'opacity': elementOpacity}, {easing: 'easeOutQuint', duration: 1000});
   };
 
+  api.buildHomeMenu = function (callback, locationSelectionCallback, tagsSelectionCallback) {
+    var searchByLocationTab = searchTab('Location', locationSelectionCallback);
+    var searchByTagTab = searchTab('Tag', tagsSelectionCallback);
+
+    searchByLocationTab.otherTab = searchByTagTab;
+    searchByTagTab.otherTab = searchByLocationTab;
+
+    pvt.showHomeMenu();
+    callback(searchByLocationTab);
+  }
+
   api.buildSearchMenu = function (callback) {
     $.get('/search_menu', function (html) {
-      $('#homeBar').append(html);
+      $('#homeMenu').append(html);
 
       var searchByLocationTab = searchTab('Location');
       var searchByTagTab = searchTab('Tag');
@@ -158,23 +209,22 @@ var homePage = function () {
       searchByLocationTab.addEvents();
       searchByTagTab.addEvents();
 
-      pvt.showBar();
+      pvt.showHomeMenu();
       callback();
     });
   };
 
-  api.buildFoursquareAuthenticationMenu = function (callback) {
+  api.buildFoursquareAuthenticationMenu = function (loginButtonCallback) {
     $.get('/foursquare/authentication_menu', function (html) {
-      $('#homeBar').append(html);
-      pvt.showBar();
-      callback();
+      $('#searchByLocationTab').find('.bar').append(html);
+      pvt.bindFoursquareLoginButton(loginButtonCallback);
     });
   };
 
   api.buildFacebookAuthenticationMenu = function (callback) {
     $.get('/facebook/authentication_menu', function (html) {
-      $('#homeBar').append(html);
-      pvt.showBar();
+      $('#homeMenu').append(html);
+      pvt.showHomeMenu();
       callback();
     });
   };
