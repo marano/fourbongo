@@ -21,7 +21,10 @@ var searchTab = function (type, setupCallback) {
     pvt.tabLink.off('click');
     pvt.selected();
     api.otherTab.notInitialSelected();
-    pvt.tab.find('.bar').css('display', 'block').animate({opacity: '1'}, {easing: 'easeOutBounce', duration: 80, complete: setupMenu});
+    pvt.tab.find('.bar').css('display', 'block').animate({opacity: '1'}, {easing: 'easeOutBounce', duration: 80, complete: function () {
+      setupMenu();
+      pvt.tab.find('input').eq(0).focus();
+    }});
   };
 
   function setupMenu() {
@@ -50,6 +53,7 @@ var searchTab = function (type, setupCallback) {
     pvt.tabLink.addClass('selectedSearchTabLink');
     pvt.tabLink.removeClass('disabledSearchTabLink');
     pvt.wasClicked = false;
+    pvt.tab.find('input').eq(0).focus();
   };
 
   api.notSelected = function () {
