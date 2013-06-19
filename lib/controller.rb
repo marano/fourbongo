@@ -81,7 +81,7 @@ def twitter
 end
 
 BRASIL_CATCHPHRASES = [
-  'não é por vinte centavos jabor',
+  'não é por cause de vinte centavos',
   'quero ver na copa',
   'o gigante acordou',
   'não se faz país sem hospital',
