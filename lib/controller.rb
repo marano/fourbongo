@@ -90,7 +90,8 @@ BRASIL_CATCHPHRASES = [
   'tacaram mentos na geração coca cola',
   'vai pra pec que te pariu',
   'verás que o filho teu não foge a luta',
-  'versão vinagre',
+  'enfia os 20 centavos no SUS',
+  'versão vinagre'
 ]
 
 CATCHPHRASES = [
