@@ -202,7 +202,7 @@ var SlidesCoordinator = function (postsList) {
 var tagWall = function (rawTags) {
   var api = {};
 
-  var tags = _(rawTags.split(',')).map(function (eachRawTag) {
+  var tags = _(rawTags.split(/,| /)).reject(function (tag) { return tag === ''; }).map(function (eachRawTag) {
     return eachRawTag.replace(/#/g, '').trim();
   });
 
