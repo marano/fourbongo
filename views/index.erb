@@ -38,38 +38,29 @@
   </head>
 
   <body>
-    <div id='wallContainer'></div>
+    <div id='wallContainer'>
+      <div id='networksMenu' style='display: none'>
+        <ul>
+          <li class='twitter-icon'></li>
+          <li class='facebook-icon loading-status'></li>
+          <li class='instagram-icon'></li>
+          <li class='flickr-icon'></li>
+        </ul>
+      </div>
+    </div>
     <div id='homeOuterContainer'>
       <div id="homeContainer">
         <h1 id='title' style='display: none'><span class='green'>fórum</span> <span class='yellow'>bangú</span></h1>
         <h2 id='catchphrase' class='blue'><%= @catchphrase %></h2>
         <div id='homeMenu' style='display: none'>
-          <div class='homeMenuQuestion'>
-            In which networks?
-          </div>
-
-          <div id='networksMenu'>
-            <ul>
-              <li class='twitter-icon'></li>
-              <li class='facebook-icon loading-status'></li>
-              <li class='instagram-icon'></li>
-              <li class='flickr-icon'></li>
-            </ul>
-          </div>
-
-          <div class='homeMenuQuestion'>
-            In what context?
-          </div>
-
           <div id='searchMenu'>
-
             <div id='searchByTagTab' class='searchTab'>
-              <div id='searchByTagTabLink' class='searchTabLink'>Hashtag</div>
+              <div id='searchByTagTabLink' class='searchTabLink'>by hashtag</div>
               <div class='bar'>
                 <div id='searchMenuFields'>
                   <form id="searchByTagForm">
-                    <label class='searchLabel' for='inputSearchTag'>what do you want to hear about?</label>
-                    <input type='text' id='inputSearchTag' name='tag' class='searchInput' placeholder='OGiganteAcordou, vemprarua, vinagre, changebrazil' />
+                    <label class='searchLabel' for='inputSearchTag'></label>
+                    <input type='text' id='inputSearchTag' name='tag' class='searchInput' placeholder='#OGiganteAcordou #vemprarua #vinagre #changebrazil' />
                     <input type='submit' value="go" class='searchButton' />
                   </form>
                 </div>
@@ -77,14 +68,14 @@
             </div>
 
             <div id='searchByLocationTab' class='searchTab'>
-              <div id='searchByLocationTabLink' class='searchTabLink'>Location</div>
+              <div id='searchByLocationTabLink' class='searchTabLink'>by location</div>
               <div class='bar'>
                 <div id='searchMenuFields'>
                   <form id="searchForm">
-                    <label class='searchLabel' for='inputSearchName'>where are you?</label>
-                    <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='click go to use your current location' />
+                    <label class='searchLabel' for='inputSearchName'></label>
+                    <input type='text' id='inputSearchName' name='venue_id' class='searchInput' placeholder='a location' />
                     <label class='searchLabel' for='inputSearchCity'>in</label>
-                    <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='city' />
+                    <input type='text' id='inputSearchCity' name='venue_id' class='searchInput' placeholder='a city' />
                     <input type='submit' value="go" class='searchButton' />
                   </form>
                 </div>

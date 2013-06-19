@@ -32,6 +32,9 @@ body:before {
 
 #searchMenu {
   position: relative;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #searchMenu, #searchResult {
@@ -76,7 +79,6 @@ body:before {
 
 #searchMenuFields {
   margin-top: 13px;
-  margin-left: 15px;
   float: left;
 }
 
@@ -96,12 +98,6 @@ body:before {
 
 .bar, .searchTabLink {
   background-color: rgb(39, 39, 39);
-}
-
-.homeMenuQuestion {
-  font-size: 38px;
-  margin-top: 40px;
-  margin-bottom: 20px;
 }
 
 .searchTabLink.initialSelectionTabLink {
@@ -144,7 +140,7 @@ body:before {
 
 .bar {
   height: 60px;
-  width: 1024px;
+  width: 800px;
   margin-left: auto;
   margin-right: auto;
 
@@ -167,15 +163,15 @@ body:before {
   position: absolute;
   margin-top: 0;
   margin-left: 0;
-  width: 1024px;
+  width: 800px;
 }
 
 #searchByLocationTabLink {
-  margin-left: 120px;
+  margin-left: 145px;
 }
 
 #searchByTagTabLink {
-  margin-left: -120px;
+  margin-left: -145px;
 }
 
 .bar .searchLabel {
@@ -205,7 +201,7 @@ body:before {
 }
 
 #inputSearchName {
-  width: 468px;
+  width: 429px;
 }
 
 #inputSearchCity {
@@ -213,7 +209,7 @@ body:before {
 }
 
 #inputSearchTag {
-  width: 545px;
+  width: 719px;
 }
 
 #searchForm {
@@ -221,7 +217,7 @@ body:before {
 }
 
 #searchResult {
-  width: 900px;
+  width: 700px;
   overflow: hidden;
   position: relative;
   margin-top: 125px;
