@@ -84,7 +84,7 @@ BRASIL_CATCHPHRASES = [
   'não é por vinte centavos jabor',
   'quero ver na copa',
   'o gigante acordou',
-  'não se faz país sem hospital ronaldo',
+  'não se faz país sem hospital',
   'mané é quem gasta 20 bilhões num estádio de futebol',
   'amanhã vai ser maior',
   'tacaram mentos na geração coca cola',
