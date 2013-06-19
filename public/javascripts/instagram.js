@@ -1,7 +1,7 @@
 var instagram = function () {
   var api = {};
 
-  var clientIds = ['ef0cec7f983646e4a6809a3d0dbd35bf', '86a8f41a1066466c8780fa68be17e71b', 'f440f7e4c1b4411c814a165d4a1a64a1'];
+  var clientIds = ['86a8f41a1066466c8780fa68be17e71b', 'f440f7e4c1b4411c814a165d4a1a64a1', '8cfff1cc2af345f4b4574436c75ea068'];
 
   function clientId() {
     return clientIds[Math.floor(Math.random() * clientIds.length)];;
