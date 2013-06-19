@@ -89,7 +89,8 @@ BRASIL_CATCHPHRASES = [
   'amanhã vai ser maior',
   'tacaram mentos na geração coca cola',
   'vai pra pec que te pariu',
-  'verás que o filho teu não foge a luta'
+  'verás que o filho teu não foge a luta',
+  'versão vinagre',
 ]
 
 CATCHPHRASES = [
