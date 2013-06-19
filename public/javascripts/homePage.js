@@ -193,30 +193,10 @@ var homePage = function () {
     searchByLocationTab.otherTab = searchByTagTab;
     searchByTagTab.otherTab = searchByLocationTab;
 
+    searchByTagTab.initialSelected();
     pvt.showHomeMenu();
     callback(searchByLocationTab);
   }
-
-  api.buildSearchMenu = function (callback) {
-    $.get('/search_menu', function (html) {
-      $('#homeMenu').append(html);
-
-      var searchByLocationTab = searchTab('Location');
-      var searchByTagTab = searchTab('Tag');
-
-      searchByLocationTab.otherTab = searchByTagTab;
-      searchByTagTab.otherTab = searchByLocationTab;
-
-      searchByLocationTab.selected();
-      searchByTagTab.notSelected();
-
-      searchByLocationTab.addEvents();
-      searchByTagTab.addEvents();
-
-      pvt.showHomeMenu();
-      callback();
-    });
-  };
 
   api.buildFoursquareAuthenticationMenu = function (loginButtonCallback) {
     $.get('/foursquare/authentication_menu', function (html) {
