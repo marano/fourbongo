@@ -144,10 +144,12 @@ var home = function () {
   };
 
   function buildMenu() {
-    homePage.buildHomeMenu(function (searchByLocationTab) {
+    homePage.buildHomeMenu(function (searchByLocationTab, searchByTagTab) {
       pvt.prepareSearchMenu();
       if (FoursquareNetwork.isFoursquareCallback()) {
         searchByLocationTab.initialSelected();
+      } else {
+        searchByTagTab.initialSelected();
       }
     }, locationSelected, tagsSelected);
   }

@@ -193,9 +193,8 @@ var homePage = function () {
     searchByLocationTab.otherTab = searchByTagTab;
     searchByTagTab.otherTab = searchByLocationTab;
 
-    searchByTagTab.initialSelected();
     pvt.showHomeMenu();
-    callback(searchByLocationTab);
+    callback(searchByLocationTab, searchByTagTab);
   }
 
   api.buildFoursquareAuthenticationMenu = function (loginButtonCallback) {
