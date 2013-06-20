@@ -277,6 +277,9 @@ var Wall = function () {
     function fetchPublications() {
       twitter.byTag(tags, postsList.addAll);
       flickr.picsByTags(tags, postsList.addAll);
+      if (facebookNetwork.isAuthenticated) {
+        facebook.updatesByTags(tags, postsList.addAll);
+      }
       _(tags).each(function (eachTag) {
         instagram.mediaByTag(eachTag, postsList.addAll, instagramNetwork);
       });

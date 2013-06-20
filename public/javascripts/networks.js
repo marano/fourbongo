@@ -94,32 +94,46 @@ var SocialNetwork = function (networkName, credentialPool) {
 };
 
 var facebookNetwork = function () {
-  var api = {};
+  var api = {
+    isAuthenticated: false
+  };
 
   function login() {
+    if (api.isAuthenticated) {
+      return;
+    }
+
     facebook.login(function () {
+      $('.network.facebook input').removeAttr('title');
+      $('.network.facebook input').removeAttr('disabled');
+      $('.network.facebook .icon-key').addClass('authenticated');
+      $('.network.facebook .icon-key').attr('title', 'Authenticated');
       $('.facebook-icon').removeClass('pending-authentication');
     });
   }
 
   api.initialize = function () {
     $('.network.facebook .icon-facebook').attr('title', 'Loading Facebook ...');
-
     $('.network.facebook .icon-facebook').addClass('loading-status');
     $('.network.facebook .icon-key').addClass('loading-status');
     $('.network.facebook input').attr('disabled', 'disabled');
-    facebook.initialize(function () {
+
+    facebook.initialize(function (isAuthenticated) {
+      api.isAuthenticated = isAuthenticated;
+
       $('.network.facebook .icon-facebook').attr('title', 'Facebook');
       $('.network.facebook .icon-facebook').removeClass('loading-status');
       $('.network.facebook .icon-key').removeClass('loading-status');
-      if (facebook.isAuthenticated()) {
+
+      if (isAuthenticated) {
         $('.network.facebook input').removeAttr('disabled');
         $('.network.facebook .icon-key').addClass('authenticated');
         $('.network.facebook .icon-key').attr('title', 'Authenticated');
       } else {
+        $('.network.facebook input').attr('title', 'Please authenticate in order to use this service.');
         $('.network.facebook .icon-key').attr('title', 'Pending Authentication. Click to authenticate.');
         $('.network.facebook .icon-key').addClass('pending-authentication');
-        $('.facebook-icon').click(login);
+        $('.network.facebook .icon-key').click(login);
       }
     });
   };

@@ -1,6 +1,5 @@
 var facebook = function () {
  var api = {};
- var pvt = {authenticated: null}
 
   api.initialize = function (callback) {
     $('body').append($('<div>', {id: 'fb-root'}));
@@ -17,10 +16,8 @@ var facebook = function () {
       });
 
       FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          if (response.authResponse) { pvt.authenticated = true; }
-          callback();
-        }
+        var authenticated = !!response.authResponse;
+        callback(authenticated);
       });
     };
  
@@ -33,15 +30,13 @@ var facebook = function () {
     document.getElementsByTagName('head')[0].appendChild(js);
   };
 
- api.login = function (callback) {
-   FB.login(function (response) {
-     if (response.authResponse) {
-       api.accessToken = response.authResponse.accessToken;
-       pvt.authenticated = true;
-       callback();
-     }
-   });
- };
+  api.login = function (callback) {
+    FB.login(function (response) {
+      if (response.authResponse) {
+        callback();
+      }
+    });
+  };
 
   api.updates = function (userId, callback) {
     FB.api(userId + '/feed', function (data) {
@@ -52,7 +47,16 @@ var facebook = function () {
     });
   };
 
-  api.isAuthenticated = function () { return pvt.authenticated; };
+  api.updatesByTags = function (tags, callback) {
+    _(tags).each(function (eachTag) {
+      FB.api('search?q=' + eachTag + '&type=post', function (data) {
+        var updates = _(data.data).map(function (update) {
+          return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
+        });
+        callback(updates);
+      });
+    });
+  };
 
   return api;
 }();
