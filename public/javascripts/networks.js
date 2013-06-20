@@ -43,20 +43,34 @@ var SocialNetwork = function (networkName, credentialPool) {
     return $.cookie(authenticatedCookieName()) == 'true';
   }
 
+  function iconElement() {
+    return $('.network.' + networkName + ' .icon-' + networkName);
+  }
+
+  function keyIconElement() {
+    return $('.network.' + networkName + ' .icon-key');
+  }
+
   api.initialize = function () {
+    iconElement().attr('title', networkName.capitalize());
     updateKeyIconStatus();
-    $('.network.' + networkName + ' .icon-key').click(login);
+    keyIconElement().click(login);
   };
 
   function updateKeyIconStatus() {
     if (isAuthenticated()) {
-      $('.network.' + networkName + ' .icon-key').addClass('authenticated');
+      keyIconElement().attr('title', 'Authenticated');
+      keyIconElement().addClass('authenticated');
     } else {
-      $('.network.' + networkName + ' .icon-key').addClass('pending-authentication');
+      keyIconElement().attr('title', 'Pending Authentication. Click to authenticate.');
+      keyIconElement().addClass('pending-authentication');
     }
   }
 
   function login() {
+    if (isAuthenticated()) {
+      return;
+    }
     $.ajax({
       type: 'PUT',
       url: '/return_to',
@@ -80,16 +94,21 @@ var facebookNetwork = function () {
   }
 
   api.initialize = function () {
+    $('.network.facebook .icon-facebook').attr('title', 'Loading Facebook ...');
+
     $('.network.facebook .icon-facebook').addClass('loading-status');
     $('.network.facebook .icon-key').addClass('loading-status');
     $('.network.facebook input').attr('disabled', 'disabled');
     facebook.initialize(function () {
+      $('.network.facebook .icon-facebook').attr('title', 'Facebook');
       $('.network.facebook .icon-facebook').removeClass('loading-status');
       $('.network.facebook .icon-key').removeClass('loading-status');
       if (facebook.isAuthenticated()) {
         $('.network.facebook input').removeAttr('disabled');
         $('.network.facebook .icon-key').addClass('authenticated');
+        $('.network.facebook .icon-key').attr('title', 'Authenticated');
       } else {
+        $('.network.facebook .icon-key').attr('title', 'Pending Authentication. Click to authenticate.');
         $('.network.facebook .icon-key').addClass('pending-authentication');
         $('.facebook-icon').click(login);
       }

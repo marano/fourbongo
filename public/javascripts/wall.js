@@ -219,6 +219,20 @@ var Wall = function () {
 
   function initializeNetworks() {
     _(socialNetworks).each(function (service) { service.initialize(); });
+    $.fn.tipsy.defaults = {
+        delayIn: 0,      // delay before showing tooltip (ms)
+        delayOut: 0,     // delay before hiding tooltip (ms)
+        fade: false,     // fade tooltips in/out?
+        fallback: '',    // fallback text to use when no tooltip text
+        gravity: 'n',    // gravity
+        html: false,     // is tooltip content HTML?
+        live: false,     // use live event support?
+        offset: 12,       // pixel offset of tooltip from element
+        opacity: 0.95,    // opacity of tooltip
+        title: 'title',  // attribute/callback containing tooltip text
+        trigger: 'hover' // how tooltip is triggered - hover | focus | manual
+    };
+    $('.network i').tipsy({gravity: 's'});
   }
 
   api.tags = function (rawTags) {
