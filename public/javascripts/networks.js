@@ -23,6 +23,10 @@ var foursquareNetwork = function () {
 var SocialNetwork = function (networkName, credentialPool) {
   var api = {};
 
+  api.showError = function () {
+    warningIconElement().show();
+  };
+
   function authenticatedCookieName() {
     return networkName + '_authenticated';
   }
@@ -51,8 +55,13 @@ var SocialNetwork = function (networkName, credentialPool) {
     return $('.network.' + networkName + ' .icon-key');
   }
 
+  function warningIconElement() {
+    return $('.network.' + networkName + ' .icon-warning-sign');
+  }
+
   api.initialize = function () {
     iconElement().attr('title', networkName.capitalize());
+    warningIconElement().attr('title', 'There was an issue with this service. Authenticating might solve the problem.');
     updateKeyIconStatus();
     keyIconElement().click(login);
   };

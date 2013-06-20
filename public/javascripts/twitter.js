@@ -1,5 +1,8 @@
 var twitter = function () {
-  var api = {};
+  var api = {
+    network: null
+  };
+
   var pvt = {};
 
   api.timeline = function (userId, callback) {
@@ -25,13 +28,20 @@ var twitter = function () {
 
   api.byTag = function (tags, callback) {
     var query = '%23' + tags.join('+OR+%23');
-    $.getJSON('/twitter/search?query=' + query, function (data) {
-      var tweets = _(data).map(function (tweet) {
-        var mediaUrl = media(tweet);
-        var locationInfo = pvt.locationInfo(tweet);
-        return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: cheatedUnescape(tweet.text), avatar: tweet.user.profile_image_url, createdAt: new Date(tweet.created_at), locationName: locationInfo.locationName, latitude: locationInfo.latitude, longitude: locationInfo.longitude, mediaUrl: mediaUrl});
-      });
-      callback(tweets);
+    $.ajax({
+      url: '/twitter/search',
+      data: { query: query },
+      success: function (data) {
+        var tweets = _($.parseJSON(data)).map(function (tweet) {
+          var mediaUrl = media(tweet);
+          var locationInfo = pvt.locationInfo(tweet);
+          return Tweet({id: tweet.id_str, username: tweet.user.screen_name, fullname: tweet.user.name, content: cheatedUnescape(tweet.text), avatar: tweet.user.profile_image_url, createdAt: new Date(tweet.created_at), locationName: locationInfo.locationName, latitude: locationInfo.latitude, longitude: locationInfo.longitude, mediaUrl: mediaUrl});
+        });
+        callback(tweets);
+      },
+      error: function () {
+        api.network.showError();
+      }
     });
   };
 

@@ -53,6 +53,10 @@
   cursor: inherit;
 }
 
+.network .icon-warning-sign {
+  color: red;
+}
+
 .settingsSection.networks i {
   display: inline-block;
   line-height: 9px;

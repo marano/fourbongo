@@ -207,11 +207,14 @@ var Wall = function () {
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
 
+  var twitterNetwork = SocialNetwork('twitter');
+  twitter.network = twitterNetwork;
+
   var instagramNetwork = SocialNetwork('instagram', ['86a8f41a1066466c8780fa68be17e71b', 'f440f7e4c1b4411c814a165d4a1a64a1', '8cfff1cc2af345f4b4574436c75ea068']);
   instagram.network = instagramNetwork;
 
   var socialNetworks = [
-    SocialNetwork('twitter'),
+    twitterNetwork,
     instagramNetwork,
     SocialNetwork('flickr'),
     facebookNetwork
