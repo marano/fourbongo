@@ -20,15 +20,27 @@ var foursquareNetwork = function () {
   return api;
 }();
 
-var SocialNetwork = function (networkName) {
+var SocialNetwork = function (networkName, credentialPool) {
   var api = {};
 
-  function cookieName() {
+  function authenticatedCookieName() {
     return networkName + '_authenticated';
   }
 
+  function randomCredentialFromPool() {
+    return credentialPool[Math.floor(Math.random() * credentialPool.length)];;
+  }
+
+  api.accessTokenParameter = function () {
+    if (isAuthenticated()) {
+      return 'access_token=' + $.cookie(networkName + '_access_token');
+    } else {
+      return 'client_id=' + randomCredentialFromPool();
+    }
+  }
+
   function isAuthenticated() {
-    return $.cookie(cookieName()) == 'true';
+    return $.cookie(authenticatedCookieName()) == 'true';
   }
 
   api.initialize = function () {

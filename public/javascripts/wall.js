@@ -199,48 +199,54 @@ var SlidesCoordinator = function (postsList) {
   return api;
 };
 
-var updateInterval = 4.75 * 60 * 1000;
-
-var tagWall = function (rawTags) {
+var Wall = function () {
   var api = {};
 
-  var tags = _(rawTags.split(/,| /)).reject(function (tag) { return tag === ''; }).map(function (eachRawTag) {
-    return eachRawTag.replace(/#/g, '').trim();
-  });
+  var updateInterval = 4.75 * 60 * 1000;
 
-  window.location.hash = 'tag=' + tags.join(',');
   wallPage.createWallContainerHtml();
   wallPage.showLoading();
 
-  var settingsList = [
-    timeRangeSetting,
-    sortOrderSetting,
-    showTwitterSetting(),
-    showInstagramSetting(),
-    showFlickrSetting(),
-    speedSetting
-  ]
-
-  var hideDistanceRangeSetting = true;
-  var settings = Settings(settingsList, hideDistanceRangeSetting);
-  settings.initialize();
+  var instagramNetwork = SocialNetwork('instagram', ['86a8f41a1066466c8780fa68be17e71b', 'f440f7e4c1b4411c814a165d4a1a64a1', '8cfff1cc2af345f4b4574436c75ea068']);
+  instagram.network = instagramNetwork;
 
   var socialNetworks = [
     SocialNetwork('twitter'),
-    SocialNetwork('instagram'),
+    instagramNetwork,
     SocialNetwork('flickr'),
     facebookNetwork
   ];
 
-  _(socialNetworks).each(function (service) { service.initialize(); });
+  function initializeNetworks() {
+    _(socialNetworks).each(function (service) { service.initialize(); });
+  }
 
-  var postsList = PostsList(settings);
+  api.tags = function (rawTags) {
+    var tags = _(rawTags.split(/,| /)).reject(function (tag) { return tag === ''; }).map(function (eachRawTag) {
+      return eachRawTag.replace(/#/g, '').trim();
+    });
 
-  var slidesCoordinator = SlidesCoordinator(postsList);
+    window.location.hash = 'tag=' + tags.join(',');
 
-  startShow();
+    var settingsList = [
+      timeRangeSetting,
+      sortOrderSetting,
+      showTwitterSetting(),
+      showInstagramSetting(),
+      showFlickrSetting(),
+      speedSetting
+    ]
 
-  function startShow() {
+    var hideDistanceRangeSetting = true;
+    var settings = Settings(settingsList, hideDistanceRangeSetting);
+    settings.initialize();
+
+    initializeNetworks();
+
+    var postsList = PostsList(settings);
+
+    var slidesCoordinator = SlidesCoordinator(postsList);
+
     var slider = slideShow($('#wallContainer'));
     introduction.showTagCover('#' + tags.join(' #'), slider);
 
@@ -249,88 +255,78 @@ var tagWall = function (rawTags) {
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
     setInterval(fetchPublications, updateInterval);
     setInterval(settings.fillPostsCount, 5000);
-  }
 
-  function fetchPublications() {
-    twitter.byTag(tags, postsList.addAll);
-    flickr.picsByTags(tags, postsList.addAll);
-    _(tags).each(function (eachTag) {
-      instagram.mediaByTag(eachTag, postsList.addAll);
-    });
-  }
-
-  return api;
-};
-
-var venueWall = function (venueId) {
-  var api = {
-    venueLat: null,
-    venueLng: null
+    function fetchPublications() {
+      twitter.byTag(tags, postsList.addAll);
+      flickr.picsByTags(tags, postsList.addAll);
+      _(tags).each(function (eachTag) {
+        instagram.mediaByTag(eachTag, postsList.addAll, instagramNetwork);
+      });
+    }
   };
 
-  var pvt = {};
+  api.venue = function (venueId) {
+    var pvt = {};
 
-  var postsList = null;
-  var slidesCoordinator = null;
+    var postsList = null;
+    var slidesCoordinator = null;
 
-  window.location.hash = 'venueId=' + venueId;
-  wallPage.createWallContainerHtml();
-  wallPage.showLoading();
-  foursquare.venue(venueId, startShow);
+    window.location.hash = 'venueId=' + venueId;
+    foursquare.venue(venueId, startShow);
 
-  function startShow(venue) {
-    var settingsList = [
-      showTwitterSetting(),
-      showInstagramSetting(),
-      showFlickrSetting(),
-      locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
-      timeRangeSetting,
-      sortOrderSetting,
-      speedSetting
-    ]
+    function startShow(venue) {
+      var settingsList = [
+        showTwitterSetting(),
+        showInstagramSetting(),
+        showFlickrSetting(),
+        locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
+        timeRangeSetting,
+        sortOrderSetting,
+        speedSetting
+      ]
 
-    var hideDistanceRangeSetting = false;
-    var settings = Settings(settingsList, hideDistanceRangeSetting);
-    settings.initialize();
+      var hideDistanceRangeSetting = false;
+      var settings = Settings(settingsList, hideDistanceRangeSetting);
+      settings.initialize();
 
-    postsList = PostsList(settings);
+      initializeNetworks();
 
-    slidesCoordinator = SlidesCoordinator(postsList);
+      postsList = PostsList(settings);
 
-    api.venueLat = venue.latitude;
-    api.venueLng = venue.longitude;
+      slidesCoordinator = SlidesCoordinator(postsList);
 
-    var slider = slideShow($('#wallContainer'));
-    introduction.showCover(venue.name, slider);
-    setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
+      var slider = slideShow($('#wallContainer'));
+      introduction.showCover(venue.name, slider);
+      setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
 
-    pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
-    pvt.fetchInstagramMedia(venue.latitude, venue.longitude);
-    pvt.fetchFlickrMedia(venue.latitude, venue.longitude);
-    pvt.fetchCheckins(venue.id);
+      pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
+      pvt.fetchInstagramMedia(venue.latitude, venue.longitude);
+      pvt.fetchFlickrMedia(venue.latitude, venue.longitude);
+      pvt.fetchCheckins(venue.id);
 
-    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, updateInterval);
-    setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, updateInterval);
-    setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, updateInterval);
-    setInterval(function () { pvt.fetchCheckins(venue.id); }, updateInterval);
-    setInterval(settings.fillPostsCount, 2000);
+      setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, updateInterval);
+      setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, updateInterval);
+      setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, updateInterval);
+      setInterval(function () { pvt.fetchCheckins(venue.id); }, updateInterval);
+      setInterval(settings.fillPostsCount, 2000);
 
-    setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
-  };
+      setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
+    };
 
-  pvt.fetchLocationBasedTweets = function (latitude, longitude) { twitter.byLocation(latitude, longitude, postsList.addAll); };
+    pvt.fetchLocationBasedTweets = function (latitude, longitude) { twitter.byLocation(latitude, longitude, postsList.addAll); };
 
-  pvt.fetchInstagramMedia = function (latitude, longitude) { instagram.mediaByLocation(latitude, longitude, postsList.addAll); };
+    pvt.fetchInstagramMedia = function (latitude, longitude) { instagram.mediaByLocation(latitude, longitude, postsList.addAll, instagramNetwork); };
 
-  pvt.fetchFlickrMedia = function (latitude, longitude) { flickr.picsByLocation(latitude, longitude, postsList.addAll); };
+    pvt.fetchFlickrMedia = function (latitude, longitude) { flickr.picsByLocation(latitude, longitude, postsList.addAll); };
 
-  pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
+    pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
 
-  pvt.fetchProfiles = function (profileIds) { _(profileIds).each(function (profileId) { foursquare.profile(profileId, pvt.fetchPosts); }); };
+    pvt.fetchProfiles = function (profileIds) { _(profileIds).each(function (profileId) { foursquare.profile(profileId, pvt.fetchPosts); }); };
 
-  pvt.fetchPosts = function (profile) {
-    if (profile.twitter != undefined) { twitter.timeline(profile.twitter, postsList.addAll); };
-    if (profile.facebook != undefined) { facebook.updates(profile.facebook, postsList.addAll); };
+    pvt.fetchPosts = function (profile) {
+      if (profile.twitter != undefined) { twitter.timeline(profile.twitter, postsList.addAll); };
+      if (profile.facebook != undefined) { facebook.updates(profile.facebook, postsList.addAll); };
+    };
   };
 
   return api;

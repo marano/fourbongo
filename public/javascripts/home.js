@@ -12,7 +12,6 @@ var home = function () {
   }
 
   function locationSelected(showSearchMenuFieldsCallback) {
-    $('<script>', { type: 'text/javascript', src: 'http://maps.google.com/maps/api/js?sensor=false' }).appendTo('head');
     if (foursquareNetwork.isAuthenticated()) {
       showSearchMenuFieldsCallback();
     } else {
@@ -110,9 +109,9 @@ var home = function () {
     pvt.startTagShow(tags);
   };
 
-  pvt.startShow = function (venueId) { homePage.slideContainer(function () { venueWall(venueId); }); };
+  pvt.startShow = function (venueId) { homePage.slideContainer(function () { Wall().venue(venueId); }); };
 
-  pvt.startTagShow = function (tags) { homePage.slideContainer(function () { tagWall(tags); }); };
+  pvt.startTagShow = function (tags) { homePage.slideContainer(function () { Wall().tags(tags); }); };
 
   return api;
 }();
