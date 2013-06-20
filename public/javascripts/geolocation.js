@@ -24,7 +24,9 @@ var geolocation = function () {
 
   function reverse(latitude, longitude, callback) {
     $.getJSON('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&addressdetails=1', function (data) {
-      callback(data);
+      if (!data.error) {
+        callback(data);
+      }
     });
   }
   
