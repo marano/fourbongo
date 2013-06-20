@@ -52,7 +52,7 @@
         <div id='homeMenu' style='display: none'>
           <div id='searchMenu'>
             <div id='searchByTagTab' class='searchTab'>
-              <div id='searchByTagTabLink' class='searchTabLink'>by hashtag</div>
+              <div id='searchByTagTabLink' class='searchTabLink'><i class='icon-tag'></i>by hashtag</div>
               <div class='bar'>
                 <div id='searchMenuFields'>
                   <form id="searchByTagForm">
@@ -65,7 +65,7 @@
             </div>
 
             <div id='searchByLocationTab' class='searchTab'>
-              <div id='searchByLocationTabLink' class='searchTabLink'>by location</div>
+              <div id='searchByLocationTabLink' class='searchTabLink'><i class='icon-location-arrow'></i>by location</div>
               <div class='bar'>
                 <div id='searchMenuFields'>
                   <form id="searchForm">
@@ -92,23 +92,23 @@
       <i id='settingsIcon' class='icon-wrench' style='display: none' ></i>
       <div id='settingsContainer' style='display: none'>
         <div class='settingsSection'>
-          <h3>Posts count</h3>
+          <h3><i class='icon-rss'></i>Posts count</h3>
           <div id='postsCountLabel'>0</div>
         </div>
 
         <div class='settingsSection'>
-          <h3>Time range</h3>
+          <h3><i class='icon-time'></i>Time range</h3>
           <span id='currentTimeRangeLabel'></span>
           <input id='currentTimeRangeSlider' type='range' min='0' />
         </div>
 
         <div id='distanceRange' class='settingsSection'>
-          <h3>Distance Range</h3>
+          <h3><i class='icon-compass'></i>Distance Range</h3>
           <span id='currentLocationBasedUpdatesDistanceRangeLabel'></span><input id='currentLocationBasedUpdatesDistanceRangeSlider' type='range' />
         </div>
 
         <div class='settingsSection'>
-          <h3>Sorting order</h3>
+          <h3><i class='icon-sort-by-attributes'></i>Sorting order</h3>
           <form>
             <input id='sortByPublication' type='radio' name='sorting' value='publication' /><label for='sortByPublication'>Publication</label>
             <input id='sortByRandom' type='radio' name='sorting' value='random' /><label for='sortByRandom'>Random</label>
@@ -116,12 +116,12 @@
         </div>
 
         <div id='speed' class='settingsSection'>
-          <h3>Time in each slide</h3>
+          <h3><i class='icon-dashboard'></i>Time in each slide</h3>
           <span id='currentSpeedLabel'></span><input id='currentSpeedSlider' type='range' />
         </div>
 
         <div class='settingsSection networks'>
-          <h3>Networks</h3>
+          <h3><i class='icon-globe'></i>Networks</h3>
           <div>
             <div class='network twitter'>
               <input id='showTwitter' type='checkbox' />

@@ -57,7 +57,7 @@
   color: red;
 }
 
-.settingsSection.networks i {
+.settingsSection.networks i.icon {
   display: inline-block;
   line-height: 9px;
   cursor: pointer;
@@ -66,6 +66,11 @@
 .settingsSection.networks i.icon-key {
   margin-left: 3px;
 }
+
+.settingsSection h3 i {
+  margin-right: 10px;
+}
+
 .loading-status {
   opacity: 0.2;
   cursor: inherit !important;
