@@ -199,6 +199,8 @@ var SlidesCoordinator = function (postsList) {
   return api;
 };
 
+var updateInterval = 4.75 * 60 * 1000;
+
 var tagWall = function (rawTags) {
   var api = {};
 
@@ -236,7 +238,7 @@ var tagWall = function (rawTags) {
     fetchPublications();
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
-    setInterval(fetchPublications, 300000);
+    setInterval(fetchPublications, updateInterval);
     setInterval(settings.fillPostsCount, 5000);
   }
 
@@ -298,10 +300,10 @@ var venueWall = function (venueId) {
     pvt.fetchFlickrMedia(venue.latitude, venue.longitude);
     pvt.fetchCheckins(venue.id);
 
-    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, 300000);
-    setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, 300000);
-    setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, 300000);
-    setInterval(function () { pvt.fetchCheckins(venue.id); }, 300000);
+    setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, updateInterval);
+    setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, updateInterval);
+    setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, updateInterval);
+    setInterval(function () { pvt.fetchCheckins(venue.id); }, updateInterval);
     setInterval(settings.fillPostsCount, 2000);
 
     setTimeout(function () { slidesCoordinator.start(slider); }, 15000);

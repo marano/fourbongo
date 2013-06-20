@@ -11,17 +11,15 @@ var TimeRange = function (index, timeInThePast, description) {
 };
 
 var timeRanges = [
-  TimeRange(0, 1 * 60 * 1000, 'One minute'),
-  TimeRange(1, 3 * 60 * 1000, 'Three minutes'),
-  TimeRange(2, 5 * 60 * 1000, 'Five minutes'),
-  TimeRange(3, 10 * 60 * 1000, 'Ten minutes'),
-  TimeRange(4, 30 * 60 * 1000, 'Half an hour'),
-  TimeRange(5, 1 * 60 * 60 * 1000, 'One hour'),
-  TimeRange(6, 2 * 60 * 60 * 1000, 'Two hours'),
-  TimeRange(7, 12 * 60 * 60 * 1000, 'Twelve hours'),
-  TimeRange(8, 24 * 60 * 60 * 1000, 'One day'),
-  TimeRange(9, 3 * 24 * 60 * 60 * 1000, 'Three days'),
-  TimeRange(10, 7 * 24 * 60 * 60 * 1000, 'One week')
+  TimeRange(0, 5 * 60 * 1000, 'Five minutes'),
+  TimeRange(1, 10 * 60 * 1000, 'Ten minutes'),
+  TimeRange(2, 30 * 60 * 1000, 'Half an hour'),
+  TimeRange(3, 1 * 60 * 60 * 1000, 'One hour'),
+  TimeRange(4, 2 * 60 * 60 * 1000, 'Two hours'),
+  TimeRange(5, 12 * 60 * 60 * 1000, 'Twelve hours'),
+  TimeRange(6, 24 * 60 * 60 * 1000, 'One day'),
+  TimeRange(7, 3 * 24 * 60 * 60 * 1000, 'Three days'),
+  TimeRange(8, 7 * 24 * 60 * 60 * 1000, 'One week')
 ];
 
 var Speed = function (index, waitInSeconds) {
