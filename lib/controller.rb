@@ -36,7 +36,7 @@ end
 get '/auth/foursquare/callback' do
   response.set_cookie :foursquare_authenticated, { :value => true, :path => '/' }
   response.set_cookie :foursquare_access_token,  { :value => request.env['omniauth.auth']['credentials']['token'], :path => '/' }
-  return_to_or_home(session)
+  redirect '/?from_foursquare_authentication_callback=true'
 end
 
 get '/auth/twitter/callback' do
