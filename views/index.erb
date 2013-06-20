@@ -4,8 +4,10 @@
     <link href='/stylesheets/home.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/wall.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/settings.css' media='all' rel='stylesheet' />
+    <link href='/stylesheets/vidaloka.css' media='all' rel='stylesheet' />
+    <link href='/stylesheets/font-awesome/css/font-awesome.min.css' media='all' rel='stylesheet' />
 
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.easie-min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.cookie.js"></script>
@@ -19,6 +21,7 @@
     <script type="text/javascript" src="/javascripts/homePage.js"></script>
     <script type="text/javascript" src="/javascripts/settingsView.js"></script>
     <script type="text/javascript" src="/javascripts/settings.js"></script>
+    <script type="text/javascript" src="/javascripts/networks.js"></script>
     <script type="text/javascript" src="/javascripts/home.js"></script>
     <script type="text/javascript" src="/javascripts/SlideShow.js"></script>
     <script type="text/javascript" src="/javascripts/geolocation.js"></script>
@@ -30,8 +33,6 @@
     <script type="text/javascript" src="/javascripts/map.js"></script>
     <script type="text/javascript" src="/javascripts/initialize.js"></script>
 
-    <link href='http://fonts.googleapis.com/css?family=Vidaloka' rel='stylesheet' type='text/css'>
-
     <meta name="facebook_app_id" content="<%= CONFIG['facebook_app_id'] %>" />
     <meta name="foursquare_client_id" content="<%= CONFIG['foursquare_client_id'] %>" />
     <meta name="from_foursquare_authentication_callback" content="<%= @from_foursquare_authentication_callback %>" />
@@ -39,14 +40,6 @@
 
   <body>
     <div id='wallContainer'>
-      <div id='networksMenu' style='display: none'>
-        <ul>
-          <li class='twitter-icon'></li>
-          <li class='facebook-icon loading-status'></li>
-          <li class='instagram-icon'></li>
-          <li class='flickr-icon'></li>
-        </ul>
-      </div>
     </div>
     <div id='homeOuterContainer'>
       <div id="homeContainer">
@@ -118,18 +111,38 @@
           </form>
         </div>
 
-        <div class='settingsSection'>
-          <h3>Networks</h3>
-          <div>
-            <input id='showTwitter' type='checkbox' /><label for='showTwitter'>Twitter</label>
-            <input id='showInstagram' type='checkbox' /><label for='showInstagram'>Instagram</label>
-            <input id='showFlickr' type='checkbox' /><label id='showFlickrLabel' for='showFlickr'>Flickr</label>
-          </div>
-        </div>
-
         <div id='speed' class='settingsSection'>
           <h3>Time in each slide</h3>
           <span id='currentSpeedLabel'></span><input id='currentSpeedSlider' type='range' />
+        </div>
+
+        <div class='settingsSection networks'>
+          <h3>Networks</h3>
+          <div>
+            <div class='network twitter'>
+              <input id='showTwitter' type='checkbox' />
+              <label for='showTwitter'><i class='icon-twitter'></i></label>
+              <i class='icon-key'></i>
+            </div>
+
+            <div class='network instagram'>
+              <input id='showInstagram' type='checkbox' />
+              <label for='showInstagram'><i class='icon-instagram'></i></label>
+              <i class='icon-key'></i>
+            </div>
+
+            <div class='network flickr'>
+              <input id='showFlickr' type='checkbox' />
+              <label for='showFlickr'><i class='icon-flickr'></i></label>
+              <i class='icon-key'></i>
+            </div>
+
+            <div class='network facebook'>
+              <input id='showFacebook' type='checkbox' />
+              <label for='showFacebook'><i class='icon-facebook'></i></label>
+              <i class='icon-key'></i>
+            </div>
+          </div>
         </div>
       </div>
     </div>

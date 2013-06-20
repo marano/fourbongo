@@ -1,108 +1,3 @@
-var FoursquareNetwork = function () {
-  var api = {};
-
-  api.token = function () {
-    return $.cookie('foursquare_access_token');
-  };
-
-  api.isAuthenticated = function () {
-    return $.cookie('foursquare_authenticated') == 'true';
-  };
-
-  api.isFoursquareCallback = function () {
-    return $('meta[name=from_foursquare_authentication_callback]').attr('content') == 'true';
-  }
-
-  api.login = function () {
-    window.location = '/auth/foursquare';
-  };
-
-  return api;
-}();
-
-var TwitterNetwork = function () {
-  var api = {};
-
-  function isAuthenticated() {
-    return $.cookie('twitter_authenticated') == 'true';
-  }
-
-  api.initialize = function () {
-    if (!isAuthenticated()) {
-      $('.twitter-icon').addClass('pending-authentication');
-      $('.twitter-icon').click(login);
-    }
-  };
-
-  function login() {
-    window.location = '/auth/twitter';
-  };
-
-  return api;
-}();
-
-var InstagramNetwork = function () {
-  var api = {};
-
-  function isAuthenticated() {
-    return $.cookie('instagram_authenticated') == 'true';
-  }
-
-  api.initialize = function () {
-    if (!isAuthenticated()) {
-      $('.instagram-icon').addClass('pending-authentication');
-      $('.instagram-icon').click(login);
-    }
-  };
-
-  function login() {
-    window.location = '/auth/instagram';
-  };
-
-  return api;
-}();
-
-var FlickrNetwork = function () {
-  var api = {};
-
-  function isAuthenticated() {
-    return $.cookie('flickr_authenticated') == 'true';
-  }
-
-  api.initialize = function () {
-    if (!isAuthenticated()) {
-      $('.flickr-icon').addClass('pending-authentication');
-      $('.flickr-icon').click(login);
-    }
-  };
-
-  function login() {
-    window.location = '/auth/flickr';
-  };
-
-  return api;
-}();
-
-var FacebookNetwork = function () {
-  var api = {};
-
-  api.initialize = function () {
-    facebook.initialize(function () {
-      $('.facebook-icon').removeClass('loading-status');
-      if (!facebook.isAuthenticated()) {
-        $('.facebook-icon').addClass('pending-authentication');
-        $('.facebook-icon').click(function () {
-          facebook.login(function () {
-            $('.facebook-icon').removeClass('pending-authentication');
-          });
-        });
-      }
-    });
-  };
-
-  return api;
-}();
-
 var home = function () {
   var api = {};
 
@@ -118,20 +13,14 @@ var home = function () {
 
   function locationSelected(showSearchMenuFieldsCallback) {
     $('<script>', { type: 'text/javascript', src: 'http://maps.google.com/maps/api/js?sensor=false' }).appendTo('head');
-    if (FoursquareNetwork.isAuthenticated()) {
+    if (foursquareNetwork.isAuthenticated()) {
       showSearchMenuFieldsCallback();
     } else {
-      homePage.buildFoursquareAuthenticationMenu(FoursquareNetwork.login);
+      homePage.buildFoursquareAuthenticationMenu(foursquareNetwork.login);
     }
   }
 
   api.initialize = function () {
-    TwitterNetwork.initialize();
-    InstagramNetwork.initialize();
-    FlickrNetwork.initialize();
-    InstagramNetwork.initialize();
-    FacebookNetwork.initialize();
-
     homePage.showTitle();
 
     if (hasSearchByTagHash()) {
@@ -146,7 +35,7 @@ var home = function () {
   function buildMenu() {
     homePage.buildHomeMenu(function (searchByLocationTab, searchByTagTab) {
       pvt.prepareSearchMenu();
-      if (FoursquareNetwork.isFoursquareCallback()) {
+      if (foursquareNetwork.isFoursquareCallback()) {
         searchByLocationTab.initialSelected();
       } else {
         searchByTagTab.initialSelected();

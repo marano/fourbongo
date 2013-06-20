@@ -248,64 +248,6 @@ body:before {
   margin-left: 20px;
 }
 
-#networksMenu ul {
-  padding-left: 0;
-}
-
-#networksMenu ul li {
-  margin-right: 3px;
-  list-style: none;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.twitter-icon {
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  background: url(/images/twitter-icon.png) center left no-repeat;
-}
-
-.facebook-icon {
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  background: url(/images/facebook-icon.png) center left no-repeat;
-}
-
-.instagram-icon {
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  background: url(/images/instagram-icon.png) center left no-repeat;
-}
-
-.flickr-icon {
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  background: url(/images/flickr-icon.png) center left no-repeat;
-}
-
-.foursquare-icon {
-  float: left;
-  width: 48px;
-  height: 48px;
-  margin-top: 6px;
-  margin-left: 6px;
-  background: url(/images/foursquare-icon.png) center left no-repeat;
-  display: inline-block;
-}
-
-.loading-status {
-  opacity: 0.2;
-  cursor: inherit !important;
-}
-
-.pending-authentication {
-  opacity: 0.5;
-}
-
 .green {
   color: #18B500;
 }

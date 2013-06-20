@@ -34,3 +34,32 @@
 #currentTimeRangeSlider, #currentLocationBasedUpdatesDistanceRangeSlider, #currentSpeedSlider {
   width: 220px;
 }
+
+.network .icon-key {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.network .icon-key.pending-authentication {
+  color: red;
+}
+
+.network .icon-key.authenticated {
+  color: green;
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.settingsSection.networks i {
+  display: inline-block;
+  line-height: 9px;
+  cursor: pointer;
+  width: 23px;
+  height: 26px;
+}
+
+.loading-status {
+  opacity: 0.2;
+  pointer-events: none;
+  cursor: inherit !important;
+}

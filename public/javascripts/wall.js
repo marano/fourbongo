@@ -225,6 +225,15 @@ var tagWall = function (rawTags) {
   var settings = Settings(settingsList, hideDistanceRangeSetting);
   settings.initialize();
 
+  var socialNetworks = [
+    SocialNetwork('twitter'),
+    SocialNetwork('instagram'),
+    SocialNetwork('flickr'),
+    facebookNetwork
+  ];
+
+  _(socialNetworks).each(function (service) { service.initialize(); });
+
   var postsList = PostsList(settings);
 
   var slidesCoordinator = SlidesCoordinator(postsList);

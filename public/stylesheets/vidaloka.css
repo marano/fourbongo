@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Vidaloka';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Vidaloka '), local('Vidaloka-Regular'), url(/stylesheets/vidaloka.ttf) format('truetype');
+}

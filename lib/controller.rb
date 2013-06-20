@@ -10,6 +10,16 @@ use OmniAuth::Builder do
   provider :flickr, CONFIG['flickr_app_key'], CONFIG['flickr_app_secret'], :scope => 'read'
 end
 
+def twitter
+  credentials = TWITTER_CREDENTIALS.sample
+  client = Twitter::Client.new(
+    :consumer_key => credentials[:consumer_key],
+    :consumer_secret => credentials[:consumer_secret],
+    :oauth_token => credentials[:oauth_token],
+    :oauth_token_secret => credentials[:oauth_token_secret]
+  )
+end
+
 get '/' do
   @catchphrase = BRASIL_CATCHPHRASES.randomize.first
   @from_foursquare_authentication_callback = params[:from_foursquare_authentication_callback]
@@ -19,38 +29,43 @@ end
 get '/auth/foursquare/callback' do
   response.set_cookie :foursquare_authenticated, { :value => true, :path => '/' }
   response.set_cookie :foursquare_access_token,  { :value => request.env['omniauth.auth']['credentials']['token'], :path => '/' }
-  redirect '/?from_foursquare_authentication_callback=true'
+  return_to_or_home(session)
 end
 
 get '/auth/twitter/callback' do
   response.set_cookie :twitter_authenticated, { :value => true, :path => '/' }
   session[:twitter_access_token] = request.env['omniauth.auth']['credentials']['token']
   session[:twitter_access_secret] = request.env['omniauth.auth']['credentials']['secret']
-  redirect '/'
+  return_to_or_home(session)
 end
 
 get '/auth/instagram/callback' do
   response.set_cookie :instagram_authenticated, { :value => true, :path => '/' }
   response.set_cookie :instagram_access_token, { :value => request.env['omniauth.auth']['credentials']['token'], :path => '/' }
-  redirect '/'
+  return_to_or_home(session)
 end
 
 get '/auth/flickr/callback' do
   response.set_cookie :flickr_authenticated, { :value => true, :path => '/' }
   response.set_cookie :flickr_access_token, { :value => request.env['omniauth.auth']['credentials']['token'], :path => '/' }
-  redirect '/'
+  return_to_or_home(session)
 end
 
-get '/settings' do
-  erb :settings
+put '/return_to' do
+  session[:return_to] = params[:location]
+  status 204
+end
+
+def return_to_or_home(session)
+  if (session.has_key? :return_to)
+    redirect '/#' + session.delete(:return_to)
+  else
+    redirect '/'
+  end
 end
 
 get '/foursquare/authentication_menu' do
   erb :foursquare_authentication_menu
-end
-
-get '/facebook/authentication_menu' do
-  erb :facebook_authentication_menu
 end
 
 get '/twitter/search' do
@@ -68,16 +83,6 @@ class Array
   def randomize!
     self.replace(randomize)
   end
-end
-
-def twitter
-  credentials = TWITTER_CREDENTIALS.sample
-  client = Twitter::Client.new(
-    :consumer_key => credentials[:consumer_key],
-    :consumer_secret => credentials[:consumer_secret],
-    :oauth_token => credentials[:oauth_token],
-    :oauth_token_secret => credentials[:oauth_token_secret]
-  )
 end
 
 BRASIL_CATCHPHRASES = [
