@@ -217,11 +217,12 @@ var tagWall = function (rawTags) {
     sortOrderSetting,
     showTwitterSetting(),
     showInstagramSetting(),
+    showFlickrSetting(),
     speedSetting
   ]
 
   var hideDistanceRangeSetting = true;
-  var hideFlickrSetting = true;
+  var hideFlickrSetting = false;
   var settings = Settings(settingsList, hideDistanceRangeSetting, hideFlickrSetting);
   settings.initialize();
 
@@ -244,6 +245,7 @@ var tagWall = function (rawTags) {
 
   function fetchPublications() {
     twitter.byTag(tags, postsList.addAll);
+    flickr.picsByTags(tags, postsList.addAll);
     _(tags).each(function (eachTag) {
       instagram.mediaByTag(eachTag, postsList.addAll);
     });
