@@ -11,13 +11,20 @@ use OmniAuth::Builder do
 end
 
 def twitter
-  credentials = TWITTER_CREDENTIALS.sample
-  client = Twitter::Client.new(
-    :consumer_key => credentials[:consumer_key],
-    :consumer_secret => credentials[:consumer_secret],
-    :oauth_token => credentials[:oauth_token],
-    :oauth_token_secret => credentials[:oauth_token_secret]
-  )
+  if session[:twitter_access_token]
+    Twitter::Client.new(
+      :oauth_token => session[:twitter_access_token],
+      :oauth_token_secret => session[:twitter_access_secret]
+    )
+  else
+    credentials = TWITTER_CREDENTIALS.sample
+    Twitter::Client.new(
+      :consumer_key => credentials[:consumer_key],
+      :consumer_secret => credentials[:consumer_secret],
+      :oauth_token => credentials[:oauth_token],
+      :oauth_token_secret => credentials[:oauth_token_secret]
+    )
+  end
 end
 
 get '/' do
