@@ -91,5 +91,47 @@
         <div id='searchResult'></div>
       </div>
     </div>
+    <div id='settings' style='opacity: 0'>
+      <img id='settingsIcon' src='/settings.png' style='display: none' />
+      <div id='settingsContainer' style='display: none'>
+        <div class='settingsSection'>
+          <h3>Posts count</h3>
+          <div id='postsCountLabel'>0</div>
+        </div>
+
+        <div class='settingsSection'>
+          <h3>Time range</h3>
+          <span id='currentTimeRangeLabel'></span>
+          <input id='currentTimeRangeSlider' type='range' min='0' />
+        </div>
+
+        <div id='distanceRange' class='settingsSection'>
+          <h3>Distance Range</h3>
+          <span id='currentLocationBasedUpdatesDistanceRangeLabel'></span><input id='currentLocationBasedUpdatesDistanceRangeSlider' type='range' />
+        </div>
+
+        <div class='settingsSection'>
+          <h3>Sorting order</h3>
+          <form>
+            <input id='sortByPublication' type='radio' name='sorting' value='publication' /><label for='sortByPublication'>Publication</label>
+            <input id='sortByRandom' type='radio' name='sorting' value='random' /><label for='sortByRandom'>Random</label>
+          </form>
+        </div>
+
+        <div class='settingsSection'>
+          <h3>Networks</h3>
+          <div>
+            <input id='showTwitter' type='checkbox' /><label for='showTwitter'>Twitter</label>
+            <input id='showInstagram' type='checkbox' /><label for='showInstagram'>Instagram</label>
+            <input id='showFlickr' type='checkbox' /><label id='showFlickrLabel' for='showFlickr'>Flickr</label>
+          </div>
+        </div>
+
+        <div id='speed' class='settingsSection'>
+          <h3>Time in each slide</h3>
+          <span id='currentSpeedLabel'></span><input id='currentSpeedSlider' type='range' />
+        </div>
+      </div>
+    </div>
   </body>
 </html>

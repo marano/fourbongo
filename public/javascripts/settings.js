@@ -344,7 +344,7 @@ var showFlickrSetting = function () {
   return api;
 };
 
-var Settings = function (list, hideDistanceRangeSetting, hideFlickrSetting) {
+var Settings = function (list, hideDistanceRangeSetting) {
   var api = {};
 
   var pvt = {
@@ -360,6 +360,19 @@ var Settings = function (list, hideDistanceRangeSetting, hideFlickrSetting) {
       setting.load();
     });
     homePage.bindToMouseMovement(pvt.mouseMovement);
+    settingsView.bindToSettingsIconHover(pvt.settingsIconHover);
+
+    _(list).each(function (setting) {
+      if (setting.prepare) {
+        setting.prepare();
+      }
+      setting.fillPage();
+      setting.bindEvents();
+      setting.onchange(api.fillPostsCount);
+    });
+    if (hideDistanceRangeSetting) {
+      settingsView.hideDistanceRange();
+    };
   };
 
   api.setPostsList = function (newPostsList) {
@@ -387,29 +400,12 @@ var Settings = function (list, hideDistanceRangeSetting, hideFlickrSetting) {
       return;
     }
     pvt.areOptionsDisplayed = true;
-    settingsView.showSettingsOptions(function () {
-      api.fillPostsCount();
-
-      _(list).each(function (setting) {
-        if (setting.prepare) {
-          setting.prepare();
-        }
-        setting.fillPage();
-        setting.bindEvents();
-        setting.onchange(api.fillPostsCount);
-      });
-      if (hideDistanceRangeSetting) {
-        settingsView.hideDistanceRange();
-      };
-      if (hideFlickrSetting) {
-        settingsView.hideShowFlickr();
-      };
-    });
+    settingsView.showSettingsOptions();
     pvt.moreTime();
   };
 
   pvt.showSettingsIcon = function () {
-    settingsView.showSettingsIcon(function () { settingsView.bindToSettingsIconHover(pvt.settingsIconHover); });
+    settingsView.showSettingsIcon();
     pvt.moreTime();
   };
 

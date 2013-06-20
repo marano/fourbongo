@@ -222,8 +222,7 @@ var tagWall = function (rawTags) {
   ]
 
   var hideDistanceRangeSetting = true;
-  var hideFlickrSetting = false;
-  var settings = Settings(settingsList, hideDistanceRangeSetting, hideFlickrSetting);
+  var settings = Settings(settingsList, hideDistanceRangeSetting);
   settings.initialize();
 
   var postsList = PostsList(settings);
@@ -282,8 +281,7 @@ var venueWall = function (venueId) {
     ]
 
     var hideDistanceRangeSetting = false;
-    var hideFlickrSetting = false;
-    var settings = Settings(settingsList, hideDistanceRangeSetting, hideFlickrSetting);
+    var settings = Settings(settingsList, hideDistanceRangeSetting);
     settings.initialize();
 
     postsList = PostsList(settings);
