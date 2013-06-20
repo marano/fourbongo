@@ -315,6 +315,35 @@ var showInstagramSetting = function () {
   return api;
 };
 
+var showFacebookSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('show_facebook', 'true'),
+    current: null,
+    changeCallback: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+    pvt.changeCallback();
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) { return rawValue == 'true'; };
+
+  api.bindEvents = function () { settingsView.bindToShowFacebookButton(pvt.set); };
+
+  api.onchange = function (callback) { pvt.changeCallback = callback; };
+
+  api.fillPage = function () { settingsView.setShowFacebook(pvt.current) };
+
+  api.validate = function (postItem) { return pvt.current || !postItem.post.isFacebookUpdate; };
+
+  return api;
+};
+
 var showFlickrSetting = function () {
   var api = {};
   var pvt = {

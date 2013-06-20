@@ -82,10 +82,12 @@ var facebookNetwork = function () {
   api.initialize = function () {
     $('.network.facebook .icon-facebook').addClass('loading-status');
     $('.network.facebook .icon-key').addClass('loading-status');
+    $('.network.facebook input').attr('disabled', 'disabled');
     facebook.initialize(function () {
       $('.network.facebook .icon-facebook').removeClass('loading-status');
       $('.network.facebook .icon-key').removeClass('loading-status');
       if (facebook.isAuthenticated()) {
+        $('.network.facebook input').removeAttr('disabled');
         $('.network.facebook .icon-key').addClass('authenticated');
       } else {
         $('.network.facebook .icon-key').addClass('pending-authentication');

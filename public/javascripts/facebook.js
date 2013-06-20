@@ -46,7 +46,7 @@ var facebook = function () {
   api.updates = function (userId, callback) {
     FB.api(userId + '/feed', function (data) {
       var updates = _(data.data).map(function (update) {
-        return FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time)});
+        return FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
       });
       callback(updates);
     });

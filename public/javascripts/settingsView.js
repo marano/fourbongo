@@ -90,6 +90,10 @@ var settingsView = function () {
     $('#showInstagram').click(function () { callback($('#showInstagram').is(':checked') + ''); });
   };
 
+  api.bindToShowFacebookButton = function (callback) {
+    $('#showFacebook').click(function () { callback($('#showFacebook').is(':checked') + ''); });
+  };
+
   api.bindToShowFlickrButton = function (callback) {
     $('#showFlickr').click(function () { callback($('#showFlickr').is(':checked') + ''); });
   };
@@ -100,6 +104,10 @@ var settingsView = function () {
 
   api.setShowInstagram = function (value) {
     $('#showInstagram').attr('checked', value);
+  }
+
+  api.setShowFacebook = function (value) {
+    $('#showFacebook').attr('checked', value);
   }
 
   api.setShowFlickr = function (value) {

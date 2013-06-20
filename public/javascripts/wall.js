@@ -233,6 +233,7 @@ var Wall = function () {
       sortOrderSetting,
       showTwitterSetting(),
       showInstagramSetting(),
+      showFacebookSetting(),
       showFlickrSetting(),
       speedSetting
     ]
@@ -278,6 +279,7 @@ var Wall = function () {
       var settingsList = [
         showTwitterSetting(),
         showInstagramSetting(),
+        showFacebookSetting(),
         showFlickrSetting(),
         locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
         timeRangeSetting,
