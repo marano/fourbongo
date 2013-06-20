@@ -21,17 +21,24 @@ var instagram = function () {
     if (currentPage > amountOfPagesToFetch) {
       return;
     }
-    $.getJSON(urlForTag(tag, maxTagId), function (data) {
-      var isUpdateByLocation = false;
-      callback(mediasFromData(data.data, isUpdateByLocation));
-      if (!data.pagination) {
-        return;
+    $.jsonp({
+      url: urlForTag(tag, maxTagId),
+      dataType: 'jsonp',
+      success: function (data) {
+        var isUpdateByLocation = false;
+        callback(mediasFromData(data.data, isUpdateByLocation));
+        if (!data.pagination) {
+          return;
+        }
+        var nextMaxTagId = data.pagination.next_max_tag_id;
+        if (!nextMaxTagId) {
+          return;
+        }
+        mediaByTagPaginated(tag, currentPage + 1, nextMaxTagId, callback);
+      },
+      error: function () {
+        api.network.showError();
       }
-      var nextMaxTagId = data.pagination.next_max_tag_id;
-      if (!nextMaxTagId) {
-        return;
-      }
-      mediaByTagPaginated(tag, currentPage + 1, nextMaxTagId, callback);
     });
   }
 
