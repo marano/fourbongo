@@ -1,6 +1,6 @@
 var settingsView = function () {
   var api = {};
-  var settingsOpacity = '.9'
+  var settingsOpacity = '.95'
 
   api.bindToSettingsIconHover = function (callback) { $('#settings').mousemove(callback); };
 
