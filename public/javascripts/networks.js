@@ -48,7 +48,7 @@ var SocialNetwork = function (networkName, credentialPool) {
   }
 
   function iconElement() {
-    return $('.network.' + networkName + ' .icon-' + networkName);
+    return $('.network.' + networkName + ' i.icon');
   }
 
   function keyIconElement() {
@@ -113,16 +113,16 @@ var facebookNetwork = function () {
   }
 
   api.initialize = function () {
-    $('.network.facebook .icon-facebook').attr('title', 'Loading Facebook ...');
-    $('.network.facebook .icon-facebook').addClass('loading-status');
+    $('.network.facebook .icon-facebook-sign').attr('title', 'Loading Facebook ...');
+    $('.network.facebook .icon-facebook-sign').addClass('loading-status');
     $('.network.facebook .icon-key').addClass('loading-status');
     $('.network.facebook input').attr('disabled', 'disabled');
 
     facebook.initialize(function (isAuthenticated) {
       api.isAuthenticated = isAuthenticated;
 
-      $('.network.facebook .icon-facebook').attr('title', 'Facebook');
-      $('.network.facebook .icon-facebook').removeClass('loading-status');
+      $('.network.facebook .icon-facebook-sign').attr('title', 'Facebook');
+      $('.network.facebook .icon-facebook-sign').removeClass('loading-status');
       $('.network.facebook .icon-key').removeClass('loading-status');
 
       if (isAuthenticated) {

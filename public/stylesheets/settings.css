@@ -61,10 +61,11 @@
   display: inline-block;
   line-height: 9px;
   cursor: pointer;
-  width: 23px;
-  height: 26px;
 }
 
+.settingsSection.networks i.icon-key {
+  margin-left: 3px;
+}
 .loading-status {
   opacity: 0.2;
   cursor: inherit !important;
