@@ -273,7 +273,10 @@ var visualizationModeSetting = function () {
   };
 
   api.bindEvents = function () {
-    var callSet = function () { pvt.set($(this).attr('value')); };
+    var callSet = function () {
+      pvt.set($(this).attr('value'));
+      window.location.reload();
+    };
     $('#wallVisualization').click(callSet);
     $('#slideshowVisualization').click(callSet);
   };
