@@ -1,10 +1,6 @@
 var introduction = function () {
   var api = {};
 
-  api.showCover = function (venueName, slider) { slider.slide(wallPage.coverHtml(venueName)); };
-
-  api.showTagCover = function (tag, slider) { slider.slide(wallPage.tagCoverHtml(tag)); };
-
   api.showMap = function (latitude, longitude, slider) { map.show(latitude, longitude, slider); };
 
   return api;
@@ -202,13 +198,12 @@ var SlidesCoordinator = function (postsList) {
   return api;
 };
 
-var Wall = function () {
+var Visualization = function (searchStrategy) {
   var api = {};
 
-  var updateInterval = 4.75 * 60 * 1000;
-
-  wallPage.createWallContainerHtml();
   wallPage.showLoading();
+
+  var updateInterval = 4.75 * 60 * 1000;
 
   var twitterNetwork = SocialNetwork('twitter');
   twitter.network = twitterNetwork;
@@ -241,23 +236,18 @@ var Wall = function () {
     $('.network i').tipsy({gravity: 's'});
   }
 
-  api.tags = function (rawTags) {
-    var tags = _(rawTags.split(/,| /)).reject(function (tag) { return tag === ''; }).map(function (eachRawTag) {
-      return eachRawTag.replace(/#/g, '').trim();
-    });
-
-    window.location.hash = 'tag=' + tags.join(',');
+  api.start = function () {
+    var visualizationMode = visualizationModeSetting();
+    visualizationMode.load();
+    var coordinator = visualizationMode.current().coordinator;
 
     var settingsList = [
-      visualizationModeSetting(),
-      timeRangeSetting,
-      sortOrderSetting,
+      visualizationMode,
       showTwitterSetting(),
       showInstagramSetting(),
       showFacebookSetting(),
       showFlickrSetting(),
-      speedSetting
-    ]
+    ].concat(coordinator.specificSettings()).concat(searchStrategy.specificSettings);
 
     var settings = Settings(settingsList);
     settings.initialize();
@@ -265,93 +255,97 @@ var Wall = function () {
     initializeNetworks();
 
     var postsList = PostsList(settings);
+    coordinator.start(searchStrategy.title, postsList);
 
-    var slidesCoordinator = SlidesCoordinator(postsList);
-
-    var slider = slideShow($('#wallContainer'));
-    introduction.showTagCover('#' + tags.join(' #'), slider);
-
-    fetchPublications();
-
-    setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
-    setInterval(fetchPublications, updateInterval);
-    setInterval(settings.fillPostsCount, 5000);
-
-    function fetchPublications() {
-      twitter.byTag(tags, postsList.addAll);
-      flickr.picsByTags(tags, postsList.addAll);
-      if (facebookNetwork.isAuthenticated) {
-        facebook.updatesByTags(tags, postsList.addAll);
-      }
-      _(tags).each(function (eachTag) {
-        instagram.mediaByTag(eachTag, postsList.addAll, instagramNetwork);
-      });
-    }
+    searchStrategy.search(postsList, instagramNetwork);
+    setInterval(function () { searchStrategy.search(postsList, instagramNetwork); }, updateInterval);
+    setInterval(settings.fillPostsCount, 2000);
   };
 
-  api.venue = function (venueId) {
-    var pvt = {};
+  return api;
+};
 
-    var postsList = null;
-    var slidesCoordinator = null;
+var WallContentCoordinator = function () {
+  var api = {};
+  api.specificSettings = function () { return []; };
+  api.start = function (coverTitle, postsList) {
+  };
+  return api;
+};
 
-    window.location.hash = 'venueId=' + venueId;
-    foursquare.venue(venueId, startShow);
+var SlideshowContentCoordinator = function () {
+  var api = {};
 
-    function startShow(venue) {
-      var settingsList = [
-        visualizationModeSetting(),
-        showTwitterSetting(),
-        showInstagramSetting(),
-        showFacebookSetting(),
-        showFlickrSetting(),
-        locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude),
-        timeRangeSetting,
-        sortOrderSetting,
-        speedSetting
-      ]
+  api.specificSettings = function () {
+    return [
+      timeRangeSetting,
+      sortOrderSetting,
+      speedSetting
+    ];
+  };
 
-      var settings = Settings(settingsList);
-      settings.initialize();
+  api.start = function (coverTitle, postsList) {
+    wallPage.createWallContainerHtml();
+    var slider = slideShow($('#wallContainer'));
+    slider.slide(wallPage.coverHtml(coverTitle));
+    var slidesCoordinator = SlidesCoordinator(postsList);
+    setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
+  };
 
-      initializeNetworks();
+  return api;
+};
 
-      postsList = PostsList(settings);
+var TagSearchStrategy = function (rawTags) {
+  var api = {};
 
-      slidesCoordinator = SlidesCoordinator(postsList);
+  var tags = _(rawTags.split(/,| /)).reject(function (tag) { return tag === ''; }).map(function (eachRawTag) {
+    return eachRawTag.replace(/#/g, '').trim();
+  });
 
-      var slider = slideShow($('#wallContainer'));
-      introduction.showCover(venue.name, slider);
-      setTimeout(function () { introduction.showMap(venue.latitude, venue.longitude, slider); }, 2000);
+  api.title = '#' + tags.join(' #');
 
-      pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude);
-      pvt.fetchInstagramMedia(venue.latitude, venue.longitude);
-      pvt.fetchFlickrMedia(venue.latitude, venue.longitude);
-      pvt.fetchCheckins(venue.id);
+  window.location.hash = 'tag=' + tags.join(',');
 
-      setInterval(function () { pvt.fetchLocationBasedTweets(venue.latitude, venue.longitude); }, updateInterval);
-      setInterval(function () { pvt.fetchInstagramMedia(venue.latitude, venue.longitude); }, updateInterval);
-      setInterval(function () { pvt.fetchFlickrMedia(venue.latitude, venue.longitude); }, updateInterval);
-      setInterval(function () { pvt.fetchCheckins(venue.id); }, updateInterval);
-      setInterval(settings.fillPostsCount, 2000);
+  api.specificSettings = [];
 
-      setTimeout(function () { slidesCoordinator.start(slider); }, 15000);
-    };
+  api.search = function (postsList, instagramNetwork) {
+    twitter.byTag(tags, postsList.addAll);
+    flickr.picsByTags(tags, postsList.addAll);
+    if (facebookNetwork.isAuthenticated) {
+      facebook.updatesByTags(tags, postsList.addAll);
+    }
+    _(tags).each(function (eachTag) {
+      instagram.mediaByTag(eachTag, postsList.addAll, instagramNetwork);
+    });
+  };
 
-    pvt.fetchLocationBasedTweets = function (latitude, longitude) { twitter.byLocation(latitude, longitude, postsList.addAll); };
+  return api;
+};
 
-    pvt.fetchInstagramMedia = function (latitude, longitude) { instagram.mediaByLocation(latitude, longitude, postsList.addAll, instagramNetwork); };
+var LocationSearchStrategy = function (venue) {
+  var api = {};
 
-    pvt.fetchFlickrMedia = function (latitude, longitude) { flickr.picsByLocation(latitude, longitude, postsList.addAll); };
+  window.location.hash = 'venueId=' + venue.id;
 
-    pvt.fetchCheckins = function (venueId) { foursquare.herenow(venueId, pvt.fetchProfiles); };
+  api.title = venue.name;
 
-    pvt.fetchProfiles = function (profileIds) { _(profileIds).each(function (profileId) { foursquare.profile(profileId, pvt.fetchPosts); }); };
+  api.specificSettings = [
+    locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude)
+  ];
 
-    pvt.fetchPosts = function (profile) {
-      if (profile.twitter != undefined) { twitter.timeline(profile.twitter, postsList.addAll); };
-      if (profile.facebook != undefined) { facebook.updates(profile.facebook, postsList.addAll); };
-    };
+  api.search = function (postsList, instagramNetwork) {
+    twitter.byLocation(venue.latitude, venue.longitude, postsList.addAll);
+    instagram.mediaByLocation(venue.latitude, venue.longitude, postsList.addAll, instagramNetwork);
+    flickr.picsByLocation(venue.latitude, venue.longitude, postsList.addAll);
+
+    foursquare.herenow(venue.id, function (profileIds) {
+      _(profileIds).each(function (profileId) {
+        foursquare.profile(profileId, function (profile) {
+          if (profile.twitter != undefined) { twitter.timeline(profile.twitter, postsList.addAll); };
+          if (profile.facebook != undefined) { facebook.updates(profile.facebook, postsList.addAll); };
+        });
+      });
+    });
   };
 
   return api;

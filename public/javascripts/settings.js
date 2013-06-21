@@ -235,14 +235,16 @@ var speedSetting = function () {
 
 var wallVisualizationMode = function () {
   var api = {
-    name: 'wall'
+    name: 'wall',
+    coordinator: WallContentCoordinator()
   };
   return api;
 }();
 
 var slideshowVisualizationMode = function () {
   var api = {
-    name: 'slideshow'
+    name: 'slideshow',
+    coordinator: SlideshowContentCoordinator()
   };
   return api;
 }();
@@ -252,6 +254,10 @@ var visualizationModeSetting = function () {
   var pvt = {
     cookieSetting: cookieSettingLoader('visualization_mode', 'wall'),
     current: null,
+  };
+
+  api.current = function () {
+    return pvt.current;
   };
 
   pvt.set = function (value) {
@@ -436,7 +442,7 @@ var showFlickrSetting = function () {
   return api;
 };
 
-var Settings = function (list, hideDistanceRangeSetting) {
+var Settings = function (list) {
   var api = {};
 
   var pvt = {
@@ -462,9 +468,6 @@ var Settings = function (list, hideDistanceRangeSetting) {
       setting.bindEvents();
       setting.onchange(api.fillPostsCount);
     });
-    if (hideDistanceRangeSetting) {
-      settingsView.hideDistanceRange();
-    };
   };
 
   api.setPostsList = function (newPostsList) {

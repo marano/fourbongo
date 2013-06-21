@@ -109,9 +109,19 @@ var home = function () {
     pvt.startTagShow(tags);
   };
 
-  pvt.startShow = function (venueId) { homePage.slideContainer(function () { Wall().venue(venueId); }); };
+  pvt.startShow = function (venueId) {
+    homePage.slideContainer(function () {
+      foursquare.venue(venueId, function (venue) {
+        Visualization(LocationSearchStrategy(venue)).start();
+      });
+    });
+  };
 
-  pvt.startTagShow = function (tags) { homePage.slideContainer(function () { Wall().tags(tags); }); };
+  pvt.startTagShow = function (tags) {
+    homePage.slideContainer(function () {
+      Visualization(TagSearchStrategy(tags)).start();
+    });
+  };
 
   return api;
 }();

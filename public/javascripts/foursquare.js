@@ -21,10 +21,11 @@ var foursquare = function () {
 
   api.venue = function (venueId, callback) {
     $.getJSON('https://api.foursquare.com/v2/venues/' + venueId + '?oauth_token=' + foursquareNetwork.token() + '&v=20111118&callback=?', function (data) {
+      var id = data.response.venue.id;
       var name = data.response.venue.name;
       var latitude = data.response.venue.location.lat;
       var longitude = data.response.venue.location.lng;
-      callback({id: venueId, name: name, latitude: latitude, longitude: longitude});
+      callback({id: id, name: name, latitude: latitude, longitude: longitude});
     });
   };
 
