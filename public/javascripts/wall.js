@@ -108,7 +108,6 @@ var PostsList = function (settings) {
   var api = {};
 
   var posts = [];
-  var currentPost = null;
   settings.setPostsList(api);
 
   api.addAll = function (newPosts) { _(newPosts).each(add); };
@@ -127,15 +126,6 @@ var PostsList = function (settings) {
   api.validPosts = function () { return _(posts).select(settings.validate); };
 
   api.next = function () {
-    var validPosts = api.validPosts();
-    if(_(validPosts).isEmpty()) {
-      return null;
-    } else {
-      var next = sortOrderSetting.next(currentPost, validPosts);
-      next.viewed = true;
-      currentPost = next;
-      return next;
-    }
   };
 
   return api;
@@ -147,7 +137,8 @@ var SlidesCoordinator = function (postsList) {
     paused: false,
     needsToHideLoading: true,
     isShowingNoUpdates: false,
-    started: false
+    started: false,
+    currentPost: null
   };
   
   api.start = function (slider) {
@@ -155,7 +146,7 @@ var SlidesCoordinator = function (postsList) {
   };
 
   function keepSliding(slider) {
-    pvt.next(slider);
+    pvt.nextSlide(slider);
     if (pvt.isShowingNoUpdates) {
       setTimeout(function () { keepSliding(slider); }, 1000);
     } else {
@@ -176,10 +167,22 @@ var SlidesCoordinator = function (postsList) {
     }
   };
 
-  pvt.next = function (slider) {
+  pvt.nextPost = function () {
+    var validPosts = postsList.validPosts();
+    if(_(validPosts).isEmpty()) {
+      return null;
+    } else {
+      var next = sortOrderSetting.next(pvt.currentPost, validPosts);
+      next.viewed = true;
+      pvt.currentPost = next;
+      return next;
+    }
+  };
+
+  pvt.nextSlide = function (slider) {
     if (pvt.paused) { return; }
     if (postsList.isNotEmpty()) {
-      var post = postsList.next();
+      var post = pvt.nextPost();
       if (post == null) {
         pvt.noUpdates(slider);
       } else {
