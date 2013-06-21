@@ -255,8 +255,7 @@ var Wall = function () {
       speedSetting
     ]
 
-    var hideDistanceRangeSetting = true;
-    var settings = Settings(settingsList, hideDistanceRangeSetting);
+    var settings = Settings(settingsList);
     settings.initialize();
 
     initializeNetworks();

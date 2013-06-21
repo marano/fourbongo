@@ -118,7 +118,10 @@ var timeRangeSetting = function () {
     pvt.changeCallback();
   }
 
-  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+  api.load = function () {
+    $('#timeRange.settingsSection').show();
+    pvt.current = pvt.transform(pvt.cookieSetting.load());
+  };
 
   pvt.transform = function (rawValue) {
     return timeRanges[parseInt(rawValue)];
@@ -159,7 +162,10 @@ var locationBasedUpdatesDistanceRangeSetting = function (venueLat, venueLng) {
     pvt.changeCallback();
   }
 
-  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+  api.load = function () {
+    $('#distanceRange.settingsSection').show();
+    pvt.current = pvt.transform(pvt.cookieSetting.load());
+  };
 
   pvt.transform = function (rawValue) { return parseInt(rawValue); };
 
@@ -201,7 +207,10 @@ var speedSetting = function () {
     pvt.changeCallback();
   }
 
-  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+  api.load = function () {
+    $('#speed.settingsSection').show();
+    pvt.current = pvt.transform(pvt.cookieSetting.load());
+  };
 
   pvt.transform = function (rawValue) {
     return speeds[parseInt(rawValue)];
@@ -236,7 +245,10 @@ var sortOrderSetting = function () {
     pvt.cookieSetting.save(value);
   }
 
-  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+  api.load = function () {
+    $('#sort.settingsSection').show();
+    pvt.current = pvt.transform(pvt.cookieSetting.load());
+  };
 
   pvt.transform = function (rawValue) {
     var sorts = [publicationSort, randomSort];

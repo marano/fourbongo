@@ -89,25 +89,25 @@
       </div>
     </div>
     <div id='settings' style='opacity: 0'>
-      <i id='settingsIcon' class='icon-wrench' style='display: none' ></i>
+      <i id='settingsIcon' class='icon-wrench' style='display: none'></i>
       <div id='settingsContainer' style='display: none'>
         <div class='settingsSection'>
           <h3><i class='icon-rss'></i>Posts count</h3>
           <div id='postsCountLabel'>0</div>
         </div>
 
-        <div class='settingsSection'>
+        <div id='timeRange' class='settingsSection' style='display: none'>
           <h3><i class='icon-time'></i>Time range</h3>
           <span id='currentTimeRangeLabel'></span>
           <input id='currentTimeRangeSlider' type='range' min='0' />
         </div>
 
-        <div id='distanceRange' class='settingsSection'>
+        <div id='distanceRange' class='settingsSection' style='display: none'>
           <h3><i class='icon-compass'></i>Distance Range</h3>
           <span id='currentLocationBasedUpdatesDistanceRangeLabel'></span><input id='currentLocationBasedUpdatesDistanceRangeSlider' type='range' />
         </div>
 
-        <div class='settingsSection'>
+        <div id='sort' class='settingsSection' style='display: none'>
           <h3><i class='icon-sort-by-attributes'></i>Sorting order</h3>
           <form>
             <input id='sortByPublication' type='radio' name='sorting' value='publication' /><label for='sortByPublication'>Publication</label>
@@ -115,7 +115,7 @@
           </form>
         </div>
 
-        <div id='speed' class='settingsSection'>
+        <div id='speed' class='settingsSection' style='display: none'>
           <h3><i class='icon-dashboard'></i>Time in each slide</h3>
           <span id='currentSpeedLabel'></span><input id='currentSpeedSlider' type='range' />
         </div>
