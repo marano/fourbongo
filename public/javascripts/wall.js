@@ -246,6 +246,7 @@ var Wall = function () {
     window.location.hash = 'tag=' + tags.join(',');
 
     var settingsList = [
+      visualizationModeSetting(),
       timeRangeSetting,
       sortOrderSetting,
       showTwitterSetting(),
@@ -296,6 +297,7 @@ var Wall = function () {
 
     function startShow(venue) {
       var settingsList = [
+        visualizationModeSetting(),
         showTwitterSetting(),
         showInstagramSetting(),
         showFacebookSetting(),
@@ -306,8 +308,7 @@ var Wall = function () {
         speedSetting
       ]
 
-      var hideDistanceRangeSetting = false;
-      var settings = Settings(settingsList, hideDistanceRangeSetting);
+      var settings = Settings(settingsList);
       settings.initialize();
 
       initializeNetworks();

@@ -233,6 +233,57 @@ var speedSetting = function () {
   return api;
 }();
 
+var wallVisualizationMode = function () {
+  var api = {
+    name: 'wall'
+  };
+  return api;
+}();
+
+var slideshowVisualizationMode = function () {
+  var api = {
+    name: 'slideshow'
+  };
+  return api;
+}();
+
+var visualizationModeSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('visualization_mode', 'wall'),
+    current: null,
+  };
+
+  pvt.set = function (value) {
+    pvt.current = pvt.transform(value);
+    pvt.cookieSetting.save(value);
+  }
+
+  api.load = function () { pvt.current = pvt.transform(pvt.cookieSetting.load()); };
+
+  pvt.transform = function (rawValue) {
+    var modes = [wallVisualizationMode, slideshowVisualizationMode];
+    return _(modes).find(function (mode) { return mode.name == rawValue });
+  };
+
+  api.bindEvents = function () {
+    var callSet = function () { pvt.set($(this).attr('value')); };
+    $('#wallVisualization').click(callSet);
+    $('#slideshowVisualization').click(callSet);
+  };
+
+  api.onchange = function (callback) {};
+
+  api.fillPage = function () {
+    $('input:radio[value=' + pvt.current.name + ']').attr('checked', true); 
+  };
+
+  api.next = function (currentPost, allPosts) { return pvt.current.next(currentPost, allPosts); };
+
+  return api;
+};
+
+
 var sortOrderSetting = function () {
   var api = {};
   var pvt = {
