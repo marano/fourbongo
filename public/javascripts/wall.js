@@ -360,12 +360,21 @@ var LocationSearchStrategy = function (venue) {
     locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude)
   ];
 
-  api.onFacebookLoad = function (postsList, facebookNetwork) {};
+  api.onFacebookLoad = function (postsList, facebookNetwork) {
+    fetchFacebook(postsList, facebookNetwork);
+  };
+
+  function fetchFacebook(postsList, facebookNetwork) {
+    if (facebookNetwork.isAuthenticated) {
+      facebook.updatesByLocation(venue.latitude, venue.longitude, postsList.addAll);
+    }
+  }
 
   api.search = function (postsList, instagramNetwork, facebookNetwork) {
     twitter.byLocation(venue.latitude, venue.longitude, postsList.addAll);
     instagram.mediaByLocation(venue.latitude, venue.longitude, postsList.addAll, instagramNetwork);
     flickr.picsByLocation(venue.latitude, venue.longitude, postsList.addAll);
+    fetchFacebook(postsList, facebookNetwork);
 
     foursquare.herenow(venue.id, function (profileIds) {
       _(profileIds).each(function (profileId) {

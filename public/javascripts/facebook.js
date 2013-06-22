@@ -40,23 +40,34 @@ var facebook = function () {
 
   api.updates = function (userId, callback) {
     FB.api(userId + '/feed', function (data) {
-      var updates = _(data.data).map(function (update) {
-        return FacebookUpdate({id: update.id, userId: userId, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
-      });
-      callback(updates);
+      callback(extractUpdates(data));
     });
   };
+
+  api.updatesByLocation = function(latitude, longitude, callback) {
+    FB.api('search?center=' + latitude + ',' + longitude + '&type=location&limit=200&distance=10000', function (data) {
+      callback(extractUpdates(data));
+    });
+  };
+
+  function formatCoordinates(coordinate) {
+    coordinate = coordinate.toString();
+    return coordinate.substring(0, coordinate.indexOf('.') + 3)
+  }
 
   api.updatesByTags = function (tags, callback) {
     _(tags).each(function (eachTag) {
       FB.api('search?q=' + eachTag + '&type=post&limit=200', function (data) {
-        var updates = _(data.data).map(function (update) {
-          return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
-        });
-        callback(updates);
+        callback(extractUpdates(data));
       });
     });
   };
+
+  function extractUpdates(data) {
+    return _(data.data).map(function (update) {
+      return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
+    });
+  }
 
   return api;
 }();
