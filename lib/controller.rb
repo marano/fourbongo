@@ -75,6 +75,10 @@ get '/foursquare/authentication_menu' do
   erb :foursquare_authentication_menu
 end
 
+get '/twitter/search_by_location' do
+  twitter.search('', :geocode => "#{params[:latitude]},#{params[:longitude]},10km", :result_type => 'recent', :count => 100, :include_entities => true).results.map { |result| result.attrs }.to_json
+end
+
 get '/twitter/search' do
   twitter.search("#{params[:query]}", :result_type => 'recent', :count => 100, :include_entities => true).results.map { |result| result.attrs }.to_json
 end
