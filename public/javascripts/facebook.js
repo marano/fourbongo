@@ -49,7 +49,7 @@ var facebook = function () {
 
   api.updatesByTags = function (tags, callback) {
     _(tags).each(function (eachTag) {
-      FB.api('search?q=' + eachTag + '&type=post', function (data) {
+      FB.api('search?q=' + eachTag + '&type=post&limit=200', function (data) {
         var updates = _(data.data).map(function (update) {
           return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
         });
