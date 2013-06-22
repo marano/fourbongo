@@ -46,6 +46,7 @@
 .settingsSection {
   margin-top: 20px;
   margin-bottom: 20px;
+  min-width: 300px;
 }
 
 #currentTimeRangeLabel, #currentLocationBasedUpdatesDistanceRangeLabel, #currentSpeedLabel {

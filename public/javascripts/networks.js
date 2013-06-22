@@ -93,7 +93,7 @@ var SocialNetwork = function (networkName, credentialPool) {
   return api;
 };
 
-var facebookNetwork = function () {
+var FacebookNetwork = function (initializeCallback) {
   var api = {
     isAuthenticated: false
   };
@@ -129,6 +129,7 @@ var facebookNetwork = function () {
         $('.network.facebook input').removeAttr('disabled');
         $('.network.facebook .icon-key').addClass('authenticated');
         $('.network.facebook .icon-key').attr('title', 'Authenticated');
+        initializeCallback();
       } else {
         $('.network.facebook input').attr('title', 'Please authenticate in order to use this service.');
         $('.network.facebook .icon-key').attr('title', 'Pending Authentication. Click to authenticate.');
@@ -139,4 +140,4 @@ var facebookNetwork = function () {
   };
 
   return api;
-}();
+};

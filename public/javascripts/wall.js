@@ -95,7 +95,7 @@ var FlickrPic = function (picData) {
 var PostsListItem = function (item) {
   var api = {
     post: item,
-    viewed: false
+    shown: false
   };
   return api;
 };
@@ -169,7 +169,9 @@ var SlidesCoordinator = function (postsList) {
       return null;
     } else {
       var next = sortOrderSetting.next(pvt.currentPost, validPosts);
-      next.viewed = true;
+      if (pvt.currentPost) {
+        pvt.currentPost.shown = true;
+      }
       pvt.currentPost = next;
       return next;
     }
@@ -211,12 +213,33 @@ var Visualization = function (searchStrategy) {
   var instagramNetwork = SocialNetwork('instagram', ['86a8f41a1066466c8780fa68be17e71b', 'f440f7e4c1b4411c814a165d4a1a64a1', '8cfff1cc2af345f4b4574436c75ea068']);
   instagram.network = instagramNetwork;
 
+  var facebookNetwork = FacebookNetwork(function () { searchStrategy.onFacebookLoad(postsList, facebookNetwork); });
+
   var socialNetworks = [
     twitterNetwork,
     instagramNetwork,
     SocialNetwork('flickr'),
     facebookNetwork
   ];
+
+  initializeNetworks();
+
+  var visualizationMode = visualizationModeSetting();
+  visualizationMode.load();
+  var coordinator = visualizationMode.current().coordinator;
+
+  var settingsList = [
+    visualizationMode,
+    showTwitterSetting(),
+    showInstagramSetting(),
+    showFacebookSetting(),
+    showFlickrSetting(),
+  ].concat(coordinator.specificSettings()).concat(searchStrategy.specificSettings);
+
+  var settings = Settings(settingsList);
+  settings.initialize();
+
+  var postsList = PostsList(settings);
 
   function initializeNetworks() {
     _(socialNetworks).each(function (service) { service.initialize(); });
@@ -237,27 +260,9 @@ var Visualization = function (searchStrategy) {
   }
 
   api.start = function () {
-    var visualizationMode = visualizationModeSetting();
-    visualizationMode.load();
-    var coordinator = visualizationMode.current().coordinator;
-
-    var settingsList = [
-      visualizationMode,
-      showTwitterSetting(),
-      showInstagramSetting(),
-      showFacebookSetting(),
-      showFlickrSetting(),
-    ].concat(coordinator.specificSettings()).concat(searchStrategy.specificSettings);
-
-    var settings = Settings(settingsList);
-    settings.initialize();
-
-    initializeNetworks();
-
-    var postsList = PostsList(settings);
     coordinator.start(searchStrategy.title, postsList);
 
-    searchStrategy.search(postsList, instagramNetwork);
+    searchStrategy.search(postsList, instagramNetwork, facebookNetwork);
     setInterval(function () { searchStrategy.search(postsList, instagramNetwork); }, updateInterval);
     setInterval(settings.fillPostsCount, 2000);
   };
@@ -267,8 +272,22 @@ var Visualization = function (searchStrategy) {
 
 var WallContentCoordinator = function () {
   var api = {};
+
   api.specificSettings = function () { return []; };
+
   api.start = function (coverTitle, postsList) {
+    setInterval(function () {
+      var posts = postsList.validPosts();
+      posts = posts.slice(0,300);
+      _(posts).chain().reject(function (postItem) {
+        return postItem.shown;
+      }).sort(function (postItem) {
+        return postItem.post.createdAt;
+      }).reverse().each(function (postItem) {
+        postItem.shown = true;
+        $('#wallContainer').append(postItem.post.html(postItem.post));
+      });
+    }, 2500);
   };
   return api;
 };
@@ -286,7 +305,7 @@ var SlideshowContentCoordinator = function () {
 
   api.start = function (coverTitle, postsList) {
     wallPage.createWallContainerHtml();
-    var slider = slideShow($('#wallContainer'));
+    var slider = slideShow($('#slideshowContainer'));
     slider.slide(wallPage.coverHtml(coverTitle));
     var slidesCoordinator = SlidesCoordinator(postsList);
     setTimeout(function () { slidesCoordinator.start(slider); }, 2500);
@@ -308,12 +327,20 @@ var TagSearchStrategy = function (rawTags) {
 
   api.specificSettings = [];
 
-  api.search = function (postsList, instagramNetwork) {
-    twitter.byTag(tags, postsList.addAll);
-    flickr.picsByTags(tags, postsList.addAll);
+  function fetchFacebook(postsList, facebookNetwork) {
     if (facebookNetwork.isAuthenticated) {
       facebook.updatesByTags(tags, postsList.addAll);
     }
+  }
+
+  api.onFacebookLoad = function (postsList, facebookNetwork) {
+    fetchFacebook(postsList, facebookNetwork);
+  };
+
+  api.search = function (postsList, instagramNetwork, facebookNetwork) {
+    twitter.byTag(tags, postsList.addAll);
+    flickr.picsByTags(tags, postsList.addAll);
+    fetchFacebook(facebookNetwork, postsList);
     _(tags).each(function (eachTag) {
       instagram.mediaByTag(eachTag, postsList.addAll, instagramNetwork);
     });
@@ -333,7 +360,9 @@ var LocationSearchStrategy = function (venue) {
     locationBasedUpdatesDistanceRangeSetting(venue.latitude, venue.longitude)
   ];
 
-  api.search = function (postsList, instagramNetwork) {
+  api.onFacebookLoad = function (postsList, facebookNetwork) {};
+
+  api.search = function (postsList, instagramNetwork, facebookNetwork) {
     twitter.byLocation(venue.latitude, venue.longitude, postsList.addAll);
     instagram.mediaByLocation(venue.latitude, venue.longitude, postsList.addAll, instagramNetwork);
     flickr.picsByLocation(venue.latitude, venue.longitude, postsList.addAll);

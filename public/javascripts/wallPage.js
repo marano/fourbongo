@@ -4,9 +4,9 @@ var wallPage = function () {
 
   api.noUpdatesSlide = function () { return $('<div id="noUpdates">OMG! Nothing to show. Try changing your filters.</div>'); };
 
-  api.createWallContainerHtml = function () { $('#wallContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
+  api.createWallContainerHtml = function () { $('#slideshowContainer').css('display', 'inline-block').css('width', '100%').css('height', '100%').css('position', 'relative'); };
 
-  api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#wallContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); }; 
+  api.showLoading = function () { $('<div>', {id:'loading'}).css('opacity', '.0').html('L<img src="/radar.gif" />ading').appendTo($('#slideshowContainer')).animate({'opacity' : '.6'}, {easing: 'easeOutQuint', duration: 1000}); };
 
   api.hideLoading = function () { $('#loading').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#loading').remove(); }}); };
 
@@ -19,7 +19,7 @@ var wallPage = function () {
   api.mapCanvasDocumentElement = function () { return document.getElementById('map_canvas'); };
 
   api.tweetHtml = function (post) {
-    var container = $('<div>', {'class': 'publication_container'});
+    var container = $('<div>', {'class': 'publication_container twitter'});
     if (post.mediaUrl) {
       container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar_small, 'class': 'avatar'})));
     } else {
@@ -30,15 +30,16 @@ var wallPage = function () {
     userData.append($('<span>', {'class': 'username'}).text(post.fullname));
     userData.append($('<span>', {'class': 'screen_name'}).text('(' + post.username + ')'));
     container.append(userData);
+    var content = $('<div>', {'class': 'content'}).appendTo(container);
     if (post.mediaUrl) {
-      container.append($('<div>', {'class': 'twitter_media'}).append($('<img>', {src: post.mediaUrl})));
+      content.append($('<div>', {'class': 'twitter_media'}).append($('<img>', {src: post.mediaUrl})));
     }
-    container.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
+    content.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
     return container;
   };
 
   api.instagramMediaHtml = function (post) {
-    var container = $('<div>', {'class': 'publication_container'});
+    var container = $('<div>', {'class': 'publication_container instagram'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append(timeAndLocationElement(post, 'icon-instagram'));
@@ -47,7 +48,8 @@ var wallPage = function () {
     container.append(userData);
     var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
     var caption = $('<div>', {'class': 'instagram_caption'}).text(post.caption);
-    container.append($('<div>').append(media).append(caption));
+    var content = $('<div>', {'class': 'content'});
+    content.append(media).append(caption).appendTo(container);
     return container;
   };
 
@@ -70,7 +72,7 @@ var wallPage = function () {
   }
 
   api.flickrPicHtml = function (post) {
-    var container = $('<div>', {'class': 'publication_container'});
+    var container = $('<div>', {'class': 'publication_container flickr'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append(timeAndLocationElement(post, 'icon-flickr'));
@@ -78,18 +80,20 @@ var wallPage = function () {
     container.append(userData);
     var media = $('<div>', {'class': 'instagram_media'}).append($('<img>', {src: post.media}));
     var caption = $('<div>', {'class': 'instagram_caption'}).text(post.caption);
-    container.append($('<div>').append(media).append(caption));
+    var content = $('<div>', {'class': 'content'}).appendTo(container);
+    content.append(media).append(caption);
     return container;
   };
 
   api.facebookUpdateHtml = function (post) {
-    var container = $('<div>', {'class': 'publication_container'});
-    container.append($('<img>', {src: post.avatar, 'class': 'avatar'}));
+    var container = $('<div>', {'class': 'publication_container facebook'});
+    container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append(timeAndLocationElement(post, 'icon-facebook-sign'));
     userData.append($('<span>', {'class': 'username'}).text(post.username));
     container.append(userData);
-    container.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
+    var content = $('<div>', {'class': 'content'}).appendTo(container);
+    content.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
     return container;
   };
 
