@@ -448,20 +448,17 @@ var showFlickrSetting = function () {
 var Settings = function (list) {
   var api = {};
 
-  var pvt = {
-    lastHover: 0,
-    isIconDisplayed: false,
-    areOptionsDisplayed: false,
-  };
-
   var postsList = null;
 
   api.initialize = function () {
     _(list).each(function (setting) {
       setting.load();
     });
-    homePage.bindToMouseMovement(pvt.mouseMovement);
-    settingsView.bindToSettingsIconHover(pvt.settingsIconHover);
+    settingsView.showSettingsIcon();
+    $('#settingsIcon').click(settingsView.showSettingsOptions);
+    $('#close-settings').click(function () {
+      settingsView.hideSettings(settingsView.showSettingsIcon);
+    });
 
     _(list).each(function (setting) {
       if (setting.prepare) {
@@ -484,38 +481,6 @@ var Settings = function (list) {
 
   api.fillPostsCount = function () {
     settingsView.setPostsCountLabel(postsList.validPosts().length);
-  };
-
-  pvt.mouseMovement = function () {
-    if (pvt.isIconDisplayed) { return; }
-    pvt.isIconDisplayed = true;
-    pvt.showSettingsIcon();
-  };
-
-  pvt.settingsIconHover = function () {
-    if (pvt.areOptionsDisplayed) {
-      pvt.moreTime();
-      return;
-    }
-    pvt.areOptionsDisplayed = true;
-    settingsView.showSettingsOptions();
-    pvt.moreTime();
-  };
-
-  pvt.showSettingsIcon = function () {
-    settingsView.showSettingsIcon();
-    pvt.moreTime();
-  };
-
-  pvt.moreTime = function () {
-    pvt.lastHover = new Date().getTime();
-    setTimeout(function () {
-      if ((new Date().getTime() - pvt.lastHover) >= 5000) {
-        settingsView.hideSettings();
-        pvt.isIconDisplayed = false;
-        pvt.areOptionsDisplayed = false;
-      }
-    }, 5000);
   };
 
   return api;

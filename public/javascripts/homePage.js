@@ -122,12 +122,6 @@ var homePage = function () {
   var api = {};
   var pvt = { thereIsASearchResult: false };
 
-  api.bindToMouseMovement = function (callback) {
-    $('body').mousemove(callback);
-    $('body').bind('touchstart', callback);
-    $('body').bind('touchmove', callback);
-  };
-
   api.bindSearchForm = function (searchCallback, searchByTagCallback) {
     $("#searchForm").submit(function (event) {
       event.preventDefault();

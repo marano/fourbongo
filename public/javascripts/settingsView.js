@@ -2,20 +2,23 @@ var settingsView = function () {
   var api = {};
   var settingsOpacity = '.95'
 
-  api.bindToSettingsIconHover = function (callback) { $('#settings').mousemove(callback); };
-
   api.showSettingsIcon = function () {
     $('#settingsIcon').show();
-    $('#settings').animate({'opacity' : settingsOpacity}, {easing: 'easeOutQuad', duration: 1000});
+    $('#settings').animate({'opacity' : settingsOpacity}, {easing: 'easeOutQuad', duration: 250});
   };
 
-  api.hideSettings = function () { $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuint', duration: 1000, complete: function () { $('#settingsContainer').hide(); }}); };
+  api.hideSettings = function (callback) {
+    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 250, complete: function () {
+      $('#settingsContainer').hide();
+      callback();
+    }});
+  };
 
   api.showSettingsOptions = function () {
-    $('#settings').stop().animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 500, complete: function () {
+    $('#settings').animate({'opacity' : '.0'}, {easing: 'easeOutQuad', duration: 250, complete: function () {
       $('#settingsIcon').hide();
       $('#settingsContainer').show();
-      $('#settings').animate({'opacity' : settingsOpacity}, {easing: 'easeOutQuad', duration: 500});
+      $('#settings').animate({'opacity' : settingsOpacity}, {easing: 'easeOutQuad', duration: 250});
     }});
   };
 
@@ -113,10 +116,6 @@ var settingsView = function () {
   api.setShowFlickr = function (value) {
     $('#showFlickr').attr('checked', value);
   }
-
-  api.hideDistanceRange = function () {
-    $('#distanceRange').hide();
-  };
 
   return api;
 }();

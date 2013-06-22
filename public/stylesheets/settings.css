@@ -1,12 +1,30 @@
 #settingsIcon {
   font-size: 150px;
+  padding: 0 1px;
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 27px;
+}
+
+#settingsIcon:hover {
+  opacity: 1;
+}
+
+#settings #close-settings {
+  float: right;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+#settings #close-settings:hover {
+  opacity: 1;
 }
 
 #settings {
   font-size: 26px;
   position: absolute;
   right: 20px;
-  bottom: 20px;
+  top: 20px;
   padding: 7px;
   z-index: 5;
   background-color: #C8C8C8;
