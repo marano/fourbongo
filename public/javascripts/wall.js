@@ -230,6 +230,7 @@ var Visualization = function (searchStrategy) {
 
   var settingsList = [
     visualizationMode,
+    timeRangeSetting,
     showTwitterSetting(),
     showInstagramSetting(),
     showFacebookSetting(),
@@ -270,27 +271,84 @@ var Visualization = function (searchStrategy) {
   return api;
 };
 
+var WallPublication = function (postItem) {
+  var api = {
+    postItem: postItem,
+    shown: false,
+    element: null
+  };
+
+  api.show = function (postItemsToShow) {
+    if (!shouldShow(postItemsToShow)) {
+      return;
+    }
+
+    api.shown = true;
+    if (!api.element) {
+      api.element = postItem.post.html(postItem.post);
+    }
+    $('#wallContentContainer').append(api.element);
+  };
+
+  api.hideIfShouldNotShow = function (postItemsToShow) {
+    if (!shouldShow(postItemsToShow)) {
+      api.shown = false;
+      api.element.remove();
+    }
+  }
+
+  function shouldShow(postItemsToShow) {
+    return _(postItemsToShow).contains(api.postItem);
+  }
+
+  return api;
+}
+
+var WallPublicationsList = function () {
+  var api = {};
+
+  var publications = [];
+
+  function isPublished(postItem) {
+    return _(publications).chain().map(function (eachPublication) { return eachPublication.postItem; }).contains(postItem).value(); 
+  }
+
+  function publish(postItem) {
+    if (!isPublished(postItem)) {
+      publications.push(WallPublication(postItem));
+    }
+  };
+
+  api.update = function (postItems) {
+    _(postItems).each(function (eachPostItem) { publish(eachPostItem); });
+    _(publications).each(function (eachPublication) { eachPublication.hideIfShouldNotShow(postItems); });
+    _(publications).filter(function (eachPublication) { eachPublication.show(postItems); });
+  };
+
+  return api;
+};
+
 var WallContentCoordinator = function () {
   var api = {};
 
   api.specificSettings = function () { return []; };
+
 
   api.start = function (coverTitle, postsList) {
     $('#wallContainer').show()
     ZoomSetting().load();
     $('.title').text(coverTitle);
 
+    wallPublicationsList = WallPublicationsList();
+
     setInterval(function () {
       var posts = postsList.validPosts();
-      posts = posts.slice(0,300);
-      _(posts).chain().reject(function (postItem) {
-        return postItem.shown;
-      }).sort(function (postItem) {
-        return postItem.post.createdAt;
-      }).reverse().each(function (postItem) {
-        postItem.shown = true;
-        $('#wallContentContainer').append(postItem.post.html(postItem.post));
-      });
+
+      var postsToShow = _(posts).chain().sortBy(function (postItem) {
+        return postItem.post.createdAt.getTime();
+      }).reverse().value().slice(0, 300);
+
+      wallPublicationsList.update(postsToShow);
     }, 2500);
   };
   return api;
@@ -301,7 +359,6 @@ var SlideshowContentCoordinator = function () {
 
   api.specificSettings = function () {
     return [
-      timeRangeSetting,
       sortOrderSetting,
       speedSetting
     ];
