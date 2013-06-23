@@ -96,7 +96,6 @@ var FlickrPic = function (picData) {
 var PostsListItem = function (item) {
   var api = {
     post: item,
-    shown: false
   };
   return api;
 };
@@ -170,9 +169,6 @@ var SlidesCoordinator = function (postsList) {
       return null;
     } else {
       var next = sortOrderSetting.next(pvt.currentPost, validPosts);
-      if (pvt.currentPost) {
-        pvt.currentPost.shown = true;
-      }
       pvt.currentPost = next;
       return next;
     }
@@ -275,25 +271,44 @@ var Visualization = function (searchStrategy) {
 var WallPublication = function (postItem) {
   var api = {
     postItem: postItem,
-    shown: false,
     element: null
   };
 
-  api.show = function (postItemsToShow) {
-    if (!shouldShow(postItemsToShow)) {
+  api.isVisible = function () {
+    return api.element && api.element.is(':visible');
+  }
+
+  api.show = function (postItemsToShow, publications) {
+    if (!shouldShow(postItemsToShow) || api.isVisible()) {
       return;
     }
 
-    api.shown = true;
     if (!api.element) {
       api.element = postItem.post.html(postItem.post);
     }
-    $('#wallContentContainer').append(api.element);
+
+    var elementToInsertAfter = insertAfterElement(publications);
+    if (elementToInsertAfter) {
+      api.element.insertAfter(elementToInsertAfter.element);
+    } else {
+      $('#wallContentContainer').prepend(api.element);
+    }
   };
+
+  function insertAfterElement(publications) {
+    if (publications.length === 0) {
+      return;
+    }
+
+    return _(publications).chain().filter(function (eachPublication) {
+      return eachPublication.isVisible() && eachPublication.postItem.post.createdAt.getTime() > api.postItem.post.createdAt.getTime();
+    }).min(function (eachPublication) {
+      return eachPublication.postItem.post.createdAt.getTime();
+    }).value();
+  }
 
   api.hideIfShouldNotShow = function (postItemsToShow) {
     if (!shouldShow(postItemsToShow)) {
-      api.shown = false;
       api.element.remove();
     }
   }
@@ -315,7 +330,7 @@ var WallPublicationsList = function () {
   var publications = [];
 
   api.updateTimeLabels = function () {
-    return _(publications).chain().filter(function (eachPublication) { return eachPublication.shown; }).invoke('updateTimeLabel'); 
+    return _(publications).chain().filter(function (eachPublication) { return eachPublication.isVisible(); }).invoke('updateTimeLabel');
   }
 
   function isPublished(postItem) {
@@ -331,7 +346,7 @@ var WallPublicationsList = function () {
   api.update = function (postItems) {
     _(postItems).each(function (eachPostItem) { publish(eachPostItem); });
     _(publications).each(function (eachPublication) { eachPublication.hideIfShouldNotShow(postItems); });
-    _(publications).filter(function (eachPublication) { eachPublication.show(postItems); });
+    _(publications).each(function (eachPublication) { eachPublication.show(postItems, publications); });
   };
 
   return api;
