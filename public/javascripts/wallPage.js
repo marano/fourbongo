@@ -55,20 +55,22 @@ var wallPage = function () {
 
   function timeAndLocationElement(publication, icon) {
     var element = $('<div>', { class: 'publication_time' });
-    var icon = $('<i>', { class: icon });
-    var time = $.timeago(publication.createdAt);
-    element.text(time);
-    element.prepend(icon);
+    $('<i>', { class: icon }).appendTo(element);
+    var timeElement = $('<span>', {'class': 'time'}).appendTo(element);
+    var locationElement = $('<span>').appendTo(element);
+    api.updateTimeLabel(timeElement, publication);
     if (publication.locationName != null) {
-      element.text(time + ' at ' + publication.locationName);
-      element.prepend(icon);
+      locationElement.text(' at ' + publication.locationName);
     } else if (publication.latitude != null && publication.longitude != null) {
       geolocation.displayName(publication.latitude, publication.longitude, function (name) {
-        element.text(time + ' at ' + name);
-        element.prepend(icon);
+        locationElement.text(' at ' + name);
       });
     }
     return element;
+  }
+
+  api.updateTimeLabel = function (element, publication) {
+    element.text($.timeago(publication.createdAt));
   }
 
   api.flickrPicHtml = function (post) {

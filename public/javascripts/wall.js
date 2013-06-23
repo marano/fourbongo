@@ -297,6 +297,10 @@ var WallPublication = function (postItem) {
     }
   }
 
+  api.updateTimeLabel = function () {
+    wallPage.updateTimeLabel(api.element.find('.time'), api.postItem.post);
+  };
+
   function shouldShow(postItemsToShow) {
     return _(postItemsToShow).contains(api.postItem);
   }
@@ -308,6 +312,10 @@ var WallPublicationsList = function () {
   var api = {};
 
   var publications = [];
+
+  api.updateTimeLabels = function () {
+    return _(publications).chain().filter(function (eachPublication) { return eachPublication.shown; }).invoke('updateTimeLabel'); 
+  }
 
   function isPublished(postItem) {
     return _(publications).chain().map(function (eachPublication) { return eachPublication.postItem; }).contains(postItem).value(); 
@@ -350,6 +358,8 @@ var WallContentCoordinator = function () {
 
       wallPublicationsList.update(postsToShow);
     }, 2500);
+
+    setInterval(function () { wallPublicationsList.updateTimeLabels(); }, 30000);
   };
   return api;
 };
