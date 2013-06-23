@@ -329,6 +329,49 @@ var sortOrderSetting = function () {
   return api;
 }();
 
+var ZoomSetting = function () {
+  var api = {};
+  var pvt = {
+    cookieSetting: cookieSettingLoader('zoom', '0.5'),
+    current: null
+  };
+
+  pvt.set = function (value) {
+    pvt.current = value;
+    pvt.cookieSetting.save(value);
+  }
+
+  api.load = function () {
+    pvt.current = pvt.transform(pvt.cookieSetting.load());
+
+    new Dragdealer('zoom-scroll', {
+      horizontal: false,
+      snap: true,
+      yPrecision: 1,
+      vertical: true,
+      steps: 75,
+      y: pvt.current,
+      animationCallback: function(x, y) {
+        pvt.set(y);
+        var zoom = (1 - y) *  75 + 25;
+        $('#wallContentContainer').css('zoom', zoom + '%');
+      }
+    });
+  };
+
+  pvt.transform = function (rawValue) {
+    return parseFloat(rawValue);
+  };
+
+  api.bindEvents = function () {};
+
+  api.onchange = function (callback) {};
+
+  api.fillPage = function () {};
+
+  return api;
+};
+
 var showTwitterSetting = function () {
   var api = {};
   var pvt = {

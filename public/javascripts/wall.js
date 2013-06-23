@@ -277,21 +277,8 @@ var WallContentCoordinator = function () {
 
   api.start = function (coverTitle, postsList) {
     $('#wallContainer').show()
+    ZoomSetting().load();
     $('.title').text(coverTitle);
-
-    new Dragdealer('zoom-scroll', {
-      horizontal: false,
-      snap: true,
-      yPrecision: 1,
-      vertical: true,
-      steps: 75,
-      y: 0.5,
-      animationCallback: function(x, y) {
-        var zoom = 100 - (y * 100) + 25;
-        console.log(zoom);
-        $('#wallContentContainer').css('zoom', zoom + '%');
-      }
-    });
 
     setInterval(function () {
       var posts = postsList.validPosts();
