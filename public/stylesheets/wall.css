@@ -41,17 +41,27 @@
   display: inline-block;
   vertical-align: top;
   max-height: 900px;
+  padding-top: 5px;
   margin-bottom: 20px;
   text-align: left;
   overflow: hidden;
+  border-top: 5px black solid;
 }
 
 #wallContainer .publication_container {
   width: 612px;
 }
 
+#wallContainer .publication_container.instagram .instagram_caption, #wallContainer .publication_container.twitter .publication_content_container.with_media {
+  font-size: 30px;
+}
+
 #wallContainer .publication_container.twitter .publication_content_container {
-  font-size: 23px;
+  font-size: 64px;
+}
+
+#wallContainer .publication_container.facebook .publication_content_container {
+  font-size: 40px;
 }
 
 #wallContainer .avatar_container {

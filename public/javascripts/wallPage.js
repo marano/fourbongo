@@ -33,8 +33,10 @@ var wallPage = function () {
     var content = $('<div>', {'class': 'content'}).appendTo(container);
     if (post.mediaUrl) {
       content.append($('<div>', {'class': 'twitter_media'}).append($('<img>', {src: post.mediaUrl})));
+      content.append($('<div>', {'class': 'publication_content_container with_media'}).text(post.content));
+    } else {
+      content.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
     }
-    content.append($('<div>', {'class': 'publication_content_container'}).text(post.content));
     return container;
   };
 
