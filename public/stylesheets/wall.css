@@ -68,7 +68,7 @@
 #wallContainer .user_data_container {
   display: inline-block;
   width: 502px;
-  font-size: 20px;
+  font-size: 27px;
   margin-bottom: 10px;
 }
 
@@ -76,6 +76,13 @@
   margin-right: 10px;
   margin-bottom: 10px;
   min-width: 612px;
+}
+
+#wallContainer .username {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 38px;
 }
 
 #wallContainer .content {
@@ -88,13 +95,6 @@
   clear: left;
   min-width: 300px;
 }
-
-#wallContainer .username {
-  font-weight: bold;
-  margin-right: 10px;
-  font-size: 23px;
-}
-
 
 #wallContainer .instagram_media, #wallContainer .twitter_media {
   margin-bottom: 10px;

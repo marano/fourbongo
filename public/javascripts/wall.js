@@ -285,7 +285,7 @@ var WallContentCoordinator = function () {
       yPrecision: 1,
       vertical: true,
       steps: 75,
-      y: 50,
+      y: 0.5,
       animationCallback: function(x, y) {
         var zoom = 100 - (y * 100) + 25;
         console.log(zoom);
