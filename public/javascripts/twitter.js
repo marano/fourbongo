@@ -20,7 +20,7 @@ var twitter = function () {
 
   api.byTag = function (tags, callback) {
     var query = '%23' + tags.join('+OR+%23');
-    searchTwitter('searh', { query: query }, callback);
+    searchTwitter('search', { query: query }, callback);
   };
 
   function searchTwitter(method, query, callback) {
