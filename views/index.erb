@@ -6,6 +6,7 @@
     <link href='/stylesheets/settings.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/vidaloka.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/tipsy.css' media='all' rel='stylesheet' />
+    <link href='/stylesheets/dragdealer.css' media='all' rel='stylesheet' />
     <link href='/stylesheets/font-awesome/css/font-awesome.min.css' media='all' rel='stylesheet' />
 
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -18,6 +19,7 @@
     <script type="text/javascript" src="/javascripts/lib/jquery.tipsy.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.jsonp.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.ba-hashchange.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/dragdealer.js"></script>
     <script type="text/javascript" src="/javascripts/util.js"></script>
     <script type="text/javascript" src="/javascripts/analytics.js"></script>
     <script type="text/javascript" src="/javascripts/wallPage.js"></script>
@@ -43,9 +45,20 @@
   </head>
 
   <body>
-    <div id='wallContainer'>
+    <div id='wallContainer' style='display: none'>
+      <h2 class='title'></h2>
+      <div id='zoom-scroll-container'>
+        <i class='icon-zoom-in'></i>
+        <div id='zoom-scroll' class='dragdealer'>
+          <div class='red-bar handle'>
+            <i class='icon-reorder'></i>
+          </div>
+        </div>
+        <i class='icon-zoom-out'></i>
+      </div>
+      <div id='wallContentContainer'></div>
     </div>
-    <div id='slideshowContainer'>
+    <div id='slideshowContainer' style='display: none'>
     </div>
     <div id='homeOuterContainer'>
       <div id="homeContainer">
@@ -114,7 +127,7 @@
         </div>
 
         <div id='distanceRange' class='settingsSection' style='display: none'>
-          <h3><i class='icon-compass'></i>Distance Range</h3>
+          <h3><i class='icon-bullseye'></i>Distance Range</h3>
           <span id='currentLocationBasedUpdatesDistanceRangeLabel'></span><input id='currentLocationBasedUpdatesDistanceRangeSlider' type='range' />
         </div>
 

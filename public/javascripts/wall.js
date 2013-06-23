@@ -276,6 +276,23 @@ var WallContentCoordinator = function () {
   api.specificSettings = function () { return []; };
 
   api.start = function (coverTitle, postsList) {
+    $('#wallContainer').show()
+    $('.title').text(coverTitle);
+
+    new Dragdealer('zoom-scroll', {
+      horizontal: false,
+      snap: true,
+      yPrecision: 1,
+      vertical: true,
+      steps: 75,
+      y: 50,
+      animationCallback: function(x, y) {
+        var zoom = 100 - (y * 100) + 25;
+        console.log(zoom);
+        $('#wallContentContainer').css('zoom', zoom + '%');
+      }
+    });
+
     setInterval(function () {
       var posts = postsList.validPosts();
       posts = posts.slice(0,300);
@@ -285,7 +302,7 @@ var WallContentCoordinator = function () {
         return postItem.post.createdAt;
       }).reverse().each(function (postItem) {
         postItem.shown = true;
-        $('#wallContainer').append(postItem.post.html(postItem.post));
+        $('#wallContentContainer').append(postItem.post.html(postItem.post));
       });
     }, 2500);
   };
@@ -304,6 +321,7 @@ var SlideshowContentCoordinator = function () {
   };
 
   api.start = function (coverTitle, postsList) {
+    $('#slideshowContainer').show()
     wallPage.createWallContainerHtml();
     var slider = slideShow($('#slideshowContainer'));
     slider.slide(wallPage.coverHtml(coverTitle));
