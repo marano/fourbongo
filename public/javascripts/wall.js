@@ -37,7 +37,8 @@ var FacebookUpdate = function (updateData) {
     content: updateData.content,
     createdAt: updateData.createdAt,
     isUpdateByLocation: false,
-    avatar: 'https://graph.facebook.com/' + updateData.userId + '/picture?type=large'
+    avatar: 'https://graph.facebook.com/' + updateData.userId + '/picture?type=large',
+    isFacebookUpdate: true
   };
 
   api.isSame = function (otherPost) { return api.id == otherPost.id; };

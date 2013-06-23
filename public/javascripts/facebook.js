@@ -65,7 +65,7 @@ var facebook = function () {
 
   function extractUpdates(data) {
     return _(data.data).map(function (update) {
-      return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time), isFacebookUpdate: true});
+      return FacebookUpdate({id: update.id, userId: update.from.id, username: update.from.name, content: cheatedUnescape(update.message), createdAt: new Date(update.created_time)});
     });
   }
 
