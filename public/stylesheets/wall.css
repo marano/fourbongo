@@ -37,7 +37,7 @@
 }
 
 #wallContainer .publication_container {
-  display: block;
+  display: inline-block;
   margin: 10px;
   vertical-align: top;
   max-height: 900px;
@@ -123,7 +123,7 @@
 }
 
 #slideshowContainer .publication_container {
-  display: inline-block;
+  display: block;
   font-size: 350%;
   margin: 0 auto 0 auto;
   position: absolute;

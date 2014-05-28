@@ -42,7 +42,7 @@ var wallPage = function () {
 
   api.instagramMediaHtml = function (post) {
     console.log(post.link);
-    var container = $('<a>', {'href': post.link, 'style': 'display: block', 'class': 'publication_container instagram'});
+    var container = $('<a>', {'href': post.link, 'class': 'publication_container instagram'});
     container.append($('<div class="avatar_container">').append($('<img>', {src: post.avatar, 'class': 'avatar'})));
     var userData = $('<div>', {'class': 'user_data_container'});
     userData.append(timeAndLocationElement(post, 'icon-instagram'));
