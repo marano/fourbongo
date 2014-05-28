@@ -37,8 +37,8 @@
 }
 
 #wallContainer .publication_container {
+  display: block;
   margin: 10px;
-  display: inline-block;
   vertical-align: top;
   max-height: 900px;
   padding-top: 5px;
@@ -46,10 +46,9 @@
   text-align: left;
   overflow: hidden;
   border-top: 5px black solid;
-}
-
-#wallContainer .publication_container {
   width: 612px;
+  color: black;
+  text-decoration: none;
 }
 
 #wallContainer .publication_container.instagram .instagram_caption, #wallContainer .publication_container.twitter .publication_content_container.with_media {
@@ -124,6 +123,7 @@
 }
 
 #slideshowContainer .publication_container {
+  display: inline-block;
   font-size: 350%;
   margin: 0 auto 0 auto;
   position: absolute;
@@ -133,6 +133,8 @@
   min-width: 95%;
   max-width: 95%;
   text-shadow: rgba(0, 0, 0, .3) 0px 0px 5px;
+  color: black;
+  text-decoration: none;
 }
 
 #slideshowContainer .user_data_container {

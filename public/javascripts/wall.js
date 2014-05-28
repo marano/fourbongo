@@ -49,6 +49,7 @@ var FacebookUpdate = function (updateData) {
 };
 
 var InstagramMedia = function (mediaData) {
+  console.log(mediaData.link);
   var api = {
     id: mediaData.id,
     username: mediaData.username,
@@ -61,6 +62,7 @@ var InstagramMedia = function (mediaData) {
     locationName: mediaData.locationName,
     latitude: mediaData.latitude,
     longitude: mediaData.longitude,
+    link: mediaData.link,
     isInstagramPic: true
   };
 
